@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Microsoft 365 Endpoint Administrator (MD-102) Interactive Study Guide & Lab Portal</title>
+  <meta name="description" content="Master Microsoft Intune, Entra ID, Defender for Endpoint, Autopilot, Compliance, and pass Exam MD-102 with hands-on interactive labs, persistent checklists, scripts, and practice quizzes.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              900: '#0c4a6e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-200">
+
+  <!-- Top Navigation Bar -->
+  <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <!-- Brand & Title -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-indigo-600 flex items-center justify-center shadow-md shadow-sky-500/20 text-white flex-shrink-0">
+          <i data-lucide="shield" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-sm md:text-base font-bold text-white tracking-tight">MD-102 Master Lab Portal</h1>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-500/20 text-sky-400 border border-sky-500/30">
+              Exam Associate
+            </span>
+          </div>
+          <p class="text-xs text-slate-400 hidden sm:block">Microsoft 365 Endpoint Administrator Hands-On Blueprint</p>
+        </div>
+      </div>
+
+      <!-- Live Tenant Parameter Injector Input -->
+      <div class="flex-1 max-w-xs sm:max-w-sm hidden md:flex items-center gap-2 bg-slate-950/80 px-3 py-1.5 rounded-xl border border-slate-800 focus-within:border-sky-500 transition">
+        <i data-lucide="building" class="w-4 h-4 text-sky-400 flex-shrink-0"></i>
+        <div class="flex-1 text-xs">
+          <span class="text-[10px] text-slate-400 uppercase font-semibold block leading-none">Your Tenant Prefix:</span>
+          <input 
+            type="text" 
+            id="tenantInput" 
+            placeholder="e.g. contoso" 
+            class="bg-transparent text-sky-300 font-mono font-bold text-xs focus:outline-none w-full placeholder-slate-600"
+          />
+        </div>
+        <span class="text-[11px] font-mono text-slate-400">.onmicrosoft.com</span>
+      </div>
+
+      <!-- Action Buttons & Navigation Modals -->
+      <div class="flex items-center gap-2">
+        <button id="btnBudget" title="25-Seat License Allocation" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1.5 text-xs font-semibold border border-slate-700/60">
+          <i data-lucide="users" class="w-4 h-4 text-emerald-400"></i>
+          <span class="hidden lg:inline">20/5 Budget</span>
+        </button>
+
+        <button id="btnErrors" title="Diagnostic Error Code Dictionary" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1.5 text-xs font-semibold border border-slate-700/60">
+          <i data-lucide="alert-circle" class="w-4 h-4 text-amber-400"></i>
+          <span class="hidden lg:inline">Error Guide</span>
+        </button>
+
+        <button id="btnSchedule" title="10-Day Sprint & 4-Week Track" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1.5 text-xs font-semibold border border-slate-700/60">
+          <i data-lucide="calendar" class="w-4 h-4 text-indigo-400"></i>
+          <span class="hidden lg:inline">Schedules</span>
+        </button>
+
+        <button id="btnProgressExport" title="Export / Import Progress" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1.5 text-xs font-semibold border border-slate-700/60">
+          <i data-lucide="download-cloud" class="w-4 h-4 text-sky-400"></i>
+          <span class="hidden xl:inline">Progress Sync</span>
+        </button>
+
+        <button id="themeToggle" title="Toggle Theme" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition border border-slate-700/60">
+          <i data-lucide="sun" id="themeIcon" class="w-4 h-4 text-amber-300"></i>
+        </button>
+
+        <a href="LAB_GUIDE.md" target="_blank" title="View Markdown Master Guide" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition border border-slate-700/60 hidden sm:flex items-center">
+          <i data-lucide="file-code" class="w-4 h-4 text-slate-300"></i>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Overall Metrics & Readiness Banner -->
+    <div class="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-5">
+        
+        <!-- Progress Summary -->
+        <div class="space-y-1.5 w-full md:w-auto">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-sky-400">Exam MD-102 Readiness</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono">100% Hands-On Coverage</span>
+          </div>
+          <div class="flex items-baseline gap-3">
+            <span id="overallProgressText" class="text-3xl md:text-4xl font-extrabold text-white font-mono">0%</span>
+            <span class="text-xs text-slate-400">of all hands-on syllabus tasks validated</span>
+          </div>
+        </div>
+
+        <!-- Metric Stat Cards -->
+        <div class="grid grid-cols-3 gap-3 w-full md:w-auto">
+          <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 text-center">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block">Total Labs</span>
+            <span class="text-sm md:text-base font-bold text-white font-mono">22+ Labs</span>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 text-center">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block">Tasks Checked</span>
+            <span id="overallTaskCount" class="text-sm md:text-base font-bold text-sky-400 font-mono">0/0</span>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 text-center">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block">Exam Quizzes</span>
+            <span id="overallQuizCount" class="text-sm md:text-base font-bold text-emerald-400 font-mono">0/0</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Master Progress Bar -->
+      <div class="mt-4 w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800/80">
+        <div id="overallProgressBar" class="h-full bg-gradient-to-r from-sky-500 to-emerald-400 transition-all duration-500" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <!-- Search & Filter Controls -->
+    <div class="space-y-3">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+        
+        <!-- Exam Domain Filter Pills -->
+        <div id="domainFilters" class="flex flex-wrap items-center gap-1.5 w-full sm:w-auto">
+          <!-- Rendered dynamically by JS -->
+        </div>
+
+        <!-- Search Bar -->
+        <div class="w-full sm:w-72 relative">
+          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Search labs, scripts, error codes..." 
+            class="w-full bg-slate-900/90 text-slate-100 text-xs pl-9 pr-3 py-2 rounded-xl border border-slate-800 focus:outline-none focus:border-sky-500 placeholder-slate-500 transition"
+          />
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (2 Columns) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- Left Column: Lab Explorer Sidebar -->
+      <div class="lg:col-span-4 space-y-4">
+        <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 shadow-sm">
+          <div class="flex items-center justify-between pb-3 mb-2 border-b border-slate-800">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+              <i data-lucide="book-open" class="w-4 h-4 text-sky-400"></i>
+              <span>Lab Syllabus Explorer</span>
+            </h3>
+            <span class="text-[11px] font-mono text-slate-400 font-bold">22 Labs</span>
+          </div>
+
+          <!-- Dynamic Lab List Container -->
+          <div id="labListContainer" class="max-h-[calc(100vh-280px)] overflow-y-auto pr-1 space-y-3">
+            <!-- Rendered dynamically by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Lab Detail Workspace -->
+      <div class="lg:col-span-8">
+        <div id="labDetailContainer">
+          <!-- Rendered dynamically by JS -->
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-auto border-t border-slate-800/80 bg-slate-950 py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+      <div class="flex items-center gap-2">
+        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+        <span>Microsoft Certified: Endpoint Administrator Associate (Exam MD-102) Master Blueprint</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="LAB_GUIDE.md" class="hover:text-sky-400 transition font-medium">Offline Lab Guide</a>
+        <a href="README.md" class="hover:text-sky-400 transition font-medium">Architecture Doc</a>
+        <span class="text-slate-400">Strict 20/5 Budget Standard</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification Floating Box -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 px-4 py-2.5 rounded-xl bg-sky-600 text-white font-semibold text-xs shadow-2xl shadow-sky-900/50 border border-sky-400 transition-all duration-300 opacity-0 translate-y-8 flex items-center gap-2 pointer-events-none">
+    <span>Notification</span>
+  </div>
+
+  <!-- Modal 1: 25-Seat License Budget Allocation -->
+  <div id="budgetModal" class="modal-backdrop fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-950/80">
+        <div class="flex items-center gap-2">
+          <i data-lucide="users" class="w-5 h-5 text-emerald-400"></i>
+          <h3 class="text-sm font-bold text-white">25-Seat Microsoft 365 E5 License Budget Allocation (20 Active / 5 Reserve)</h3>
+        </div>
+        <button onclick="closeModal('budgetModal')" class="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-5 overflow-y-auto space-y-4">
+        <p class="text-xs text-slate-300 leading-relaxed">
+          Standard Microsoft 365 Developer and Trial subscriptions allocate <strong>25 E5 licenses</strong>. To guarantee zero tenant exhaustion and zero admin lockouts during automated enrollments, this lab enforces a strict <strong>20-Seat Active Allocated Budget</strong> with an unassigned <strong>5-Seat Safety Reserve Buffer</strong>.
+        </p>
+
+        <div class="overflow-x-auto rounded-xl border border-slate-800">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-950 text-slate-400 text-[11px] uppercase tracking-wider font-semibold border-b border-slate-800">
+                <th class="py-2.5 px-3">Category</th>
+                <th class="py-2.5 px-3">Persona</th>
+                <th class="py-2.5 px-3">UPN</th>
+                <th class="py-2.5 px-3">Workload Context</th>
+                <th class="py-2.5 px-3 text-center">Seats</th>
+              </tr>
+            </thead>
+            <tbody id="budgetTableBody" class="divide-y divide-slate-800">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Diagnostic Error Code Dictionary -->
+  <div id="errorsModal" class="modal-backdrop fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-950/80">
+        <div class="flex items-center gap-2">
+          <i data-lucide="alert-circle" class="w-5 h-5 text-amber-400"></i>
+          <h3 class="text-sm font-bold text-white">High-Yield Intune & Enrollment Error Code Dictionary</h3>
+        </div>
+        <button onclick="closeModal('errorsModal')" class="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-5 overflow-y-auto space-y-4">
+        <p class="text-xs text-slate-300">
+          High-yield diagnostic error codes commonly encountered on the MD-102 exam and in production Intune deployments:
+        </p>
+
+        <div id="errorDictionaryBody" class="space-y-3">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Study Schedules (10-Day Sprint vs 4-Week Track) -->
+  <div id="scheduleModal" class="modal-backdrop fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-950/80">
+        <div class="flex items-center gap-2">
+          <i data-lucide="calendar" class="w-5 h-5 text-indigo-400"></i>
+          <h3 class="text-sm font-bold text-white">MD-102 Study & Execution Schedules</h3>
+        </div>
+        <button onclick="closeModal('scheduleModal')" class="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-5 overflow-y-auto space-y-4">
+        <div class="space-y-2">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-sky-400">Track A: 10-Day Accelerated Intensive Sprint (~2.5–3.5 hrs/day)</h4>
+          <div id="sprintScheduleList" class="space-y-2">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Progress Export / Import & Backup -->
+  <div id="progressModal" class="modal-backdrop fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full flex flex-col shadow-2xl overflow-hidden">
+      <div class="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-950/80">
+        <div class="flex items-center gap-2">
+          <i data-lucide="download-cloud" class="w-5 h-5 text-sky-400"></i>
+          <h3 class="text-sm font-bold text-white">Progress Synchronization & Backup</h3>
+        </div>
+        <button onclick="closeModal('progressModal')" class="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4 text-xs">
+        <p class="text-slate-300 leading-relaxed">
+          Your lab checklist tasks, custom tenant prefix, and exam quiz results are automatically stored in browser LocalStorage. Use these tools to back up or transfer your progress between machines.
+        </p>
+
+        <div class="space-y-3 pt-2">
+          <button onclick="exportProgressJSON()" class="w-full py-2.5 px-4 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-semibold flex items-center justify-center gap-2 transition">
+            <i data-lucide="download" class="w-4 h-4"></i> Export Progress as JSON File
+          </button>
+
+          <div class="p-3 rounded-xl border border-slate-800 bg-slate-950 text-center space-y-2">
+            <span class="text-slate-400 block font-medium">Import Progress JSON:</span>
+            <input type="file" accept=".json" onchange="importProgressJSON(event)" class="text-xs text-slate-400 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-sky-300 hover:file:bg-slate-700 cursor-pointer" />
+          </div>
+
+          <button onclick="resetAllProgress()" class="w-full py-2 px-4 rounded-xl bg-rose-950/30 hover:bg-rose-900/40 text-rose-300 border border-rose-800/40 font-semibold flex items-center justify-center gap-2 transition">
+            <i data-lucide="trash-2" class="w-4 h-4"></i> Reset All Progress
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
