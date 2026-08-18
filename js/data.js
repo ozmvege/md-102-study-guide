@@ -35,6 +35,57 @@ const EXAM_DOMAINS = [
   }
 ];
 
+const VM_INFRASTRUCTURE = [
+  {
+    name: "Corporate VM 1 (IT / Adele)",
+    persona: "adele.vance@<tenant>.onmicrosoft.com",
+    gen: "Generation 2 (UEFI)",
+    vtpm: "Enabled (TPM 2.0)",
+    secureBoot: "Enabled (Microsoft Windows)",
+    specs: "2 vCPU / 4096 MB RAM Dynamic",
+    disk: "80 GB VHDX (Thin)",
+    os: "Windows 11 Pro 23H2/24H2",
+    network: "Default Switch (NAT)",
+    purpose: "Subscription Activation (Pro -> Enterprise), Update Ring 0, EPM elevation testing."
+  },
+  {
+    name: "Corporate VM 2 (Finance / Alex)",
+    persona: "alex.wilber@<tenant>.onmicrosoft.com",
+    gen: "Generation 2 (UEFI)",
+    vtpm: "Enabled (TPM 2.0)",
+    secureBoot: "Enabled (Microsoft Windows)",
+    specs: "2 vCPU / 4096 MB RAM Dynamic",
+    disk: "80 GB VHDX (Thin)",
+    os: "Windows 11 Pro 23H2/24H2",
+    network: "Default Switch (NAT)",
+    purpose: "Autopilot Classic, BitLocker 256-bit escrow, Cloud LAPS, Custom Compliance, Zero Trust CA test."
+  },
+  {
+    name: "Autopilot VM 3 (HR / Megan)",
+    persona: "megan.bowen@<tenant>.onmicrosoft.com",
+    gen: "Generation 2 (UEFI)",
+    vtpm: "Enabled (TPM 2.0)",
+    secureBoot: "Enabled (Microsoft Windows)",
+    specs: "2 vCPU / 4096 MB RAM Dynamic",
+    disk: "80 GB VHDX (Thin)",
+    os: "Windows 11 Pro 23H2/24H2 (Clean/Un-hashed)",
+    network: "Default Switch (NAT)",
+    purpose: "Autopilot Device Preparation (v2) testing without hardware hash upload."
+  },
+  {
+    name: "Android Studio AVD Emulator (Diego)",
+    persona: "diego.s@<tenant>.onmicrosoft.com",
+    gen: "Android Virtual Device (AVD)",
+    vtpm: "N/A",
+    secureBoot: "N/A",
+    specs: "Pixel 7 Hardware Profile / 4096 MB",
+    disk: "32 GB Internal Storage",
+    os: "Android 14.0 (UpsideDownCake - API 34 with Google Play)",
+    network: "Android Emulator Bridge (NAT)",
+    purpose: "100% Free Android Enterprise Personally-Owned Work Profile & Dedicated Kiosk testing."
+  }
+];
+
 const PHASES = [
   { id: "phase-1", number: 1, name: "Tenant and Identity Foundation", description: "Establish tenant security, RBAC scope tags, GBL budget, and Subscription Activation." },
   { id: "phase-2", number: 2, name: "Device Enrollment & Identity Lifecycle", description: "Dissect device identities with dsregcmd, corporate identifiers, and platform restrictions." },

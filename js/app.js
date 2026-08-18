@@ -190,6 +190,7 @@ function initEventListeners() {
   });
 
   // Modal Open/Close Buttons
+  document.getElementById("btnInfra")?.addEventListener("click", () => openModal("infraModal"));
   document.getElementById("btnBudget")?.addEventListener("click", () => openModal("budgetModal"));
   document.getElementById("btnErrors")?.addEventListener("click", () => openModal("errorsModal"));
   document.getElementById("btnSchedule")?.addEventListener("click", () => openModal("scheduleModal"));
@@ -210,6 +211,7 @@ function renderApp() {
   renderDomainPills();
   renderLabList();
   renderLabDetail();
+  renderInfraModal();
   renderBudgetModal();
   renderErrorsModal();
   renderScheduleModal();
@@ -768,6 +770,33 @@ function openModal(modalId) {
 
 function closeModal(modalId) {
   document.getElementById(modalId)?.classList.add("hidden");
+}
+
+function renderInfraModal() {
+  const container = document.getElementById("infraTableBody");
+  if (!container) return;
+
+  container.innerHTML = VM_INFRASTRUCTURE.map(vm => `
+    <div class="p-4 rounded-xl border border-slate-800 bg-slate-900/90 space-y-2 text-xs">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
+        <div class="flex items-center gap-2">
+          <i data-lucide="monitor" class="w-4 h-4 text-sky-400"></i>
+          <span class="font-bold text-white text-sm">${vm.name}</span>
+        </div>
+        <span class="px-2 py-0.5 rounded bg-sky-500/20 text-sky-400 font-mono text-[11px]">${formatTenant(vm.persona)}</span>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 pt-1 text-[11px]">
+        <div><strong class="text-slate-400 block">Generation:</strong> <span class="text-slate-200">${vm.gen}</span></div>
+        <div><strong class="text-slate-400 block">vTPM / Security:</strong> <span class="text-emerald-400 font-semibold">${vm.vtpm}</span></div>
+        <div><strong class="text-slate-400 block">Hardware Specs:</strong> <span class="text-slate-200">${vm.specs}</span></div>
+        <div><strong class="text-slate-400 block">OS Base:</strong> <span class="text-slate-200">${vm.os}</span></div>
+      </div>
+      <div class="pt-1 text-[11px]">
+        <strong class="text-slate-400">Primary Testing Focus:</strong>
+        <span class="text-slate-300 ml-1">${vm.purpose}</span>
+      </div>
+    </div>
+  `).join("");
 }
 
 function renderBudgetModal() {
