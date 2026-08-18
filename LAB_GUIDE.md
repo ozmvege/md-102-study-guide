@@ -126,15 +126,80 @@ GRP-DEV-MACOS-CORPORATE         # Dynamic: (device.deviceOSType -eq "macOS") and
 ### Objective
 Provision the foundational identity and hardware infrastructure for the complete 20-seat lab: establish Group-Based Licensing (GBL) on `GRP-LIC-M365-E5`, create all departmental & device security groups, provision the 20 test personas with standard passwords, and deploy 3 Gen-2 Hyper-V VMs with vTPM 2.0.
 
-### Tasks
-- [ ] Create Licensing Security Group `GRP-LIC-M365-E5` and assign **Microsoft 365 E5** license.
-- [ ] Create Departmental Groups (`GRP-USR-IT`, `GRP-USR-FINANCE`, `GRP-USR-HR`, `GRP-USR-SALES`, `GRP-USR-FIELD`, `GRP-USR-EXCLUDE-CA`).
-- [ ] Create Device Groups (`GRP-DEV-WIN-CORPORATE`, `GRP-DEV-WIN-AUTOPILOT`, `GRP-DEV-WIN-AUTOPILOT-V2`, `GRP-DEV-WIN-PILOT`, `GRP-DEV-WIN-PRODUCTION`, `GRP-DEV-BYOD`).
-- [ ] Provision all 20 User Personas and add them to `GRP-LIC-M365-E5`.
-- [ ] Assign Global Administrator role to `admin-global-emergency` and Intune Administrator to `admin-intune`.
-- [ ] Run Hyper-V PowerShell script to create `MD102-VM1-Adele`, `MD102-VM2-Alex`, and `MD102-VM3-Megan` with vTPM 2.0.
+### Exercise 1: Create Microsoft Entra Security Groups via Admin Center
+1. Sign in to **https://entra.microsoft.com** as Global Administrator.
+2. Expand **Identity** > select **Groups** > **All groups**.
+3. Select **New group** at the top.
+4. Configure group parameters:
+   - Group type: **Security**
+   - Group name: `GRP-LIC-M365-E5`
+   - Group description: *Group-based licensing container for Microsoft 365 E5*
+   - Membership type: **Assigned**
+5. Select **Create**.
+6. Repeat this process to create the remaining groups:
+   - Departmental User Groups: `GRP-USR-IT`, `GRP-USR-FINANCE`, `GRP-USR-HR`, `GRP-USR-SALES`, `GRP-USR-FIELD`, `GRP-USR-EXCLUDE-CA`
+   - Device Groups: `GRP-DEV-WIN-CORPORATE`, `GRP-DEV-WIN-AUTOPILOT-V2`, `GRP-DEV-WIN-PILOT`, `GRP-DEV-WIN-PRODUCTION`, `GRP-DEV-WIN-SHARED`
 
-### Automated Entra ID Setup Script (Microsoft Graph PowerShell):
+---
+
+### Exercise 2: Configure Group-Based Licensing (GBL) for Microsoft 365 E5
+1. In Microsoft Entra admin center, expand **Identity** > **Billing** > select **Licenses**.
+2. Under *Manage*, select **All products**.
+3. Select **Microsoft 365 E5** > click **+ Assign**.
+4. Under *Users and groups*, click **+ Add users and groups**.
+5. Search for and select `GRP-LIC-M365-E5` > click **Select**.
+6. Select the **Assignment options** tab > verify *Microsoft Intune*, *Microsoft Entra ID P2*, *Microsoft Defender for Endpoint P2*, and *Windows Enterprise* are toggled to **On**.
+7. Select **Review + assign** > click **Assign**.
+
+---
+
+### Exercise 3: Create User Personas in Microsoft Entra Admin Center
+1. Navigate to **Identity** > **Users** > **All users**.
+2. Select **New user** > **Create new user**.
+3. On the *Basics* tab:
+   - User Principal Name: `adele.vance` (Domain: `<tenant>.onmicrosoft.com`)
+   - Display Name: **Adele Vance**
+   - Uncheck *Auto-generate password* and enter standard password: `ContosoLabP@ssw0rd2026!`.
+4. Select **Next: Properties**:
+   - First name: **Adele** | Last name: **Vance**
+   - Job title: **IT Specialist** | Department: **IT**
+   - Usage location: **United States** (or your local region).
+5. Select **Next: Assignments** > click **+ Add group** > select `GRP-LIC-M365-E5` and `GRP-USR-IT` > click **Select**.
+6. Select **Review + create** > click **Create**.
+7. Repeat for the other primary personas:
+   - `alex.wilber` (Finance / VM 2)
+   - `megan.bowen` (HR / VM 3)
+   - `joni.sherman` (Sales / BYOD)
+   - `diego.s` (Field / Mobile)
+
+---
+
+### Exercise 4: Create Admin Accounts & Assign Directory Roles
+1. In **Users** > **New user** > **Create new user**.
+2. Create `admin-global-emergency@<tenant>.onmicrosoft.com` (Display Name: *Global Emergency BreakGlass*).
+3. On the *Assignments* tab, click **+ Add role** > search and select **Global Administrator** > click **Select**. Also add to `GRP-LIC-M365-E5`.
+4. Create `admin-intune@<tenant>.onmicrosoft.com` (Display Name: *Intune Principal Architect*) > assign role **Intune Administrator** and add to `GRP-LIC-M365-E5`.
+
+---
+
+### Exercise 5: Provision Virtual Machines in Hyper-V Manager GUI
+1. Open **Hyper-V Manager** on your host machine.
+2. In the Actions pane on the right, select **New** > **Virtual Machine**.
+3. *Specify Name and Location:* Name: `MD102-VM1-Adele` > click **Next**.
+4. *Specify Generation:* Select **Generation 2** (UEFI) > click **Next**.
+5. *Assign Memory:* Startup memory: **4096 MB**, check **Use Dynamic Memory for this virtual machine** > click **Next**.
+6. *Configure Networking:* Connection: **Default Switch** > click **Next**.
+7. *Connect Virtual Hard Disk:* Size: **80 GB** > click **Next** > click **Finish**.
+8. Right-click `MD102-VM1-Adele` > select **Settings...**.
+9. In the left pane, select **Security**:
+   - Ensure **Enable Secure Boot** is checked (Template: *Microsoft Windows*).
+   - Check **Enable Trusted Platform Module** (vTPM 2.0).
+10. Click **Apply** and **OK**.
+11. Repeat to create `MD102-VM2-Alex` and `MD102-VM3-Megan`.
+
+---
+
+### Exercise 6: (Fast-Track Alternative) Automated PowerShell Script
 ```powershell
 # Connect to Microsoft Graph with admin permissions
 Connect-MgGraph -Scopes "Group.ReadWrite.All", "User.ReadWrite.All", "Directory.ReadWrite.All", "RoleManagement.ReadWrite.Directory"

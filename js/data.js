@@ -152,9 +152,36 @@ const LABS_DATA = [
       { id: "t-0-7", text: "(Optional Mobile) Configure Android Studio AVD (Pixel 7 with Android 14 API 34 with Google Play)." }
     ],
     steps: [
-      { step: 1, title: "Create Entra ID Groups & Enable GBL", desc: "In Microsoft Entra admin center > Groups > Create 'GRP-LIC-M365-E5'. Navigate to Identity > Billing > Licenses > Assign Microsoft 365 E5 to GRP-LIC-M365-E5." },
-      { step: 2, title: "Provision Personas & Add to Licensing Group", desc: "Create the 20 user personas or execute the automated Microsoft Graph PowerShell provisioning script. Ensure all users are members of GRP-LIC-M365-E5." },
-      { step: 3, title: "Deploy Hyper-V Virtual Machines", desc: "Open elevated PowerShell on your Hyper-V host and run the automated VM creation loop to instantiate 3 Gen-2 VMs with vTPM 2.0 and Secure Boot." }
+      {
+        step: 1,
+        title: "Exercise 1: Create Microsoft Entra Security Groups via Admin Center",
+        desc: "1. Sign in to https://entra.microsoft.com as Global Admin.<br/>2. Expand <strong>Identity</strong> > select <strong>Groups</strong> > <strong>All groups</strong>.<br/>3. Select <strong>New group</strong> at the top.<br/>4. Group type: <strong>Security</strong>.<br/>5. Group name: <strong>GRP-LIC-M365-E5</strong>.<br/>6. Group description: <em>Group-based licensing container for Microsoft 365 E5</em>.<br/>7. Membership type: <strong>Assigned</strong>.<br/>8. Select <strong>Create</strong>.<br/>9. Repeat this process to create the remaining groups: <code>GRP-USR-IT</code>, <code>GRP-USR-FINANCE</code>, <code>GRP-USR-HR</code>, <code>GRP-USR-SALES</code>, <code>GRP-USR-FIELD</code>, <code>GRP-USR-EXCLUDE-CA</code>, <code>GRP-DEV-WIN-CORPORATE</code>, <code>GRP-DEV-WIN-AUTOPILOT-V2</code>, <code>GRP-DEV-WIN-PILOT</code>, <code>GRP-DEV-WIN-PRODUCTION</code>, and <code>GRP-DEV-WIN-SHARED</code>."
+      },
+      {
+        step: 2,
+        title: "Exercise 2: Configure Group-Based Licensing (GBL) for Microsoft 365 E5",
+        desc: "1. In Microsoft Entra admin center, expand <strong>Identity</strong> > <strong>Billing</strong> > select <strong>Licenses</strong>.<br/>2. Under <em>Manage</em>, select <strong>All products</strong>.<br/>3. Select <strong>Microsoft 365 E5</strong> > click <strong>+ Assign</strong>.<br/>4. Under <em>Users and groups</em>, click <strong>+ Add users and groups</strong>.<br/>5. Search for and select <strong>GRP-LIC-M365-E5</strong> > click <strong>Select</strong>.<br/>6. Select the <strong>Assignment options</strong> tab > verify <em>Microsoft Intune</em>, <em>Microsoft Entra ID P2</em>, <em>Microsoft Defender for Endpoint P2</em>, and <em>Windows Enterprise</em> are toggled to <strong>On</strong>.<br/>7. Select <strong>Review + assign</strong> > click <strong>Assign</strong>."
+      },
+      {
+        step: 3,
+        title: "Exercise 3: Create User Personas in Microsoft Entra Admin Center",
+        desc: "1. Navigate to <strong>Identity</strong> > <strong>Users</strong> > <strong>All users</strong>.<br/>2. Select <strong>New user</strong> > <strong>Create new user</strong>.<br/>3. On the <em>Basics</em> tab:<br/>&nbsp;&nbsp;• User Principal Name: <code>adele.vance</code> (Domain: <code>&lt;tenant&gt;.onmicrosoft.com</code>)<br/>&nbsp;&nbsp;• Display Name: <strong>Adele Vance</strong><br/>&nbsp;&nbsp;• Uncheck <em>Auto-generate password</em> and enter standard password: <code>ContosoLabP@ssw0rd2026!</code>.<br/>4. Select <strong>Next: Properties</strong>:<br/>&nbsp;&nbsp;• First name: <strong>Adele</strong> | Last name: <strong>Vance</strong><br/>&nbsp;&nbsp;• Job title: <strong>IT Specialist</strong> | Department: <strong>IT</strong><br/>&nbsp;&nbsp;• Usage location: <strong>United States</strong> (or your local region).<br/>5. Select <strong>Next: Assignments</strong> > click <strong>+ Add group</strong> > select <strong>GRP-LIC-M365-E5</strong> and <strong>GRP-USR-IT</strong> > click <strong>Select</strong>.<br/>6. Select <strong>Review + create</strong> > click <strong>Create</strong>.<br/>7. Repeat for the other primary personas: <code>alex.wilber</code> (Finance), <code>megan.bowen</code> (HR), <code>joni.sherman</code> (Sales), and <code>diego.s</code> (Field)."
+      },
+      {
+        step: 4,
+        title: "Exercise 4: Create Admin Accounts & Assign Directory Roles",
+        desc: "1. In <strong>Users</strong> > <strong>New user</strong> > <strong>Create new user</strong>.<br/>2. Create <code>admin-global-emergency@&lt;tenant&gt;.onmicrosoft.com</code> (Display Name: <em>Global Emergency BreakGlass</em>).<br/>3. On the <em>Assignments</em> tab, click <strong>+ Add role</strong> > search and select <strong>Global Administrator</strong> > click <strong>Select</strong>.<br/>4. Also add it to <strong>GRP-LIC-M365-E5</strong>.<br/>5. Create <code>admin-intune@&lt;tenant&gt;.onmicrosoft.com</code> (Display Name: <em>Intune Principal Architect</em>) > assign role <strong>Intune Administrator</strong> and group <strong>GRP-LIC-M365-E5</strong>."
+      },
+      {
+        step: 5,
+        title: "Exercise 5: Provision Virtual Machines in Hyper-V Manager GUI",
+        desc: "1. Open <strong>Hyper-V Manager</strong> on your host machine.<br/>2. In the Actions pane on the right, select <strong>New</strong> > <strong>Virtual Machine</strong>.<br/>3. <em>Specify Name and Location:</em> Name: <strong>MD102-VM1-Adele</strong> > click <strong>Next</strong>.<br/>4. <em>Specify Generation:</em> Select <strong>Generation 2</strong> (UEFI) > click <strong>Next</strong>.<br/>5. <em>Assign Memory:</em> Startup memory: <strong>4096 MB</strong>, check <strong>Use Dynamic Memory for this virtual machine</strong> > click <strong>Next</strong>.<br/>6. <em>Configure Networking:</em> Connection: <strong>Default Switch</strong> > click <strong>Next</strong>.<br/>7. <em>Connect Virtual Hard Disk:</em> Size: <strong>80 GB</strong> > click <strong>Next</strong> > click <strong>Finish</strong>.<br/>8. Right-click <strong>MD102-VM1-Adele</strong> > select <strong>Settings...</strong>.<br/>9. In the left pane, select <strong>Security</strong>:<br/>&nbsp;&nbsp;• Ensure <strong>Enable Secure Boot</strong> is checked (Template: <em>Microsoft Windows</em>).<br/>&nbsp;&nbsp;• Check <strong>Enable Trusted Platform Module</strong> (vTPM 2.0).<br/>10. Click <strong>Apply</strong> and <strong>OK</strong>.<br/>11. Repeat to create <strong>MD102-VM2-Alex</strong> and <strong>MD102-VM3-Megan</strong>."
+      },
+      {
+        step: 6,
+        title: "Exercise 6: (Fast-Track Alternative) Automated PowerShell Script",
+        desc: "If you prefer to automate the creation of all 20 accounts, 12 groups, and 3 Hyper-V VMs at once, navigate to the <strong>Script Sandbox</strong> tab and execute the automated Graph and Hyper-V scripts with 1-click."
+      }
     ],
     scripts: [
       {
