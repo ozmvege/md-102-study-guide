@@ -269,9 +269,10 @@ foreach ($VM in $VMNames) {
     New-VM -Name $VM -Generation 2 -MemoryStartupBytes 4GB -NewVHDPath "C:\Hyper-V\$VM.vhdx" -NewVHDSizeBytes 80GB -SwitchName "Default Switch"
     Set-VMMemory -VMName $VM -DynamicMemoryEnabled $true -MinimumBytes 2GB -MaximumBytes 6GB
     Set-VMProcessor -VMName $VM -Count 2
-    Set-VMSecurity -VMName $VM -EncryptStateAndVmMigrationTraffic $true -TpmEnabled $true
     Set-VMFirmware -VMName $VM -EnableSecureBoot On -SecureBootTemplate "MicrosoftWindows"
-    Write-Host "Created $VM with vTPM 2.0 and Secure Boot enabled!" -ForegroundColor Green
+    Set-VMKeyProtector -VMName $VM -NewLocalKeyProtector
+    Enable-VMTPM -VMName $VM
+    Write-Host "Configured $VM with vTPM 2.0 and Secure Boot!" -ForegroundColor Green
 }</code></pre>
         </div>
       </div>
