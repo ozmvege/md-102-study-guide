@@ -120,6 +120,85 @@ GRP-DEV-MACOS-CORPORATE         # Dynamic: (device.deviceOSType -eq "macOS") and
 
 # Phase 1: Tenant and Identity Foundation
 
+## Lab 0: Enterprise Prerequisites, Personas, Security Groups & VM Automation
+*MD-102 Domain: Manage Identity and Access (10–15%) & Deploy Windows Client (25–30%)*
+
+### Objective
+Provision the foundational identity and hardware infrastructure for the complete 20-seat lab: establish Group-Based Licensing (GBL) on `GRP-LIC-M365-E5`, create all departmental & device security groups, provision the 20 test personas with standard passwords, and deploy 3 Gen-2 Hyper-V VMs with vTPM 2.0.
+
+### Tasks
+- [ ] Create Licensing Security Group `GRP-LIC-M365-E5` and assign **Microsoft 365 E5** license.
+- [ ] Create Departmental Groups (`GRP-USR-IT`, `GRP-USR-FINANCE`, `GRP-USR-HR`, `GRP-USR-SALES`, `GRP-USR-FIELD`, `GRP-USR-EXCLUDE-CA`).
+- [ ] Create Device Groups (`GRP-DEV-WIN-CORPORATE`, `GRP-DEV-WIN-AUTOPILOT`, `GRP-DEV-WIN-AUTOPILOT-V2`, `GRP-DEV-WIN-PILOT`, `GRP-DEV-WIN-PRODUCTION`, `GRP-DEV-BYOD`).
+- [ ] Provision all 20 User Personas and add them to `GRP-LIC-M365-E5`.
+- [ ] Assign Global Administrator role to `admin-global-emergency` and Intune Administrator to `admin-intune`.
+- [ ] Run Hyper-V PowerShell script to create `MD102-VM1-Adele`, `MD102-VM2-Alex`, and `MD102-VM3-Megan` with vTPM 2.0.
+
+### Automated Entra ID Setup Script (Microsoft Graph PowerShell):
+```powershell
+# Connect to Microsoft Graph with admin permissions
+Connect-MgGraph -Scopes "Group.ReadWrite.All", "User.ReadWrite.All", "Directory.ReadWrite.All", "RoleManagement.ReadWrite.Directory"
+
+$TenantDomain = "<tenant>.onmicrosoft.com"
+$InitialPassword = "ContosoLabP@ssw0rd2026!"
+$PasswordProfile = @{ Password = $InitialPassword; ForceChangePasswordNextSignIn = $false }
+
+# 1. Create Core Security Groups
+$Groups = @(
+    "GRP-LIC-M365-E5", "GRP-USR-IT", "GRP-USR-FINANCE", "GRP-USR-HR", "GRP-USR-SALES",
+    "GRP-USR-FIELD", "GRP-USR-EXCLUDE-CA", "GRP-DEV-WIN-CORPORATE", "GRP-DEV-WIN-AUTOPILOT-V2",
+    "GRP-DEV-WIN-PILOT", "GRP-DEV-WIN-PRODUCTION", "GRP-DEV-WIN-SHARED"
+)
+
+$GroupObjects = @{}
+foreach ($GrpName in $Groups) {
+    $Existing = Get-MgGroup -Filter "displayName eq '$GrpName'"
+    if (-not $Existing) {
+        $GroupObjects[$GrpName] = New-MgGroup -DisplayName $GrpName -MailEnabled:$false -MailNickname $GrpName.Replace("-","") -SecurityEnabled:$true
+        Write-Host "Created Security Group: $GrpName" -ForegroundColor Green
+    } else {
+        $GroupObjects[$GrpName] = $Existing
+    }
+}
+
+# 2. Define the 20 Personas
+$Personas = @(
+    @{ DisplayName = "Global Emergency BreakGlass"; UPN = "admin-global-emergency@$TenantDomain"; Nick = "admin-emergency"; Department = "IT"; Role = "Global Administrator" },
+    @{ DisplayName = "Intune Principal Architect"; UPN = "admin-intune@$TenantDomain"; Nick = "admin-intune"; Department = "IT"; Role = "Intune Administrator" },
+    @{ DisplayName = "Security Operations Lead"; UPN = "admin-security@$TenantDomain"; Nick = "admin-security"; Department = "IT"; Role = "Security Administrator" },
+    @{ DisplayName = "Adele Vance"; UPN = "adele.vance@$TenantDomain"; Nick = "adelev"; Department = "IT"; Role = "" },
+    @{ DisplayName = "Alex Wilber"; UPN = "alex.wilber@$TenantDomain"; Nick = "alexw"; Department = "Finance"; Role = "" },
+    @{ DisplayName = "Megan Bowen"; UPN = "megan.bowen@$TenantDomain"; Nick = "meganb"; Department = "HR"; Role = "" },
+    @{ DisplayName = "Joni Sherman"; UPN = "joni.sherman@$TenantDomain"; Nick = "jonis"; Department = "Sales"; Role = "" },
+    @{ DisplayName = "Diego Siciliani"; UPN = "diego.s@$TenantDomain"; Nick = "diegos"; Department = "Field"; Role = "" },
+    @{ DisplayName = "Miriam Graham"; UPN = "miriam.g@$TenantDomain"; Nick = "miriamg"; Department = "Executive"; Role = "" },
+    @{ DisplayName = "Intune Helpdesk Operator"; UPN = "intune-operator@$TenantDomain"; Nick = "intune-operator"; Department = "IT"; Role = "" },
+    @{ DisplayName = "Security Operator"; UPN = "security-operator@$TenantDomain"; Nick = "sec-operator"; Department = "IT"; Role = "" },
+    @{ DisplayName = "Shared Kiosk Account"; UPN = "kiosk-user@$TenantDomain"; Nick = "kiosk-user"; Department = "IT"; Role = "" },
+    @{ DisplayName = "Pilot User 01"; UPN = "pilot.user01@$TenantDomain"; Nick = "pilot01"; Department = "IT"; Role = "" },
+    @{ DisplayName = "Pilot User 02"; UPN = "pilot.user02@$TenantDomain"; Nick = "pilot02"; Department = "IT"; Role = "" },
+    @{ DisplayName = "Staging User 01"; UPN = "staging.user01@$TenantDomain"; Nick = "staging01"; Department = "Staging"; Role = "" },
+    @{ DisplayName = "Staging User 02"; UPN = "staging.user02@$TenantDomain"; Nick = "staging02"; Department = "Staging"; Role = "" },
+    @{ DisplayName = "Staging User 03"; UPN = "staging.user03@$TenantDomain"; Nick = "staging03"; Department = "Staging"; Role = "" },
+    @{ DisplayName = "Staging User 04"; UPN = "staging.user04@$TenantDomain"; Nick = "staging04"; Department = "Staging"; Role = "" },
+    @{ DisplayName = "Staging User 05"; UPN = "staging.user05@$TenantDomain"; Nick = "staging05"; Department = "Staging"; Role = "" },
+    @{ DisplayName = "Staging User 06"; UPN = "staging.user06@$TenantDomain"; Nick = "staging06"; Department = "Staging"; Role = "" }
+)
+
+# 3. Create Users and Assign to Licensing Group
+$LicGroupId = $GroupObjects["GRP-LIC-M365-E5"].Id
+foreach ($p in $Personas) {
+    $User = Get-MgUser -Filter "userPrincipalName eq '$($p.UPN)'"
+    if (-not $User) {
+        $User = New-MgUser -DisplayName $p.DisplayName -UserPrincipalName $p.UPN -MailNickname $p.Nick -AccountEnabled:$true -PasswordProfile $PasswordProfile -Department $p.Department
+        Write-Host "Created User: $($p.DisplayName)" -ForegroundColor Green
+    }
+    try { New-MgGroupMember -GroupId $LicGroupId -DirectoryObjectId $User.Id -ErrorAction SilentlyContinue } catch {}
+}
+```
+
+---
+
 ## Lab 1: Hardened Tenant Setup, Branding & Emergency Break-Glass
 *MD-102 Domain: Manage Identity and Access (10–15%)*
 

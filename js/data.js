@@ -133,6 +133,184 @@ const ERROR_CODES = [
 
 const LABS_DATA = [
   {
+    id: "lab-0",
+    number: "0",
+    phaseId: "phase-1",
+    domainId: "domain-2",
+    title: "Enterprise Prerequisites, Personas, Security Groups & VM Automation",
+    duration: "30 mins",
+    difficulty: "Beginner",
+    summary: "Provision the foundational infrastructure for the entire lab: create the 20 user personas, establish Group-Based Licensing (GBL) on GRP-LIC-M365-E5, build all Entra ID static and dynamic security groups, and spin up the 3 Generation-2 UEFI Virtual Machines in Hyper-V with vTPM 2.0.",
+    keyConcepts: ["Group-Based Licensing (GBL)", "Entra ID Personas", "Dynamic Device Groups", "Hyper-V Generation 2", "Virtual TPM (vTPM 2.0)", "Android Studio AVD"],
+    checklist: [
+      { id: "t-0-1", text: "Create Licensing Security Group 'GRP-LIC-M365-E5' and assign Microsoft 365 E5 license stack." },
+      { id: "t-0-2", text: "Create Departmental Groups: GRP-USR-IT, GRP-USR-FINANCE, GRP-USR-HR, GRP-USR-SALES, GRP-USR-FIELD, GRP-USR-EXCLUDE-CA." },
+      { id: "t-0-3", text: "Create Device Groups: GRP-DEV-WIN-CORPORATE, GRP-DEV-WIN-AUTOPILOT, GRP-DEV-WIN-AUTOPILOT-V2, GRP-DEV-WIN-PILOT, GRP-DEV-WIN-PRODUCTION, GRP-DEV-BYOD." },
+      { id: "t-0-4", text: "Provision the 20 User Personas (Admins, Adele, Alex, Megan, Joni, Diego, Operators) and add all to GRP-LIC-M365-E5." },
+      { id: "t-0-5", text: "Assign Global Administrator role to admin-global-emergency, and Intune Administrator role to admin-intune." },
+      { id: "t-0-6", text: "Execute Hyper-V PowerShell script to create MD102-VM1-Adele, MD102-VM2-Alex, and MD102-VM3-Megan with vTPM 2.0." },
+      { id: "t-0-7", text: "(Optional Mobile) Configure Android Studio AVD (Pixel 7 with Android 14 API 34 with Google Play)." }
+    ],
+    steps: [
+      { step: 1, title: "Create Entra ID Groups & Enable GBL", desc: "In Microsoft Entra admin center > Groups > Create 'GRP-LIC-M365-E5'. Navigate to Identity > Billing > Licenses > Assign Microsoft 365 E5 to GRP-LIC-M365-E5." },
+      { step: 2, title: "Provision Personas & Add to Licensing Group", desc: "Create the 20 user personas or execute the automated Microsoft Graph PowerShell provisioning script. Ensure all users are members of GRP-LIC-M365-E5." },
+      { step: 3, title: "Deploy Hyper-V Virtual Machines", desc: "Open elevated PowerShell on your Hyper-V host and run the automated VM creation loop to instantiate 3 Gen-2 VMs with vTPM 2.0 and Secure Boot." }
+    ],
+    scripts: [
+      {
+        title: "Automated Hyper-V 3-VM Creation Script (Elevated PowerShell)",
+        lang: "powershell",
+        code: `# Run in Elevated PowerShell on Hyper-V Host
+$VMNames = @("MD102-VM1-Adele", "MD102-VM2-Alex", "MD102-VM3-Megan")
+
+# Clean old artifacts if re-running
+foreach ($VM in $VMNames) {
+    if (Get-VM -Name $VM -ErrorAction SilentlyContinue) {
+        Stop-VM -Name $VM -TurnOff -Force -ErrorAction SilentlyContinue
+        Remove-VM -Name $VM -Force
+    }
+    if (Test-Path "C:\\Hyper-V\\$VM.vhdx") {
+        Remove-Item "C:\\Hyper-V\\$VM.vhdx" -Force
+    }
+}
+
+# Create fresh Gen-2 VMs with vTPM 2.0 & Secure Boot
+foreach ($VM in $VMNames) {
+    New-VM -Name $VM -Generation 2 -MemoryStartupBytes 4GB -NewVHDPath "C:\\Hyper-V\\$VM.vhdx" -NewVHDSizeBytes 80GB -SwitchName "Default Switch"
+    Set-VMMemory -VMName $VM -DynamicMemoryEnabled $true -MinimumBytes 2GB -MaximumBytes 6GB
+    Set-VMProcessor -VMName $VM -Count 2
+    Set-VMFirmware -VMName $VM -EnableSecureBoot On -SecureBootTemplate "MicrosoftWindows"
+    Set-VMKeyProtector -VMName $VM -NewLocalKeyProtector
+    Enable-VMTPM -VMName $VM
+    Write-Host "Created $VM with vTPM 2.0 and Secure Boot enabled!" -ForegroundColor Green
+}`
+      },
+      {
+        title: "Automated Entra ID Groups & 20 Personas Provisioning Script (Microsoft Graph)",
+        lang: "powershell",
+        code: `# Connect to Microsoft Graph with admin permissions
+Connect-MgGraph -Scopes "Group.ReadWrite.All", "User.ReadWrite.All", "Directory.ReadWrite.All", "RoleManagement.ReadWrite.Directory"
+
+# Define Tenant Domain Variable
+$TenantDomain = "<tenant>.onmicrosoft.com"
+$InitialPassword = "ContosoLabP@ssw0rd2026!" # Standard initial lab password
+$PasswordProfile = @{ Password = $InitialPassword; ForceChangePasswordNextSignIn = $false }
+
+# 1. Create Core Security Groups
+$Groups = @(
+    "GRP-LIC-M365-E5", "GRP-USR-IT", "GRP-USR-FINANCE", "GRP-USR-HR", "GRP-USR-SALES",
+    "GRP-USR-FIELD", "GRP-USR-EXCLUDE-CA", "GRP-DEV-WIN-CORPORATE", "GRP-DEV-WIN-AUTOPILOT-V2",
+    "GRP-DEV-WIN-PILOT", "GRP-DEV-WIN-PRODUCTION", "GRP-DEV-WIN-SHARED"
+)
+
+$GroupObjects = @{}
+foreach ($GrpName in $Groups) {
+    $Existing = Get-MgGroup -Filter "displayName eq '$GrpName'"
+    if (-not $Existing) {
+        $GroupObjects[$GrpName] = New-MgGroup -DisplayName $GrpName -MailEnabled:$false -MailNickname $GrpName.Replace("-","") -SecurityEnabled:$true
+        Write-Host "Created Security Group: $GrpName" -ForegroundColor Green
+    } else {
+        $GroupObjects[$GrpName] = $Existing
+        Write-Host "Group already exists: $GrpName" -ForegroundColor Yellow
+    }
+}
+
+# 2. Define the 20 Lab Personas
+$Personas = @(
+    @{ DisplayName = "Global Emergency BreakGlass"; UPN = "admin-global-emergency@$TenantDomain"; Nick = "admin-emergency"; Department = "IT"; Role = "Global Administrator" },
+    @{ DisplayName = "Intune Principal Architect"; UPN = "admin-intune@$TenantDomain"; Nick = "admin-intune"; Department = "IT"; Role = "Intune Administrator" },
+    @{ DisplayName = "Security Operations Lead"; UPN = "admin-security@$TenantDomain"; Nick = "admin-security"; Department = "IT"; Role = "Security Administrator" },
+    @{ DisplayName = "Adele Vance"; UPN = "adele.vance@$TenantDomain"; Nick = "adelev"; Department = "IT"; Role = "" },
+    @{ DisplayName = "Alex Wilber"; UPN = "alex.wilber@$TenantDomain"; Nick = "alexw"; Department = "Finance"; Role = "" },
+    @{ DisplayName = "Megan Bowen"; UPN = "megan.bowen@$TenantDomain"; Nick = "meganb"; Department = "HR"; Role = "" },
+    @{ DisplayName = "Joni Sherman"; UPN = "joni.sherman@$TenantDomain"; Nick = "jonis"; Department = "Sales"; Role = "" },
+    @{ DisplayName = "Diego Siciliani"; UPN = "diego.s@$TenantDomain"; Nick = "diegos"; Department = "Field"; Role = "" },
+    @{ DisplayName = "Miriam Graham"; UPN = "miriam.g@$TenantDomain"; Nick = "miriamg"; Department = "Executive"; Role = "" },
+    @{ DisplayName = "Intune Helpdesk Operator"; UPN = "intune-operator@$TenantDomain"; Nick = "intune-operator"; Department = "IT"; Role = "" },
+    @{ DisplayName = "Security Operator"; UPN = "security-operator@$TenantDomain"; Nick = "sec-operator"; Department = "IT"; Role = "" },
+    @{ DisplayName = "Shared Kiosk Account"; UPN = "kiosk-user@$TenantDomain"; Nick = "kiosk-user"; Department = "IT"; Role = "" },
+    @{ DisplayName = "Pilot User 01"; UPN = "pilot.user01@$TenantDomain"; Nick = "pilot01"; Department = "IT"; Role = "" },
+    @{ DisplayName = "Pilot User 02"; UPN = "pilot.user02@$TenantDomain"; Nick = "pilot02"; Department = "IT"; Role = "" },
+    @{ DisplayName = "Staging User 01"; UPN = "staging.user01@$TenantDomain"; Nick = "staging01"; Department = "Staging"; Role = "" },
+    @{ DisplayName = "Staging User 02"; UPN = "staging.user02@$TenantDomain"; Nick = "staging02"; Department = "Staging"; Role = "" },
+    @{ DisplayName = "Staging User 03"; UPN = "staging.user03@$TenantDomain"; Nick = "staging03"; Department = "Staging"; Role = "" },
+    @{ DisplayName = "Staging User 04"; UPN = "staging.user04@$TenantDomain"; Nick = "staging04"; Department = "Staging"; Role = "" },
+    @{ DisplayName = "Staging User 05"; UPN = "staging.user05@$TenantDomain"; Nick = "staging05"; Department = "Staging"; Role = "" },
+    @{ DisplayName = "Staging User 06"; UPN = "staging.user06@$TenantDomain"; Nick = "staging06"; Department = "Staging"; Role = "" }
+)
+
+# 3. Create All Users and Add to Licensing Group
+$LicGroupId = $GroupObjects["GRP-LIC-M365-E5"].Id
+
+foreach ($p in $Personas) {
+    $User = Get-MgUser -Filter "userPrincipalName eq '$($p.UPN)'"
+    if (-not $User) {
+        $User = New-MgUser -DisplayName $p.DisplayName -UserPrincipalName $p.UPN -MailNickname $p.Nick -AccountEnabled:$true -PasswordProfile $PasswordProfile -Department $p.Department
+        Write-Host "Created User: $($p.DisplayName) ($($p.UPN))" -ForegroundColor Green
+    } else {
+        Write-Host "User already exists: $($p.UPN)" -ForegroundColor Yellow
+    }
+
+    # Add to Licensing Group GRP-LIC-M365-E5
+    try {
+        New-MgGroupMember -GroupId $LicGroupId -DirectoryObjectId $User.Id -ErrorAction SilentlyContinue
+        Write-Host "  -> Added to GRP-LIC-M365-E5" -ForegroundColor Gray
+    } catch {}
+
+    # Add to Departmental Groups
+    if ($p.Department -eq "IT" -and $GroupObjects["GRP-USR-IT"]) {
+        try { New-MgGroupMember -GroupId $GroupObjects["GRP-USR-IT"].Id -DirectoryObjectId $User.Id -ErrorAction SilentlyContinue } catch {}
+    } elseif ($p.Department -eq "Finance" -and $GroupObjects["GRP-USR-FINANCE"]) {
+        try { New-MgGroupMember -GroupId $GroupObjects["GRP-USR-FINANCE"].Id -DirectoryObjectId $User.Id -ErrorAction SilentlyContinue } catch {}
+    } elseif ($p.Department -eq "HR" -and $GroupObjects["GRP-USR-HR"]) {
+        try { New-MgGroupMember -GroupId $GroupObjects["GRP-USR-HR"].Id -DirectoryObjectId $User.Id -ErrorAction SilentlyContinue } catch {}
+    } elseif ($p.Department -eq "Sales" -and $GroupObjects["GRP-USR-SALES"]) {
+        try { New-MgGroupMember -GroupId $GroupObjects["GRP-USR-SALES"].Id -DirectoryObjectId $User.Id -ErrorAction SilentlyContinue } catch {}
+    } elseif ($p.Department -eq "Field" -and $GroupObjects["GRP-USR-FIELD"]) {
+        try { New-MgGroupMember -GroupId $GroupObjects["GRP-USR-FIELD"].Id -DirectoryObjectId $User.Id -ErrorAction SilentlyContinue } catch {}
+    }
+
+    # Assign Admin Role if applicable
+    if ($p.Role -ne "") {
+        $RoleDef = Get-MgRoleManagementDirectoryRoleDefinition -Filter "displayName eq '$($p.Role)'"
+        if ($RoleDef) {
+            try {
+                New-MgRoleManagementDirectoryRoleAssignment -DirectoryScopeId "/" -PrincipalId $User.Id -RoleDefinitionId $RoleDef.Id -ErrorAction SilentlyContinue
+                Write-Host "  -> Assigned Directory Role: $($p.Role)" -ForegroundColor Cyan
+            } catch {}
+        }
+    }
+}
+
+Write-Host "==========================================================" -ForegroundColor Green
+Write-Host " All 20 Personas & Groups Provisioned & Added to GBL! " -ForegroundColor Green
+Write-Host "==========================================================" -ForegroundColor Green`
+      }
+    ],
+    troubleshooting: [
+      {
+        scenario: "Users in GRP-LIC-M365-E5 report 'License assignment error / SKU conflict'.",
+        rootCause: "A user account has a legacy direct license assignment that conflicts with the group-based licensing policy.",
+        diagnosticCommand: "In Entra admin center > Users > Select user > Licenses > Check Assignment path (Direct vs Inherited).",
+        resolution: "Remove the direct license assignment from the user. GBL will automatically take over within 60 seconds."
+      }
+    ],
+    quiz: [
+      {
+        question: "Why is Group-Based Licensing (GBL) strictly enforced in this enterprise Intune blueprint rather than direct user license assignment?",
+        options: [
+          "GBL prevents configuration drift, automatically provisions all required Intune/Defender sub-SKUs to new users, and guarantees zero license leaks upon offboarding.",
+          "GBL allows unassigned users to bypass Entra ID password complexity policies.",
+          "GBL is required to enable TPM 2.0 on Hyper-V virtual machines.",
+          "GBL automatically creates on-premises Active Directory computer objects."
+        ],
+        correctIndex: 0,
+        rationale: "Group-Based Licensing eliminates human error and drift by ensuring that every persona added to GRP-LIC-M365-E5 consistently and automatically receives Intune, Entra ID P2, Defender for Endpoint P2, and Windows Enterprise licensing.",
+        examTip: "Exam MD-102: Always use Group-Based Licensing (GBL) in Microsoft Entra ID for scalable and drift-free license management."
+      }
+    ]
+  },
+  {
     id: "lab-1",
     number: "1",
     phaseId: "phase-1",
