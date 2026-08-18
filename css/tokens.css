@@ -1,0 +1,158 @@
+/*
+ * Design tokens.
+ *
+ * Light is the base declaration; dark overrides only the values. Every colour in
+ * the app resolves through a variable here, which is what makes the theme toggle
+ * a one-attribute change instead of an edit to three hundred class attributes.
+ *
+ * Contrast targets: body text >= 12:1, muted text >= 7:1, borders visible but
+ * never competing with text. Neither theme uses pure black or pure white — #000
+ * on #fff haloes and #fff on #000 blooms, and both are tiring over a 45-minute lab.
+ */
+
+:root {
+  color-scheme: light;
+
+  --bg: #fbfbfa;
+  --surface: #ffffff;
+  --surface-2: #f4f4f2;
+  --surface-3: #ebebe8;
+
+  --text: #1b1f24;
+  --text-muted: #5a6470;
+  --text-faint: #78828e;
+
+  --border: #e2e2df;
+  --border-strong: #cfcfcb;
+
+  --accent: #0b5cad;
+  --accent-hover: #094a8c;
+  --accent-fg: #ffffff;
+  --accent-soft: #e8f1fb;
+  --accent-border: #b6d3f0;
+
+  --note: #0b5cad;
+  --important: #6b3fa0;
+  --tip: #0f7b4f;
+  --warning: #8a5a00;
+  --caution: #a3232b;
+
+  --ok: #0f7b4f;
+  --ok-soft: #e6f4ec;
+  --gap: #a3232b;
+  --gap-soft: #fbeaea;
+
+  --code-bg: #f6f6f4;
+  --code-fg: #1b1f24;
+  --code-border: #e2e2df;
+  --code-block-bg: #1c2027;
+  --code-block-fg: #e4e7ea;
+
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 1px 3px rgb(0 0 0 / 0.04);
+  --shadow-lg: 0 4px 16px rgb(0 0 0 / 0.08);
+
+  --font-sans: ui-sans-serif, "Segoe UI Variable Text", "Segoe UI", system-ui,
+    -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-display: ui-sans-serif, "Segoe UI Variable Display", "Segoe UI", system-ui,
+    -apple-system, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", "Cascadia Code", Consolas, "SF Mono",
+    "Liberation Mono", monospace;
+
+  --measure: 68ch;
+  --measure-steps: 76ch;
+  --measure-wide: 100ch;
+
+  --header-h: 3.5rem;
+  --scroll-offset: 5rem;
+
+  --radius: 8px;
+  --radius-lg: 12px;
+}
+
+/* Follow the operating system until the reader makes an explicit choice. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --bg: #16181c;
+    --surface: #1c1f24;
+    --surface-2: #22262c;
+    --surface-3: #2a2f36;
+
+    --text: #e6e6e3;
+    --text-muted: #9aa3ad;
+    --text-faint: #7d8792;
+
+    --border: #2c3138;
+    --border-strong: #3b424b;
+
+    --accent: #5aa9f0;
+    --accent-hover: #7dbcf5;
+    --accent-fg: #0d1014;
+    --accent-soft: #17293a;
+    --accent-border: #2d4a66;
+
+    --note: #5aa9f0;
+    --important: #b391dd;
+    --tip: #5ec98f;
+    --warning: #e0b25e;
+    --caution: #f08a90;
+
+    --ok: #5ec98f;
+    --ok-soft: #16281f;
+    --gap: #f08a90;
+    --gap-soft: #2b1a1c;
+
+    --code-bg: #101317;
+    --code-fg: #dfe3e6;
+    --code-border: #2c3138;
+    --code-block-bg: #101317;
+    --code-block-fg: #dfe3e6;
+
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+    --shadow-lg: 0 4px 16px rgb(0 0 0 / 0.5);
+  }
+}
+
+/* An explicit choice always wins, in both directions. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #16181c;
+  --surface: #1c1f24;
+  --surface-2: #22262c;
+  --surface-3: #2a2f36;
+
+  --text: #e6e6e3;
+  --text-muted: #9aa3ad;
+  --text-faint: #7d8792;
+
+  --border: #2c3138;
+  --border-strong: #3b424b;
+
+  --accent: #5aa9f0;
+  --accent-hover: #7dbcf5;
+  --accent-fg: #0d1014;
+  --accent-soft: #17293a;
+  --accent-border: #2d4a66;
+
+  --note: #5aa9f0;
+  --important: #b391dd;
+  --tip: #5ec98f;
+  --warning: #e0b25e;
+  --caution: #f08a90;
+
+  --ok: #5ec98f;
+  --ok-soft: #16281f;
+  --gap: #f08a90;
+  --gap-soft: #2b1a1c;
+
+  --code-bg: #101317;
+  --code-fg: #dfe3e6;
+  --code-border: #2c3138;
+  --code-block-bg: #101317;
+  --code-block-fg: #dfe3e6;
+
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 4px 16px rgb(0 0 0 / 0.5);
+}
