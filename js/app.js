@@ -224,11 +224,13 @@ function renderStatsBanner() {
   const progressBar = document.getElementById("overallProgressBar");
   const taskCount = document.getElementById("overallTaskCount");
   const quizCount = document.getElementById("overallQuizCount");
+  const labCount = document.getElementById("overallLabCount");
 
   if (progressText) progressText.innerText = `${stats.percentage}%`;
   if (progressBar) progressBar.style.width = `${stats.percentage}%`;
   if (taskCount) taskCount.innerText = `${stats.completedTasks}/${stats.totalTasks} Tasks`;
   if (quizCount) quizCount.innerText = `${stats.correctAnswers}/${stats.totalQuestions} Passed`;
+  if (labCount) labCount.innerText = `${LABS_DATA.length} Labs`;
 }
 
 function renderDomainPills() {
@@ -498,22 +500,36 @@ function renderChecklistTab(lab) {
 
 function renderStepsTab(lab) {
   if (!lab.steps || lab.steps.length === 0) {
-    return `<p class="text-xs text-slate-400">No step breakdown specified. Refer to the checklist tab.</p>`;
+    return `<p class="text-sm text-slate-400">No step breakdown specified. Refer to the checklist tab.</p>`;
   }
 
   return `
     <div class="space-y-4">
-      <h3 class="text-sm font-bold text-white mb-2">Step-by-Step Production Execution</h3>
-      <div class="space-y-3">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+        <div>
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <i data-lucide="list-ordered" class="w-4 h-4 text-sky-400"></i>
+            Official MD-102 Step-by-Step Hands-On Exercises
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5">Follow these exact portal clicks, setting paths, and configuration parameters in your tenant.</p>
+        </div>
+        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-800 text-sky-300 border border-slate-700/60">
+          ${lab.steps.length} Exercises
+        </span>
+      </div>
+
+      <div class="space-y-3.5">
         ${lab.steps.map(s => `
-          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="w-6 h-6 rounded-full bg-sky-500/20 text-sky-400 font-mono font-bold text-xs flex items-center justify-center border border-sky-500/30">
+          <div class="p-4.5 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition shadow-sm">
+            <div class="flex items-center gap-3 mb-2.5">
+              <span class="w-6 h-6 rounded-lg bg-sky-500/20 text-sky-400 font-mono font-bold text-xs flex items-center justify-center border border-sky-500/30 shrink-0">
                 ${s.step}
               </span>
-              <h4 class="text-xs font-bold text-white">${formatTenant(s.title)}</h4>
+              <h4 class="text-sm font-bold text-white tracking-tight">${formatTenant(s.title)}</h4>
             </div>
-            <p class="text-xs text-slate-300 leading-relaxed pl-8">${formatTenant(s.desc)}</p>
+            <div class="step-content text-[13px] text-slate-300 leading-relaxed pl-9 space-y-1.5">
+              ${formatTenant(s.desc)}
+            </div>
           </div>
         `).join("")}
       </div>
