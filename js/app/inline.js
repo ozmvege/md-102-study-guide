@@ -106,11 +106,15 @@
     const s = String(src);
     const at = where ? where + ": " : "";
   
-    const withoutTenant = s.replace(/<tenant>/g, "");
-    if (withoutTenant.includes("<")) {
-      const snippet = withoutTenant.slice(Math.max(0, withoutTenant.indexOf("<") - 30), withoutTenant.indexOf("<") + 40);
+    // Inside a code span, "<" is code content: it is escaped on the HTML side and
+    // meaningless to Markdown, so placeholders like `<name>` are legitimate. The
+    // rule that matters is no raw "<" in *prose*, which is where HTML would leak in.
+    const prose = s.replace(/`[^`\n]*`/g, "").replace(/<tenant>/g, "");
+    if (prose.includes("<")) {
+      const i = prose.indexOf("<");
+      const snippet = prose.slice(Math.max(0, i - 30), i + 40);
       errors.push(
-        at + "raw HTML or stray '<' is not allowed in authored text (near: ..." + snippet + "...)"
+        at + "raw HTML or stray '<' is not allowed in prose — wrap placeholders in backticks (near: ..." + snippet + "...)"
       );
     }
     if (/&nbsp;|&amp;nbsp;|<br\s*\/?>/i.test(s)) {

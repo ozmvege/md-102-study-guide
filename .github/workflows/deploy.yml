@@ -1,10 +1,10 @@
-name: Deploy Interactive MD-102 Study Guide to GitHub Pages
+name: Build check and deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
-      - master
+    branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -13,45 +13,53 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: false
 
 jobs:
+  # Validates content and proves the committed artifacts match content/.
+  # This is what structurally prevents the drift the previous version suffered
+  # from, where the site, LAB_GUIDE.md and README.md disagreed about how many
+  # labs existed.
   validate:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Validate JSON & Script Data
-        run: |
-          echo "Validating HTML and JavaScript file integrity..."
-          test -f index.html || (echo "index.html is missing!" && exit 1)
-          test -f js/data.js || (echo "js/data.js is missing!" && exit 1)
-          test -f js/app.js || (echo "js/app.js is missing!" && exit 1)
-          test -f css/styles.css || (echo "css/styles.css is missing!" && exit 1)
-          echo "All core assets verified successfully."
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      # Fails on: an unknown exam skill id, a lab with no primary objective
+      # mapping, a checkpoint with no way to verify it, a prerequisite pointing
+      # at a later lab, an unknown error code, raw HTML in authored text, a
+      # licensed-persona count over the 20-seat budget, or a syntax error in the
+      # hand-written browser scripts.
+      - name: Validate content
+        run: node tools/build.mjs --validate
+
+      # Rebuilds every generated artifact in memory and fails if the committed
+      # copy differs. A stale bundle or LAB_GUIDE.md is a red build, not a
+      # surprise six months later.
+      - name: Check generated artifacts are up to date
+        run: node tools/build.mjs --check
 
   deploy:
+    needs: validate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: validate
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
+      - uses: actions/configure-pages@v5
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      # The site is served exactly as committed — no build, no bundler.
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
 
-      - name: Deploy to GitHub Pages
-        id: deployment
+      - id: deployment
         uses: actions/deploy-pages@v4
