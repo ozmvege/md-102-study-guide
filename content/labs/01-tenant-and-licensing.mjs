@@ -106,34 +106,42 @@ export default {
                   headers: ["Capability", "Comes from", "What it unlocks in this course"],
                   rows: [
                     ["Microsoft Intune Plan 1", "M365 E5", "Enrollment, configuration, compliance, apps, endpoint security, update rings"],
+                    ["Microsoft Intune Plan 2", "M365 E5 (since July 2026)", "Tunnel for MAM, firmware over-the-air updates, specialty and shared device management"],
+                    ["Remote Help", "M365 E5 (since July 2026)", "Audited remote assistance with verified identity on both sides"],
+                    ["Advanced Analytics", "M365 E5 (since July 2026)", "Anomaly detection, device timeline, multi-device query"],
+                    ["Endpoint Privilege Management", "M365 E5 (since July 2026)", "Application-scoped elevation for standard users"],
+                    ["Microsoft Cloud PKI", "M365 E5 (since July 2026)", "A hosted certification authority — no on-premises PKI, NDES or connector"],
+                    ["Enterprise App Management", "M365 E5 (since July 2026)", "Prepackaged Win32 apps with supplied detection rules"],
                     ["Microsoft Entra ID P2", "M365 E5", "Conditional Access, dynamic groups, PIM, administrative units"],
                     ["Defender for Endpoint Plan 2", "M365 E5", "EDR, device risk feeding compliance, incident triage"],
                     ["Windows 11 Enterprise E5", "M365 E5", "Subscription activation from Pro to Enterprise"],
                     ["Windows Autopatch", "Windows Enterprise E3 or E5", "Autopatch groups and release management"]
                   ]
+                },
+                {
+                  kind: "callout",
+                  variant: "important",
+                  text: "The six capabilities marked *since July 2026* used to be paid add-ons, together costing more than the Intune Suite. Microsoft moved them into Microsoft 365 E3 and E5 in a packaging change that completed on **1 August 2026**, with no customer action required. Almost every study guide, blog post and exam-prep video written before then will tell you these need the Intune Suite. They do not, and you will use all six in this course."
                 }
               ]
             },
             {
-              text: "Not included — these are examined, so this course covers them as walkthroughs rather than pretending you can run them:",
+              text: "Not included — these are still examined, so this course covers them as walkthroughs rather than pretending you can run them:",
               parts: [
                 {
                   kind: "table",
-                  headers: ["Capability", "Needs", "How this course handles it"],
+                  headers: ["Capability", "Needs", "Why it is out of reach", "How this course handles it"],
                   rows: [
-                    ["Endpoint Privilege Management", "Intune Suite", "Walkthrough with exact configuration paths"],
-                    ["Remote Help, Advanced Analytics", "Intune Plan 2 or Suite", "Walkthrough"],
-                    ["Microsoft Cloud PKI, Enterprise App Catalog", "Intune Suite", "Walkthrough"],
-                    ["Microsoft Tunnel for MAM", "Intune Plan 2 or Suite", "Walkthrough"],
-                    ["Windows 365 Cloud PC", "Windows 365 subscription", "Walkthrough"],
-                    ["Security Copilot agents in Intune", "Security Compute Units", "Walkthrough"],
-                    ["Apple Business Manager, VPP", "Apple organisation and hardware", "Walkthrough"]
+                    ["Windows 365 Cloud PC", "Windows 365 subscription", "A separate per-user subscription; the July 2026 Intune packaging change did not touch it", "Walkthrough — lab 21"],
+                    ["Security Copilot agents in Intune", "Security Compute Units", "Billed hourly by provisioned compute, so it cannot be trialled from inside a tenant", "Walkthrough — lab 57"],
+                    ["Apple Business Manager, VPP", "Apple organisation and hardware", "Needs a D-U-N-S number and hardware bought through Apple or a reseller", "Walkthrough — labs 14, 26, 49"],
+                    ["Microsoft Tunnel Gateway", "A Linux host you run", "The licence is included; the gateway is infrastructure you must host yourself", "Configuration path only — lab 59"]
                   ]
                 },
                 {
                   kind: "callout",
-                  variant: "tip",
-                  text: "The Intune advanced capabilities each have a free 90-day trial for up to 250 users, started from **Tenant administration** in the Intune admin center. You do not need it for this course and you should not start it now — the clock runs whether you use it or not, and you only get one per capability per tenant. Module 11 tells you exactly when it is worth spending."
+                  variant: "note",
+                  text: "Only four things in this whole course are out of reach, and only two of them are licensing. Everything else — including every capability that used to require the Intune Suite — you will configure and use for real. That is a recent change and a genuinely large one."
                 }
               ]
             }
@@ -141,7 +149,7 @@ export default {
           result: {
             text: "You can state which examined capabilities you can practise and which you will study without a tenant.",
             verify: [
-              { text: "You can name at least three examined capabilities that Microsoft 365 E5 does not include." }
+              { text: "You can name the two examined capabilities that Microsoft 365 E5 genuinely does not license." }
             ]
           }
         }

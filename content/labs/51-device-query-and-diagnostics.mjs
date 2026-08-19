@@ -53,7 +53,7 @@ export default {
                 {
                   kind: "callout",
                   variant: "important",
-                  text: "**Single-device query** is included with Intune Plan 1, which Microsoft 365 E5 provides — so this exercise works. **Multi-device query**, which runs the same KQL across many devices at once, is part of Intune Advanced Analytics and needs Plan 2 or the Suite. The exam objective says *run a device query by using KQL* without distinguishing them; know that the multi-device version is licensed separately."
+                  text: "**Single-device query** is included with Intune Plan 1. **Multi-device query**, which runs the same KQL across many devices at once, belongs to Intune Advanced Analytics — which Microsoft 365 E5 has included since July 2026, so you have both. This lab teaches the single-device form because it is where the query language is easiest to learn; lab 59 runs the same queries across the estate."
                 }
               ]
             },
@@ -214,13 +214,13 @@ export default {
     {
       symptom: "Device query returns no results or the Query option is unavailable.",
       rootCause:
-        "The device is offline, is running an unsupported operating system version, or the query targets multiple devices — which requires Intune Advanced Analytics rather than Plan 1.",
+        "The device is offline, is running an unsupported operating system version, or Endpoint Analytics data collection does not target it — multi-device query only reaches devices that are in scope for collection.",
       diagnostic: {
         lang: "text",
         code: "Devices > All devices > open the device > check Last check-in\nConfirm the OS version meets the device query minimum."
       },
       resolution:
-        "Device query needs the device online because it executes live. For multi-device query, confirm the tenant holds Intune Plan 2 or the Intune Suite — on Microsoft 365 E5 alone only single-device query is available."
+        "Device query needs the device online because it executes live — there is no cached answer to fall back on. For multi-device query, confirm the devices are in scope for Endpoint Analytics data collection, which lab 54 configures."
     }
   ],
 
@@ -238,7 +238,7 @@ export default {
       rationale:
         "Device query executes on the device on demand and returns current state. Discovered apps is cached inventory refreshed on a schedule, and a compliance script would take a full evaluation cycle to report.",
       examTip:
-        "Live versus cached is the distinction being tested. Note also that querying many devices at once requires Advanced Analytics, while single-device query is included with Plan 1.",
+        "Live versus cached is the distinction being tested. Note also that querying many devices at once belongs to Advanced Analytics, while single-device query is in Plan 1 — Microsoft 365 E5 has included both since July 2026.",
       skills: ["g2.t4.s6"]
     },
     {

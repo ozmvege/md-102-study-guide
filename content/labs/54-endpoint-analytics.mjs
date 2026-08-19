@@ -189,7 +189,7 @@ export default {
               parts: [
                 {
                   kind: "table",
-                  headers: ["Capability", "Plan 1 (your licence)", "Advanced Analytics"],
+                  headers: ["Capability", "Intune Plan 1", "Advanced Analytics"],
                   rows: [
                     ["Endpoint analytics score and components", "Yes", "Yes"],
                     ["Startup, reliability and resource performance", "Yes", "Yes"],
@@ -203,7 +203,7 @@ export default {
                 {
                   kind: "callout",
                   variant: "important",
-                  text: "Everything in this lab works on Microsoft 365 E5. **Advanced Analytics** — anomaly detection, device timeline, multi-device query — is Intune Plan 2 or the Suite, and is covered as a walkthrough in lab 59. The exam objective for Advanced Analytics names anomaly detection, proactive insights and risk-based recommendations specifically."
+                  text: "The exam still draws this line between Plan 1 and Advanced Analytics, so learn the boundary — but note that **Microsoft 365 E5 has included Advanced Analytics since July 2026**, so you hold both sides of this table. Lab 59 uses anomaly detection, the device timeline and multi-device query for real. The exam objective for Advanced Analytics names anomaly detection, proactive insights and risk-based recommendations specifically."
                 }
               ]
             }
@@ -262,9 +262,9 @@ export default {
       ],
       correctIndex: 0,
       rationale:
-        "Anomaly detection, the per-device timeline and multi-device query are Advanced Analytics capabilities requiring Intune Plan 2 or the Suite. The core score, startup performance, application reliability and proactive remediations are included with Plan 1.",
+        "Anomaly detection, the per-device timeline and multi-device query belong to Advanced Analytics. The core score, startup performance, application reliability and proactive remediations are Plan 1 capabilities.",
       examTip:
-        "The exam objective for Advanced Analytics names anomaly detection, proactive insights and risk-based policy recommendations. Those three phrases are the tell.",
+        "The exam objective for Advanced Analytics names anomaly detection, proactive insights and risk-based policy recommendations — those three phrases are the tell. The plan boundary is still examined even though Microsoft 365 E5 now grants both sides of it.",
       skills: ["g5.t2.s2"]
     }
   ]

@@ -7,8 +7,8 @@ A hands-on lab curriculum for **Exam MD-102: Managing and Securing Microsoft 365
 | --- | --- |
 | Exam | **MD-102** — Managing and Securing Microsoft 365 Endpoints by using Intune |
 | Skills outline | 2026-07-24 ([source](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/md-102)) |
-| Labs | 60 across 13 modules (52 hands-on, 8 walkthrough) |
-| Lab time | ~47 hours |
+| Labs | 60 across 13 modules (54 hands-on, 6 walkthrough) |
+| Lab time | ~48 hours |
 | Objective coverage | 83 of 83 skill bullets (100%) |
 <!-- END:SUMMARY -->
 
@@ -20,13 +20,15 @@ Labs are written in the shape Microsoft uses for its own lab guides — lab scen
 
 ### Honest access badges
 
-The exam covers capabilities that Microsoft 365 E5 does not include. Rather than pretend otherwise, every lab carries a badge:
+A few examined capabilities are still out of reach on a Microsoft 365 E5 trial. Rather than pretend otherwise, every lab carries a badge:
 
 | Badge | Meaning |
 | --- | --- |
 | **Hands-on** | You can complete it with Microsoft 365 E5 and the lab hardware. |
-| **Walkthrough (licence)** | Needs Intune Plan 2, the Intune Suite, Windows 365 or Security Copilot. Exact configuration paths, decision criteria and exam drills, plus how to start the free 90-day add-on trial if you want to run it for real. |
+| **Walkthrough (licence)** | Needs Windows 365 (a separate subscription) or Security Copilot (billed by compute unit). Exact configuration paths, decision criteria and exam drills instead. |
 | **Walkthrough (device)** | Needs Apple hardware or an Apple Business Manager organisation. |
+
+> **Licensing note.** Microsoft moved a large set of advanced Intune capabilities into Microsoft 365 E3 and E5 in a packaging change completed on **1 August 2026**. E5 now includes Intune Plan 2, Remote Help, Advanced Analytics, Endpoint Privilege Management, Microsoft Cloud PKI and Enterprise App Management — effectively the whole Intune Suite feature set. Study material written before then will tell you these are paid add-ons. They are not, and this curriculum uses all six. See [`content/meta/licenses.mjs`](content/meta/licenses.mjs) for the per-capability sources.
 
 ## Getting started
 
@@ -111,7 +113,7 @@ Validation fails on an unknown skill id, a lab with no primary objective mapping
 | 24 | Assignment filters and enrollment time grouping | Configuration | Hands-on | 40 min |
 | 25 | Android configuration profiles | Configuration | Hands-on | 40 min |
 | 26 | Apple and specialty device configuration profiles | Configuration | Walkthrough (device) | 35 min |
-| 27 | Certificate profiles, Wi-Fi and VPN | Configuration | Hands-on | 45 min |
+| 27 | Cloud PKI, certificate profiles, Wi-Fi and VPN | Configuration | Hands-on | 60 min |
 | 28 | Windows Hello for Business, Windows LAPS and local group membership | Configuration | Hands-on | 55 min |
 | 29 | Compliance policies and actions for non-compliance | Compliance and CA | Hands-on | 50 min |
 | 30 | Extend compliance with PowerShell and JSON | Compliance and CA | Hands-on | 45 min |
@@ -142,8 +144,8 @@ Validation fails on an unknown skill id, a lab with no primary objective mapping
 | 55 | Intune reporting, workbooks and data export | Automate and monitor | Hands-on | 35 min |
 | 56 | Tenant health, service communications and alert rules | Automate and monitor | Hands-on | 35 min |
 | 57 | Security Copilot agents in Intune | Automate and monitor | Walkthrough (licence) | 30 min |
-| 58 | Endpoint Privilege Management | Intune Suite | Walkthrough (licence) | 40 min |
-| 59 | Remote Help, Enterprise App Catalog, Cloud PKI, Tunnel for MAM and Advanced Analytics | Intune Suite | Walkthrough (licence) | 45 min |
+| 58 | Endpoint Privilege Management | Advanced capabilities | Hands-on | 55 min |
+| 59 | Remote Help, Enterprise App Catalog, Advanced Analytics and Tunnel for MAM | Advanced capabilities | Hands-on | 55 min |
 | 60 | Capstone: rebuild the estate, then close your gaps | Capstone | Hands-on | 180 min |
 <!-- END:CURRICULUM -->
 

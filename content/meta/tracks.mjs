@@ -25,7 +25,7 @@ export default [
       { day: 9, modules: ["m8"], focus: "Updates, Autopatch and Hotpatch" },
       { day: 10, modules: ["m9"], focus: "Remote actions, device query and diagnostics" },
       { day: 11, modules: ["m10"], focus: "Automation, Endpoint Analytics and reporting" },
-      { day: 12, modules: ["m11"], focus: "Intune Suite walkthroughs and decision criteria" },
+      { day: 12, modules: ["m11"], focus: "Privilege management, Remote Help, app catalog and advanced analytics" },
       { day: 13, modules: ["m12"], focus: "Capstone rebuild with injected faults" },
       { day: 14, modules: [], focus: "Coverage review, weighted practice, close the gaps you found" }
     ]

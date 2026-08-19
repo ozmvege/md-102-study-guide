@@ -111,13 +111,13 @@ export default {
                     ["Configured in", "A device restrictions profile", "A dedicated FOTA policy, per vendor"],
                     ["Vendor support required", "No", "**Yes** — the manufacturer must participate"],
                     ["Example", "Any fully managed Android device", "Zebra LifeGuard for Zebra handhelds"],
-                    ["Licence", "Included with Intune Plan 1", "Intune Plan 2 or the Intune Suite"]
+                    ["Licence", "Intune Plan 1", "Intune Plan 2 — included with Microsoft 365 E5 since July 2026"]
                   ]
                 },
                 {
                   kind: "callout",
                   variant: "important",
-                  text: "FOTA is vendor-specific and, for Zebra devices, is an Intune Suite capability — so it is not available on Microsoft 365 E5 alone. Know that it exists, that it needs manufacturer participation, and that it is how ruggedised device estates get firmware without physically handling each unit. The exam asks about the concept, not the click path."
+                  text: "FOTA is part of Intune Plan 2, which Microsoft 365 E5 has included since July 2026 — so the licence is not the obstacle. The **manufacturer** is: FOTA only works where the vendor participates, Zebra LifeGuard being the common example, and you need that vendor's hardware to see it work. Know that it exists, that it depends on manufacturer participation rather than licensing, and that it is how ruggedised estates get firmware without physically handling each unit."
                 }
               ]
             }
