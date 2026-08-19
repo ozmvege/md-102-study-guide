@@ -1,123 +1,153 @@
 export default {
   id: "intune-suite-capabilities",
   moduleId: "m11",
-  title: "Remote Help, Enterprise App Catalog, Cloud PKI, Tunnel for MAM and Advanced Analytics",
-  access: "walkthrough-license",
-  accessReason:
-    "All five capabilities require Microsoft Intune Plan 2 or the Intune Suite, neither of which is part of Microsoft 365 E5. Each has a free 90-day trial for up to 250 users, started from Tenant administration > Intune add-ons — lab 58 covers whether starting it is worth your one attempt. This lab gives you the configuration surfaces, the prerequisites and the decision criteria the exam asks for.",
+  title: "Remote Help, Enterprise App Catalog, Advanced Analytics and Tunnel for MAM",
+  access: "hands-on",
   difficulty: "intermediate",
-  estimatedMinutes: 45,
+  estimatedMinutes: 55,
 
   scenario:
-    "The remaining Intune Suite objectives cover five capabilities that each solve a problem you have already met in this course: helping a user you cannot see, packaging applications you would rather not package, running a certification authority you would rather not run, giving unmanaged devices access to internal services, and finding the device that is quietly degrading. Each is examined and none is included in your licence.",
+    "Four capabilities that each remove friction you have already met in this course: helping a user you cannot see, packaging applications you would rather not package, finding the device that is quietly degrading, and giving unmanaged devices access to internal services. All four arrived in Microsoft 365 E5 with the July 2026 packaging change, so three of them you will configure and use here. The fourth, Tunnel for MAM, is licensed but needs a Linux gateway you would have to host — so it stays a walkthrough within an otherwise hands-on lab.",
 
   objectives: [
-    "Configure Microsoft Intune Remote Help and its security model",
-    "Describe the Enterprise App Catalog and what it replaces",
-    "Explain Microsoft Cloud PKI and how it differs from SCEP with an on-premises CA",
-    "Describe Microsoft Tunnel for Mobile Application Management",
-    "State what Intune Advanced Analytics adds beyond Endpoint Analytics"
+    "Configure and use Microsoft Intune Remote Help",
+    "Deploy an application from the Enterprise App Catalog and compare it with hand packaging",
+    "Use Advanced Analytics: multi-device query, anomaly detection and the device timeline",
+    "Describe Microsoft Tunnel for Mobile Application Management and what hosting it requires"
   ],
 
-  keyConcepts: ["Remote Help", "Enterprise App Catalog", "Cloud PKI", "Tunnel for MAM", "Advanced Analytics", "Anomaly detection", "Device timeline"],
+  keyConcepts: ["Remote Help", "Enterprise App Catalog", "Advanced Analytics", "Anomaly detection", "Device timeline", "Multi-device query", "Tunnel for MAM"],
 
   skills: [
     { id: "g2.t3.s2", depth: "primary" },
     { id: "g2.t3.s3", depth: "primary" },
-    { id: "g2.t3.s4", depth: "primary" },
     { id: "g2.t3.s5", depth: "primary" },
     { id: "g2.t3.s6", depth: "primary" }
   ],
 
   requires: {
-    licenses: ["M365-E5", "INTUNE-SUITE"],
+    licenses: ["M365-E5", "INTUNE-REMOTE-HELP", "INTUNE-ENTERPRISE-APP-MGMT", "INTUNE-ADV-ANALYTICS", "INTUNE-P2"],
     roles: ["Intune Administrator"],
-    platforms: [{ kind: "portal", id: "Microsoft Intune admin center" }],
-    personas: ["helpdesk.operator", "adele.vance"],
-    labs: ["endpoint-privilege-management", "certificates-and-network", "endpoint-analytics"]
+    platforms: [
+      { kind: "portal", id: "Microsoft Intune admin center" },
+      { kind: "vm", id: "vm1-adele", os: "Windows 11" }
+    ],
+    personas: ["adele.vance", "helpdesk.operator"],
+    labs: ["endpoint-privilege-management", "win32-packaging", "endpoint-analytics"]
   },
 
   exercises: [
     {
       id: "e1",
-      title: "Remote Help and the Enterprise App Catalog",
+      title: "Remote Help",
       estimatedMinutes: 20,
       tasks: [
         {
           id: "t1",
-          title: "Remote Help",
+          title: "Enable Remote Help and deploy the app",
           checkpoint: true,
           steps: [
             {
-              text: "Remote Help is a secure screen-sharing and remote-control tool built into Intune. Its path is **Tenant administration** > **Remote Help**.",
+              text: "In the **Microsoft Intune admin center**, select **Tenant administration**, then **Remote Help**.",
               nav: ["Tenant administration", "Remote Help"]
             },
             {
-              text: "The configuration:",
+              text: "On the **Settings** tab, configure:",
               parts: [
                 {
                   kind: "inputs",
                   rows: [
                     { label: "Enable Remote Help", value: "Yes" },
-                    { label: "Allow Remote Help to unenrolled devices", value: "Your choice", note: "Useful for helping a user before enrollment succeeds — which is exactly when they most need help." },
-                    { label: "Disable chat", value: "No" },
-                    { label: "Application deployment", value: "Deploy the Remote Help app to devices as a Win32 app" }
+                    { label: "Allow Remote Help to unenrolled devices", value: "Yes", note: "Useful precisely when a user most needs help — before enrollment has succeeded." },
+                    { label: "Disable chat", value: "No" }
                   ]
-                },
+                }
+              ]
+            },
+            {
+              text: "Deploy the Remote Help application to devices. Select **Apps** > **All apps** > **Add** > **Windows app (Win32)**, or use the Enterprise App Catalog entry you will meet in the next exercise.",
+              parts: [
+                {
+                  kind: "callout",
+                  variant: "tip",
+                  text: "Remote Help is itself in the Enterprise App Catalog, so the quickest route is **Add** > **Enterprise App Catalog app** and search for it. That saves packaging it by hand and is a neat demonstration of why the catalogue exists."
+                }
+              ]
+            },
+            {
+              text: "Assign the app as **Required** to `GRP-DEV-WIN-CORP`."
+            },
+            {
+              text: "Confirm the permissions model, because this is what makes Remote Help enterprise-grade:",
+              parts: [
                 {
                   kind: "table",
-                  headers: ["Property", "Detail"],
+                  headers: ["Permission", "Grants"],
                   rows: [
-                    ["Trust", "Both parties see the other's verified organisation identity before the session starts"],
-                    ["Consent", "The user must accept, and must accept again to grant full control"],
-                    ["Permissions", "Governed by Intune RBAC — separate permissions for view-only, full control and elevation"],
-                    ["Audit", "Every session is logged with participants, device and duration"],
-                    ["Conditional Access", "Sessions can be gated by Conditional Access policy"]
+                    ["Remote Help app — Take full control", "Full remote control of the session"],
+                    ["Remote Help app — View screen", "View only, no input"],
+                    ["Remote Help app — Elevation", "The ability to approve a UAC prompt during the session"]
                   ]
                 },
                 {
                   kind: "callout",
-                  variant: "important",
-                  text: "The distinguishing feature against a generic remote-control tool is **verified identity on both sides**. The helper sees who they are connecting to and the user sees a verified organisational identity rather than a name anyone could type — which is the defence against the support-desk impersonation call. Combined with RBAC-governed permissions and per-session audit, that is what makes it enterprise-grade."
+                  variant: "note",
+                  text: "These are Intune RBAC permissions from lab 7, so a Help Desk Operator can be granted view-only while a senior engineer gets full control. Elevation is deliberately separate — approving a UAC prompt on someone else's device is a bigger grant than seeing their screen."
                 }
               ]
             }
           ],
           result: {
-            text: "You can describe Remote Help's configuration and security model.",
-            verify: [{ text: "You can name what distinguishes Remote Help from a generic remote-control tool." }]
+            text: "Remote Help is enabled and the application is deploying to corporate devices.",
+            verify: [
+              { text: "**Remote Help** shows as enabled under **Tenant administration**." },
+              { text: "The Remote Help app is assigned as Required." }
+            ]
           }
         },
         {
           id: "t2",
-          title: "Enterprise App Catalog",
+          title: "Run a session",
+          checkpoint: true,
           steps: [
             {
-              text: "The Enterprise App Catalog is a Microsoft-curated library of prepackaged Win32 applications, found under **Apps** > **All apps** > **Add** > **Enterprise App Catalog app**.",
+              text: "On **MD102-VM1-Adele**, sync policy and wait for the Remote Help application to install, then open it and sign in as Adele."
+            },
+            {
+              text: "From your admin machine, open Remote Help and sign in as `admin-intune@<tenant>.onmicrosoft.com`, then request a session with Adele's device.",
               parts: [
-                {
-                  kind: "table",
-                  headers: ["", "Manual Win32 packaging (lab 33)", "Enterprise App Catalog"],
-                  rows: [
-                    ["Obtain the installer", "You download it", "Microsoft hosts it"],
-                    ["Package it", "You run IntuneWinAppUtil", "Already packaged"],
-                    ["Install and uninstall commands", "You determine them", "Supplied"],
-                    ["Detection rules", "**You write them**", "**Supplied and correct**"],
-                    ["Updates", "You repackage each new version", "New versions appear in the catalogue, with supersedence"],
-                    ["Effort per application", "An hour or more", "Minutes"]
-                  ]
-                },
                 {
                   kind: "callout",
                   variant: "important",
-                  text: "The value is the detection rules. Lab 33 showed that `0x87D1041C` — a correct installation reported as failed — is the most common Win32 problem, and it comes from writing detection rules by hand. Catalogue applications arrive with rules Microsoft has already validated, which removes that entire class of failure along with the repackaging treadmill."
+                  text: "Watch what both sides are shown before the session starts. The helper sees the verified organisational identity of the person they are connecting to, and the user sees the helper's verified identity — not a name someone typed. That mutual verification is the defence against the support-desk impersonation call, and it is what distinguishes Remote Help from a generic remote-control tool."
+                }
+              ]
+            },
+            {
+              text: "Accept on Adele's side, then request full control and accept again.",
+              parts: [
+                {
+                  kind: "verify",
+                  text: "The session connects. Note that full control required a **second** explicit consent — viewing and controlling are separate grants."
+                }
+              ]
+            },
+            {
+              text: "End the session, then check the audit trail under **Tenant administration** > **Remote Help** > **Monitor**.",
+              parts: [
+                {
+                  kind: "verify",
+                  text: "The session is logged with both participants, the device and the duration."
                 }
               ]
             }
           ],
           result: {
-            text: "You can state what the Enterprise App Catalog removes from the Win32 workflow.",
-            verify: [{ text: "You can name the Win32 error class the catalogue eliminates." }]
+            text: "You have run an audited remote session with verified identity on both sides.",
+            verify: [
+              { text: "A session completed and appears in the Remote Help monitor." },
+              { text: "Full control required a separate consent from view-only." }
+            ]
           }
         }
       ]
@@ -125,73 +155,176 @@ export default {
 
     {
       id: "e2",
-      title: "Cloud PKI and Tunnel for MAM",
+      title: "Enterprise App Catalog",
       estimatedMinutes: 15,
       tasks: [
         {
           id: "t1",
-          title: "Microsoft Cloud PKI",
+          title: "Deploy a catalogue app and compare it with lab 33",
           checkpoint: true,
           steps: [
             {
-              text: "Lab 27 built certificate profiles but could not issue certificates, because SCEP and PKCS need an on-premises certification authority and the Intune Certificate Connector. Cloud PKI removes that requirement entirely.",
+              text: "Select **Apps**, **All apps**, **Add**, then app type **Enterprise App Catalog app**.",
+              nav: ["Apps", "All apps", "Add"]
+            },
+            {
+              text: "Select **Search the Enterprise App Catalog**, find a common application — 7-Zip, Notepad++ or Google Chrome are all present — and select it."
+            },
+            {
+              text: "Work through the wizard and pay attention to what you are *not* asked for:",
               parts: [
                 {
                   kind: "table",
-                  headers: ["", "SCEP with on-premises CA", "Microsoft Cloud PKI"],
+                  headers: ["Step", "Lab 33 — hand packaged", "Enterprise App Catalog"],
                   rows: [
-                    ["Certification authority", "Yours — Active Directory Certificate Services", "Hosted in the Intune service"],
-                    ["NDES server", "Required", "**Not required**"],
-                    ["Certificate Connector", "Required", "**Not required**"],
-                    ["Servers to maintain and patch", "Two or more", "**None**"],
-                    ["Root and issuing CA", "You build the hierarchy", "Created in the portal in minutes"],
-                    ["Bring your own root", "Not applicable", "Supported — issuing CA under your existing root"],
-                    ["Revocation", "Your CRL infrastructure", "Managed by the service"],
-                    ["Setup time", "Days", "Under an hour"]
+                    ["Obtain the installer", "You download it", "Microsoft hosts it"],
+                    ["Package it", "You run IntuneWinAppUtil", "Already packaged"],
+                    ["Install and uninstall commands", "You determine them", "**Supplied**"],
+                    ["Detection rules", "**You write them**", "**Supplied and validated**"],
+                    ["Requirement rules", "You set them", "Supplied, and editable"],
+                    ["Updates", "You repackage each version", "New versions appear in the catalogue with supersedence"]
                   ]
                 },
                 {
                   kind: "callout",
                   variant: "important",
-                  text: "The exam objective names *setting up cloud-based PKI, automating certificate issuance, and monitoring certificate health*. The path is **Tenant administration** > **Cloud PKI**: create a root CA, create an issuing CA under it, then reference that issuing CA from a SCEP profile exactly as lab 27 did. The certificate profile side is unchanged — only the authority behind it moves."
+                  text: "The detection rules are the real value. Lab 33 showed that `0x87D1041C` — a correct installation reported as failed — is the most common Win32 problem, and it comes almost entirely from writing detection rules by hand. Catalogue applications arrive with rules Microsoft has already validated, which removes that whole class of failure along with the repackaging treadmill."
                 }
               ]
             },
             {
-              text: "Certificate health monitoring is the third part of the objective.",
+              text: "Assign as **Available for enrolled devices** to `GRP-USR-PILOT`, then create the app."
+            },
+            {
+              text: "Open the created app and inspect its **Detection rules**.",
+              parts: [
+                {
+                  kind: "verify",
+                  text: "Detection rules are pre-populated and correct for the packaged version. Compare with the rule you wrote by hand in lab 33 — and with the one you deliberately broke to produce `0x87D1041C`."
+                }
+              ]
+            },
+            {
+              text: "Note where the catalogue does not help:",
               parts: [
                 {
                   kind: "callout",
                   variant: "note",
-                  text: "Cloud PKI reports issued, expiring and revoked certificates per CA in the portal, which is what *monitoring certificate health* refers to. With an on-premises authority that information lives in the CA console and is nobody's job to watch."
+                  text: "The catalogue covers widely used third-party software. Your own line-of-business application will never be in it, so lab 33's packaging skills remain necessary — the catalogue removes the tedious 80 percent, not the difficult 20 percent."
                 }
               ]
             }
           ],
           result: {
-            text: "You can explain what Cloud PKI removes and how it plugs into existing certificate profiles.",
+            text: "An application is deployed with supplied, validated detection rules.",
             verify: [
-              { text: "You can name the two servers Cloud PKI makes unnecessary." },
-              { text: "You can state what changes in the certificate profile itself." }
+              { text: "A catalogue app exists with pre-populated detection rules." },
+              { text: "You can state which Win32 error class the catalogue eliminates." }
             ]
           }
-        },
+        }
+      ]
+    },
+
+    {
+      id: "e3",
+      title: "Advanced Analytics",
+      estimatedMinutes: 12,
+      tasks: [
         {
-          id: "t2",
-          title: "Microsoft Tunnel for Mobile Application Management",
+          id: "t1",
+          title: "Use multi-device query, anomaly detection and the device timeline",
+          checkpoint: true,
           steps: [
             {
-              text: "Lab 27 mentioned per-app VPN for enrolled devices. Tunnel for MAM extends that to devices that are not enrolled at all.",
+              text: "Lab 51 ran a KQL query against a single device. Now run one across many. Select **Reports**, **Endpoint analytics**, then **Device query**.",
+              nav: ["Reports", "Endpoint analytics", "Device query"]
+            },
+            {
+              text: "Run a query across your whole estate:",
+              parts: [
+                {
+                  kind: "code",
+                  lang: "kusto",
+                  caption: "Which devices have a given application, and at what version?",
+                  code: "Application\n| where displayName contains \"7-Zip\"\n| project deviceName, displayName, version, publisher\n| sort by version asc"
+                },
+                {
+                  kind: "verify",
+                  text: "Results return for every device that matches, not just one. This is the vulnerability-response scenario from lab 51 answered properly — that lab could only ask one device at a time."
+                }
+              ]
+            },
+            {
+              text: "Open **Reports** > **Endpoint analytics** > **Anomalies**.",
               parts: [
                 {
                   kind: "table",
-                  headers: ["Component", "Role"],
+                  headers: ["Column", "Meaning"],
                   rows: [
-                    ["Tunnel Gateway", "A Linux container you host, on-premises or in a cloud, terminating the VPN"],
-                    ["Tunnel server configuration", "IP ranges, DNS servers and split-tunnelling rules"],
-                    ["Site", "A logical grouping of gateway servers"],
-                    ["App configuration policy", "Points Microsoft Edge or a managed app at the tunnel"],
-                    ["App protection policy", "Protects the corporate data reached through it"]
+                    ["Anomaly", "What is behaving unusually — a crash pattern, a startup regression, a driver fault"],
+                    ["Devices impacted", "How many, and which"],
+                    ["Anomaly details", "The correlated signals behind the detection"],
+                    ["First detected", "When the behaviour diverged from the baseline"]
+                  ]
+                },
+                {
+                  kind: "callout",
+                  variant: "note",
+                  text: "With two virtual machines you will likely see nothing here, and that is the correct result — anomaly detection compares devices against their peers and needs a population to compare within. The mechanism is what matters: it finds the device you would not have thought to look at."
+                }
+              ]
+            },
+            {
+              text: "Open a device and select **Device timeline**.",
+              parts: [
+                {
+                  kind: "verify",
+                  text: "A chronological history appears: policy applications, application installs, restarts, crashes and driver events."
+                },
+                {
+                  kind: "callout",
+                  variant: "important",
+                  text: "The timeline is the capability that changes daily work. Endpoint Analytics in lab 54 told you a device was slow; the timeline tells you it became slow on the fourteenth, two hours after a configuration profile applied. That is the difference between a symptom and a cause, and it is why the exam objective names it alongside anomaly detection."
+                }
+              ]
+            }
+          ],
+          result: {
+            text: "You can query the estate, spot outliers and reconstruct what happened to a device.",
+            verify: [
+              { text: "A multi-device query returned results from more than one device." },
+              { text: "The device timeline shows a chronological event history." }
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      id: "e4",
+      title: "Microsoft Tunnel for Mobile Application Management",
+      intro:
+        "The licence is included, but this is the one capability in the module you cannot simply switch on — it needs infrastructure you would have to host.",
+      estimatedMinutes: 8,
+      tasks: [
+        {
+          id: "t1",
+          title: "Understand what Tunnel for MAM requires",
+          checkpoint: true,
+          steps: [
+            {
+              text: "Lab 27 configured per-app VPN for enrolled devices. Tunnel for MAM extends that to devices that are not enrolled at all.",
+              parts: [
+                {
+                  kind: "table",
+                  headers: ["Component", "Role", "Who provides it"],
+                  rows: [
+                    ["Tunnel Gateway", "A Linux container terminating the VPN", "**You host it** — on-premises or in a cloud"],
+                    ["Server configuration", "IP ranges, DNS servers, split-tunnelling rules", "You configure it in Intune"],
+                    ["Site", "A logical grouping of gateway servers", "You define it in Intune"],
+                    ["App configuration policy", "Points Microsoft Edge or a managed app at the tunnel", "Intune, as in lab 37"],
+                    ["App protection policy", "Protects the corporate data reached through it", "Intune, as in lab 36"]
                   ]
                 },
                 {
@@ -202,70 +335,55 @@ export default {
               ]
             },
             {
-              text: "Note the operational commitment:",
+              text: "Understand why this exercise stops here:",
               parts: [
                 {
                   kind: "callout",
                   variant: "warning",
-                  text: "Tunnel Gateway is infrastructure **you** run: a Linux host, a container, a TLS certificate to renew, and patching. Unlike the other four capabilities in this lab, buying the licence is not the end of the work. Monitoring tunnel connections and server health is named in the exam objective for exactly that reason."
+                  text: "Tunnel Gateway is infrastructure **you** run: a Linux host, a container runtime, a TLS certificate to renew, and patching. Unlike the other three capabilities in this lab, the licence being included is not the end of the work — there is nothing to click until a gateway exists. That is also why *monitoring tunnel connections and server health* appears in the exam objective."
+                }
+              ]
+            },
+            {
+              text: "Note the configuration path so you recognise it:",
+              nav: ["Tenant administration", "Microsoft Tunnel Gateway"],
+              parts: [
+                {
+                  kind: "substeps",
+                  items: [
+                    { text: "Create a **Server configuration** defining IP ranges, DNS and split tunnelling." },
+                    { text: "Create a **Site** and associate the server configuration with it." },
+                    { text: "Install the Tunnel Gateway software on a supported Linux server using the generated script." },
+                    { text: "Create an **app configuration policy** pointing the managed app at the tunnel." },
+                    { text: "Monitor server health and connection counts under the same blade." }
+                  ]
                 }
               ]
             }
           ],
           result: {
-            text: "You can describe Tunnel for MAM's components and the scenario it answers.",
+            text: "You can describe Tunnel for MAM's components and state what it requires beyond a licence.",
             verify: [
               { text: "You can name the component you must host yourself." },
-              { text: "You can state why a device-wide VPN is not the answer for unenrolled devices." }
+              { text: "You can explain why a device-wide VPN is not the answer for unenrolled devices." }
             ]
           }
-        }
-      ]
-    },
-
-    {
-      id: "e3",
-      title: "Advanced Analytics",
-      estimatedMinutes: 10,
-      tasks: [
+        },
         {
-          id: "t1",
-          title: "What it adds beyond Endpoint Analytics",
-          checkpoint: true,
+          id: "t2",
+          title: "Place the whole module in context",
           steps: [
             {
-              text: "Lab 54 used Endpoint Analytics on your Plan 1 licence. Advanced Analytics extends it in four ways, all named in the exam objective.",
+              text: "Review all six formerly-Suite capabilities against the problem each one removes.",
               parts: [
                 {
                   kind: "table",
-                  headers: ["Capability", "What it does"],
+                  headers: ["Capability", "Removes", "Friction first met in"],
                   rows: [
-                    ["**Anomaly detection**", "Identifies devices behaving unlike their peers — a sudden change in crashes, startup time or resource use"],
-                    ["**Proactive insights**", "Surfaces developing problems before users report them, with the affected device population"],
-                    ["**Risk-based policy recommendations**", "Suggests configuration changes ranked by measured impact on the estate"],
-                    ["**Device timeline**", "A chronological event history per device — policy changes, application installs, restarts, crashes — for root-cause analysis"],
-                    ["**Multi-device query**", "The KQL from lab 51, run across many devices at once instead of one"],
-                    ["**Enhanced device scopes**", "Scoped analytics for delegated administrators"]
-                  ]
-                },
-                {
-                  kind: "callout",
-                  variant: "important",
-                  text: "**Device timeline** is the one that changes daily work. Endpoint Analytics tells you a device is slow; the timeline tells you it became slow on the fourteenth, two hours after a configuration profile applied. That is the difference between a symptom and a cause, and it is why this appears in the objective alongside anomaly detection."
-                }
-              ]
-            },
-            {
-              text: "Close the module by reviewing all six Intune Suite capabilities against the problems they solve:",
-              parts: [
-                {
-                  kind: "table",
-                  headers: ["Capability", "Solves", "First met in"],
-                  rows: [
-                    ["Endpoint Privilege Management", "Standard users needing occasional elevation", "Lab 28, removing admin rights"],
-                    ["Remote Help", "Supporting a user you cannot see, with verified identity", "Lab 38, troubleshooting"],
+                    ["Endpoint Privilege Management", "Standard users blocked from occasional elevation", "Lab 28, removing admin rights"],
+                    ["Remote Help", "Supporting a user you cannot see", "Lab 38, troubleshooting"],
                     ["Enterprise App Catalog", "Packaging and detection-rule effort", "Lab 33, `0x87D1041C`"],
-                    ["Cloud PKI", "Running a certification authority", "Lab 27, SCEP with no CA"],
+                    ["Cloud PKI", "Running a certification authority", "Lab 27, where you now use it"],
                     ["Tunnel for MAM", "Unenrolled devices reaching internal services", "Lab 36, BYOD app protection"],
                     ["Advanced Analytics", "Finding the cause rather than the symptom", "Lab 54, Endpoint Analytics"]
                   ]
@@ -273,40 +391,46 @@ export default {
                 {
                   kind: "callout",
                   variant: "tip",
-                  text: "Every one of these extends something you have already built. That is not a coincidence — the Suite is positioned as the answer to the friction points a Plan 1 deployment reaches. Being able to name the friction each one removes is a better exam preparation than memorising configuration paths."
+                  text: "Every one extends something you had already built and hit a wall with. That is not a coincidence — these capabilities are positioned as the answer to the friction a Plan 1 deployment reaches. Being able to name the friction each removes is better exam preparation than memorising configuration paths, because that is how the scenario questions are framed."
                 }
               ]
             }
           ],
           result: {
-            text: "You can state what Advanced Analytics adds and map every Suite capability to the problem it solves.",
-            verify: [
-              { text: "You can name the four Advanced Analytics capabilities in the exam objective." },
-              { text: "You can pair each of the six Suite capabilities with a lab that revealed its need." }
-            ]
+            text: "You can pair each capability with the problem it solves.",
+            verify: [{ text: "You can name the lab where each capability's need first became obvious." }]
           }
         }
       ]
     }
   ],
 
-  quiz: [
+  troubleshooting: [
     {
-      question:
-        "Contoso wants certificate-based Wi-Fi authentication but has no on-premises certification authority and does not want to build one. Which Intune Suite capability applies?",
-      options: [
-        "Microsoft Cloud PKI, which hosts the certification authority in the service",
-        "Microsoft Tunnel for MAM",
-        "The Enterprise App Catalog",
-        "Advanced Analytics"
-      ],
-      correctIndex: 0,
-      rationale:
-        "Cloud PKI provides a hosted root and issuing certification authority, removing the need for Active Directory Certificate Services, an NDES server and the Intune Certificate Connector. Certificate profiles then reference the cloud issuing CA instead of an on-premises one.",
-      examTip:
-        "No on-premises CA and no NDES server is the Cloud PKI signature. The certificate profile configuration itself is unchanged — only the issuing authority moves.",
-      skills: ["g2.t3.s4"]
+      symptom: "Remote Help sessions cannot be started and the option is greyed out for a help desk operator.",
+      rootCause:
+        "The operator's Intune role does not include the Remote Help app permissions, or Remote Help is not enabled at tenant level.",
+      diagnostic: {
+        lang: "text",
+        code: "Tenant administration > Remote Help > Settings — confirm Enable Remote Help is Yes\nSigned in as the operator: Tenant administration > Roles > My permissions — look for Remote Help app"
+      },
+      resolution:
+        "Grant the appropriate Remote Help app permission on the operator's role — view screen, take full control and elevation are separate grants, so a role can permit viewing without control."
     },
+    {
+      symptom: "Multi-device query returns results for only one device, or the Device query blade under Endpoint analytics is missing.",
+      rootCause:
+        "Advanced Analytics has not finished provisioning, or the data collection policy from lab 54 does not target the devices you are querying.",
+      diagnostic: {
+        lang: "text",
+        code: "Reports > Endpoint analytics > Settings — confirm the data collection policy scope\nTenant administration > Intune add-ons — confirm Advanced Analytics shows as Active"
+      },
+      resolution:
+        "Confirm Advanced Analytics is active on the tenant and that the devices are in scope for Endpoint Analytics data collection. Devices excluded from data collection cannot be queried across."
+    }
+  ],
+
+  quiz: [
     {
       question:
         "A user on a personally owned, unenrolled device needs access to an internal line-of-business web application. Which capability provides this without enrolling the device?",
@@ -320,7 +444,7 @@ export default {
       rationale:
         "Tunnel for MAM places the VPN inside the managed application, so an unenrolled device can reach internal resources through that application only. A device-wide VPN profile requires enrollment.",
       examTip:
-        "Unenrolled plus internal resource access equals Tunnel for MAM. Remember it also requires you to host and maintain the Tunnel Gateway yourself.",
+        "Unenrolled plus internal resource access equals Tunnel for MAM. Remember that the licence alone is not enough — you must also host the Tunnel Gateway yourself.",
       skills: ["g2.t3.s5"]
     },
     {
@@ -336,8 +460,24 @@ export default {
       rationale:
         "Device timeline shows policy changes, application installs, restarts and crashes in order, letting you correlate the onset of a problem with what changed. Anomaly detection identifies that a device is unusual; the timeline explains when and why.",
       examTip:
-        "Anomaly detection finds the device; device timeline finds the cause. Multi-device query answers a specific question across many devices.",
+        "Anomaly detection finds the device; device timeline finds the cause; multi-device query answers a specific question across many devices.",
       skills: ["g2.t3.s6"]
+    },
+    {
+      question:
+        "What is the principal advantage of deploying an application from the Enterprise App Catalog rather than packaging it as a Win32 app by hand?",
+      options: [
+        "Install commands and validated detection rules are supplied, removing the most common cause of 0x87D1041C",
+        "Catalogue applications install without requiring the Intune Management Extension",
+        "Catalogue applications bypass assignment intents and install on all devices",
+        "Catalogue applications do not require a licence to deploy"
+      ],
+      correctIndex: 0,
+      rationale:
+        "The catalogue supplies packaging, install and uninstall commands, requirement rules and — most valuably — detection rules Microsoft has validated. Hand-written detection rules are the dominant cause of an application installing correctly but reporting as failed.",
+      examTip:
+        "The catalogue covers common third-party software only. Your own line-of-business applications still need the packaging skills from lab 33.",
+      skills: ["g2.t3.s2"]
     }
   ]
 };

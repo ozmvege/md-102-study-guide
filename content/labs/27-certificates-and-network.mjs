@@ -1,28 +1,31 @@
 export default {
   id: "certificates-and-network",
   moduleId: "m4",
-  title: "Certificate profiles, Wi-Fi and VPN",
+  title: "Cloud PKI, certificate profiles, Wi-Fi and VPN",
   access: "hands-on",
   difficulty: "advanced",
-  estimatedMinutes: 45,
+  estimatedMinutes: 60,
 
   scenario:
-    "Contoso wants certificate-based Wi-Fi authentication rather than a shared key that leaks the moment one laptop is stolen. That requires a chain: a trusted root certificate so devices trust the issuer, a device or user certificate issued automatically, and a Wi-Fi profile that references it. You will build the profiles and understand the chain, including the ordering rule that quietly breaks most first attempts.",
+    "Contoso wants certificate-based Wi-Fi authentication rather than a shared key that leaks the moment one laptop is stolen. That requires a chain: a certification authority to issue from, a trusted root so devices trust the issuer, a client certificate delivered automatically, and a Wi-Fi profile that references it. Historically the authority was the hard part — an on-premises PKI, an NDES server and a connector. Microsoft Cloud PKI removes all three, and since the July 2026 packaging change it is included with Microsoft 365 E5, so you can build the whole chain here.",
 
   objectives: [
-    "Deploy a trusted root certificate profile",
     "Explain the difference between SCEP and PKCS certificate profiles",
-    "Create a Wi-Fi profile that authenticates with a certificate",
-    "Describe how a VPN profile references a certificate for authentication",
-    "State the deployment order the certificate chain requires"
+    "Stand up a root and issuing certification authority with Microsoft Cloud PKI",
+    "Deploy a trusted root certificate profile and a SCEP profile that issues from it",
+    "Create a Wi-Fi profile that authenticates with the issued certificate",
+    "Monitor certificate health, and state the deployment order the chain requires"
   ],
 
-  keyConcepts: ["Trusted root certificate", "SCEP", "PKCS", "NDES connector", "Certificate connector", "EAP-TLS", "Cloud PKI"],
+  keyConcepts: ["Microsoft Cloud PKI", "Root CA", "Issuing CA", "Trusted root certificate", "SCEP", "PKCS", "EAP-TLS", "Certificate health"],
 
-  skills: [{ id: "g2.t2.s1", depth: "primary" }],
+  skills: [
+    { id: "g2.t2.s1", depth: "primary" },
+    { id: "g2.t3.s4", depth: "primary" }
+  ],
 
   requires: {
-    licenses: ["M365-E5"],
+    licenses: ["M365-E5", "INTUNE-CLOUD-PKI"],
     roles: ["Intune Administrator"],
     platforms: [{ kind: "portal", id: "Microsoft Intune admin center" }],
     personas: ["adele.vance"],
@@ -61,12 +64,12 @@ export default {
               ]
             },
             {
-              text: "Note what this lab can and cannot do:",
+              text: "Note where the certification authority is going to come from:",
               parts: [
                 {
                   kind: "callout",
                   variant: "note",
-                  text: "Both SCEP and PKCS require an on-premises certification authority and the Intune Certificate Connector, which this lab does not have. **Microsoft Cloud PKI** removes that requirement entirely by hosting the certification authority in the service — but it is an Intune Suite capability and is not in Microsoft 365 E5. Lab 59 covers it. You will build the trusted root and Wi-Fi profiles here, which need no infrastructure, and read the SCEP profile without assigning it."
+                  text: "SCEP and PKCS both traditionally require an on-premises certification authority plus, for SCEP, an NDES server and the Intune Certificate Connector — three servers to build, patch and keep running. **Microsoft Cloud PKI** hosts the authority in the service and removes all three. It became part of Microsoft 365 E5 in the July 2026 packaging change, which is why the next exercise builds a real, working chain rather than describing one."
                 }
               ]
             },
@@ -91,32 +94,92 @@ export default {
         },
         {
           id: "t2",
-          title: "Create a trusted root certificate profile",
+          title: "Build the certification authority with Cloud PKI",
           checkpoint: true,
           steps: [
             {
-              text: "Export a root certificate to upload. Any root will do for the mechanics — take one from your own machine's trusted root store:",
+              text: "In the **Microsoft Intune admin center**, select **Tenant administration**, then **Cloud PKI**, then **Create**.",
+              nav: ["Tenant administration", "Cloud PKI", "Create"]
+            },
+            {
+              text: "Create the **root** certification authority first:",
               parts: [
                 {
-                  kind: "code",
-                  lang: "powershell",
-                  caption: "Exports the first available root certificate as .cer",
-                  code: "$cert = Get-ChildItem Cert:\\LocalMachine\\Root | Select-Object -First 1\nExport-Certificate -Cert $cert -FilePath C:\\Temp\\labroot.cer -Type CERT\nWrite-Host \"Exported: $($cert.Subject)\""
+                  kind: "inputs",
+                  rows: [
+                    { label: "Name", value: "Contoso Root CA" },
+                    { label: "Description", value: "Offline root of the Contoso certificate hierarchy" },
+                    { label: "CA type", value: "Root CA" },
+                    { label: "Validity period (years)", value: "10" },
+                    { label: "Extended key usages", value: "Leave default" },
+                    { label: "Key size and algorithm", value: "RSA-4096, SHA-384" },
+                    { label: "Subject attributes — Common name", value: "Contoso Root CA" }
+                  ]
+                },
+                {
+                  kind: "callout",
+                  variant: "note",
+                  text: "A root CA signs nothing except its own issuing CAs, which is why its validity is long and its key is large. Cloud PKI also supports **bring your own root** — an issuing CA anchored under an existing on-premises root — which is how an organisation adopts Cloud PKI without reissuing every trust relationship it already has."
                 }
               ]
             },
             {
-              text: "In the **Microsoft Intune admin center**, select **Devices**, **Configuration**, then **Create** > **New Policy**, platform **Windows 10 and later**, profile type **Templates** > **Trusted certificate**.",
+              text: "Create the **issuing** certification authority under it:",
+              parts: [
+                {
+                  kind: "inputs",
+                  rows: [
+                    { label: "Name", value: "Contoso Issuing CA" },
+                    { label: "CA type", value: "Issuing CA" },
+                    { label: "Root CA", value: "Contoso Root CA" },
+                    { label: "Validity period (years)", value: "5" },
+                    { label: "Key size and algorithm", value: "RSA-2048, SHA-256" },
+                    { label: "Subject attributes — Common name", value: "Contoso Issuing CA" }
+                  ]
+                },
+                {
+                  kind: "callout",
+                  variant: "important",
+                  text: "Every certificate you issue comes from the **issuing** CA, never the root. That separation is why the root's private key can stay effectively untouched while the issuing CA does the daily work — and why compromising an issuing CA is recoverable by revoking it, whereas compromising a root is not."
+                }
+              ]
+            },
+            {
+              text: "Wait for both authorities to finish provisioning, then download the root certificate.",
+              nav: ["Tenant administration", "Cloud PKI", "Contoso Root CA"],
+              parts: [
+                {
+                  kind: "verify",
+                  text: "Both CAs show a status of **Active**. The root CA blade offers **Download certificate**, which produces the `.cer` you need for the trusted root profile in the next task."
+                }
+              ]
+            }
+          ],
+          result: {
+            text: "A two-tier certification authority exists in the service, with no servers to maintain.",
+            verify: [
+              { text: "**Cloud PKI** lists an Active root CA and an Active issuing CA beneath it." },
+              { text: "You have downloaded the root CA certificate." }
+            ]
+          }
+        },
+        {
+          id: "t3",
+          title: "Deploy the trusted root and issue certificates with SCEP",
+          checkpoint: true,
+          steps: [
+            {
+              text: "Create the trusted root profile: **Devices** > **Configuration** > **Create** > **New Policy**, platform **Windows 10 and later**, profile type **Templates** > **Trusted certificate**.",
               nav: ["Devices", "Configuration", "Create", "New Policy"]
             },
             {
-              text: "Configure:",
+              text: "Configure it:",
               parts: [
                 {
                   kind: "inputs",
                   rows: [
                     { label: "Name", value: "WIN-Cert-TrustedRoot" },
-                    { label: "Certificate file", value: "labroot.cer" },
+                    { label: "Certificate file", value: "The Contoso Root CA .cer you downloaded" },
                     { label: "Destination store", value: "Computer certificate store - Root" }
                   ]
                 },
@@ -129,13 +192,89 @@ export default {
             },
             {
               text: "Assign to `GRP-DEV-WIN-CORP` and create the profile."
+            },
+            {
+              text: "Now create the SCEP profile that actually issues certificates. Create another profile, platform **Windows 10 and later**, profile type **Templates** > **SCEP certificate**.",
+              nav: ["Devices", "Configuration", "Create", "New Policy"]
+            },
+            {
+              text: "Configure it:",
+              parts: [
+                {
+                  kind: "inputs",
+                  rows: [
+                    { label: "Name", value: "WIN-Cert-SCEP-Device" },
+                    { label: "Certificate type", value: "Device" },
+                    { label: "Subject name format", value: "CN={{DeviceName}}" },
+                    { label: "Subject alternative name", value: "DNS = {{DeviceName}}" },
+                    { label: "Certificate validity period", value: "1 year" },
+                    { label: "Key storage provider (KSP)", value: "Enroll to Trusted Platform Module (TPM) KSP, otherwise fail", note: "The vTPM from lab 2 earns its keep again — the private key is generated in hardware and cannot be exported." },
+                    { label: "Key usage", value: "Digital signature, Key encipherment" },
+                    { label: "Key size (bits)", value: "2048" },
+                    { label: "Hash algorithm", value: "SHA-2" },
+                    { label: "Root Certificate", value: "WIN-Cert-TrustedRoot" },
+                    { label: "Extended key usage", value: "Client Authentication" },
+                    { label: "SCEP Server URLs", value: "Select the Contoso Issuing CA", note: "Cloud PKI populates this for you — there is no NDES URL to type because there is no NDES server." }
+                  ]
+                },
+                {
+                  kind: "callout",
+                  variant: "important",
+                  text: "Compare this with what the same profile needed before Cloud PKI: an NDES server published to the internet, the Intune Certificate Connector installed and registered, a SCEP challenge password mechanism, and a certificate template configured on an on-premises CA. The profile fields are identical; three servers have disappeared from behind them."
+                }
+              ]
+            },
+            {
+              text: "Assign to `GRP-DEV-WIN-CORP` and create the profile.",
+              parts: [
+                {
+                  kind: "callout",
+                  variant: "warning",
+                  text: "Assign the trusted root profile **before** the SCEP profile, or accept that the first sync fails. A certificate request whose issuing chain is not yet trusted is rejected, and Intune does not retry aggressively. This ordering rule is the single most common cause of a Cloud PKI deployment that appears broken on day one and fixes itself on day two."
+                }
+              ]
+            },
+            {
+              text: "On **MD102-VM1-Adele**, sync policy, wait, then confirm the certificate arrived:",
+              parts: [
+                {
+                  kind: "code",
+                  lang: "powershell",
+                  code: "Get-ChildItem Cert:\\LocalMachine\\Root | Where-Object Subject -like \"*Contoso Root CA*\" |\n    Select-Object Subject, NotAfter\n\nGet-ChildItem Cert:\\LocalMachine\\My | Where-Object Issuer -like \"*Contoso Issuing CA*\" |\n    Select-Object Subject, Issuer, NotAfter,\n        @{n='HasPrivateKey';e={$_.HasPrivateKey}},\n        @{n='Provider';e={$_.PrivateKey.CspKeyContainerInfo.ProviderName}}"
+                },
+                {
+                  kind: "verify",
+                  text: "The Contoso root is in the machine Root store, and a client certificate issued by Contoso Issuing CA is in the machine Personal store with a private key. This is a real certificate, issued on demand, with no PKI infrastructure of your own."
+                }
+              ]
+            },
+            {
+              text: "Check certificate health in the portal — the third part of the exam objective.",
+              nav: ["Tenant administration", "Cloud PKI", "Contoso Issuing CA"],
+              parts: [
+                {
+                  kind: "table",
+                  headers: ["View", "Shows"],
+                  rows: [
+                    ["Issued certificates", "Every certificate this CA has issued, with subject, serial and expiry"],
+                    ["Certificate status", "Active, expiring and revoked counts"],
+                    ["Revoke", "Revokes an individual certificate; the service maintains the revocation list"]
+                  ]
+                },
+                {
+                  kind: "callout",
+                  variant: "tip",
+                  text: "With an on-premises authority this information lives in the CA console and is nobody's job to watch. Having issued, expiring and revoked counts in the same portal as the devices is what the objective means by *monitoring certificate health* — and it is why a certificate expiry no longer has to become an outage."
+                }
+              ]
             }
           ],
           result: {
-            text: "Corporate devices trust the issuing authority.",
+            text: "Devices trust the Contoso root and hold a TPM-protected client certificate issued by Cloud PKI.",
             verify: [
-              { text: "`WIN-Cert-TrustedRoot` reports **Succeeded** on your devices." },
-              { text: "The certificate appears in `Cert:\\LocalMachine\\Root` on a synced device." }
+              { text: "The root certificate is present in `Cert:\\LocalMachine\\Root`." },
+              { text: "A client certificate issued by the Contoso Issuing CA is present with a private key." },
+              { text: "The issuing CA reports the certificate under **Issued certificates**." }
             ]
           }
         }
@@ -181,7 +320,7 @@ export default {
                     { label: "EAP type", value: "EAP-TLS", note: "The certificate-based method. PEAP uses a password inside a TLS tunnel." },
                     { label: "Certificate server names", value: "The RADIUS server's certificate subject name" },
                     { label: "Root certificate for server validation", value: "WIN-Cert-TrustedRoot" },
-                    { label: "Client certificate for client authentication", value: "Your SCEP or PKCS profile", note: "Not available in this lab — the field is where the chain is joined." }
+                    { label: "Client certificate for client authentication", value: "WIN-Cert-SCEP-Device", note: "The SCEP profile from exercise 1. This field is where the chain is joined." }
                   ]
                 },
                 {
@@ -231,14 +370,14 @@ export default {
                 {
                   kind: "callout",
                   variant: "tip",
-                  text: "Note the **per-app VPN** option on some connection types. It routes only nominated applications through the tunnel, which is how organisations give a managed app access to an internal service without putting the whole device on the corporate network. That capability, extended to unenrolled devices, is what **Microsoft Tunnel for MAM** provides — an Intune Suite feature covered in lab 59."
+                  text: "Note the **per-app VPN** option on some connection types. It routes only nominated applications through the tunnel, which is how organisations give a managed app access to an internal service without putting the whole device on the corporate network. That capability, extended to devices that are not enrolled at all, is what **Microsoft Tunnel for MAM** provides — covered in lab 59."
                 }
               ]
             }
           ],
           result: {
             text: "You can describe how a VPN profile authenticates with a certificate and what per-app VPN achieves.",
-            verify: [{ text: "You can name the Intune Suite feature that extends per-app VPN to unenrolled devices." }]
+            verify: [{ text: "You can name the feature that extends per-app VPN to unenrolled devices." }]
           }
         }
       ]

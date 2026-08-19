@@ -87,10 +87,10 @@ export default [
   },
   {
     id: "m11",
-    shortTitle: "Intune Suite",
-    title: "Module 11 — Intune Suite add-on capabilities",
+    shortTitle: "Advanced capabilities",
+    title: "Module 11 — Advanced endpoint capabilities",
     description:
-      "Examined capabilities that are not included in Microsoft 365 E5. These are walkthroughs: exact configuration paths, decision criteria and exam drills, plus how to start the free 90-day trial if you decide you want to run them for real."
+      "The capabilities the exam still calls Intune Suite add-ons, every one of which Microsoft 365 E5 has included since the July 2026 packaging change: Endpoint Privilege Management, Remote Help, the Enterprise App Catalog and Advanced Analytics. Each removes friction you hit earlier in the course. Cloud PKI belongs to this group too and is used in lab 27, where certificates are taught."
   },
   {
     id: "m12",

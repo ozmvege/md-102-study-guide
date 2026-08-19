@@ -58,7 +58,7 @@ Aligned to the skills measured outline of **2026-07-24** ([source](https://learn
 24. [Assignment filters and enrollment time grouping](#lab-24-assignment-filters-and-enrollment-time-grouping)
 25. [Android configuration profiles](#lab-25-android-configuration-profiles)
 26. [Apple and specialty device configuration profiles](#lab-26-apple-and-specialty-device-configuration-profiles) *(walkthrough)*
-27. [Certificate profiles, Wi-Fi and VPN](#lab-27-certificate-profiles-wi-fi-and-vpn)
+27. [Cloud PKI, certificate profiles, Wi-Fi and VPN](#lab-27-cloud-pki-certificate-profiles-wi-fi-and-vpn)
 28. [Windows Hello for Business, Windows LAPS and local group membership](#lab-28-windows-hello-for-business-windows-laps-and-local-group-membership)
 
 **Module 5 — Compliance and Conditional Access** — Define what healthy means, extend it with PowerShell where the built-in rules stop, and turn compliance into an access decision with Conditional Access.
@@ -108,10 +108,10 @@ Aligned to the skills measured outline of **2026-07-24** ([source](https://learn
 56. [Tenant health, service communications and alert rules](#lab-56-tenant-health-service-communications-and-alert-rules)
 57. [Security Copilot agents in Intune](#lab-57-security-copilot-agents-in-intune) *(walkthrough)*
 
-**Module 11 — Intune Suite add-on capabilities** — Examined capabilities that are not included in Microsoft 365 E5. These are walkthroughs: exact configuration paths, decision criteria and exam drills, plus how to start the free 90-day trial if you decide you want to run them for real.
+**Module 11 — Advanced endpoint capabilities** — The capabilities the exam still calls Intune Suite add-ons, every one of which Microsoft 365 E5 has included since the July 2026 packaging change: Endpoint Privilege Management, Remote Help, the Enterprise App Catalog and Advanced Analytics. Each removes friction you hit earlier in the course. Cloud PKI belongs to this group too and is used in lab 27, where certificates are taught.
 
-58. [Endpoint Privilege Management](#lab-58-endpoint-privilege-management) *(walkthrough)*
-59. [Remote Help, Enterprise App Catalog, Cloud PKI, Tunnel for MAM and Advanced Analytics](#lab-59-remote-help-enterprise-app-catalog-cloud-pki-tunnel-for-mam-and-advanced-analytics) *(walkthrough)*
+58. [Endpoint Privilege Management](#lab-58-endpoint-privilege-management)
+59. [Remote Help, Enterprise App Catalog, Advanced Analytics and Tunnel for MAM](#lab-59-remote-help-enterprise-app-catalog-advanced-analytics-and-tunnel-for-mam)
 
 **Module 12 — Capstone and exam readiness** — Rebuild the whole estate from a clean tenant against a deadline with faults injected, then close your remaining gaps with a domain-weighted timed practice run.
 
@@ -183,29 +183,35 @@ About a quarter of the MD-102 objectives cover capabilities that are *not* in Mi
    | Capability | Comes from | What it unlocks in this course |
    | --- | --- | --- |
    | Microsoft Intune Plan 1 | M365 E5 | Enrollment, configuration, compliance, apps, endpoint security, update rings |
+   | Microsoft Intune Plan 2 | M365 E5 (since July 2026) | Tunnel for MAM, firmware over-the-air updates, specialty and shared device management |
+   | Remote Help | M365 E5 (since July 2026) | Audited remote assistance with verified identity on both sides |
+   | Advanced Analytics | M365 E5 (since July 2026) | Anomaly detection, device timeline, multi-device query |
+   | Endpoint Privilege Management | M365 E5 (since July 2026) | Application-scoped elevation for standard users |
+   | Microsoft Cloud PKI | M365 E5 (since July 2026) | A hosted certification authority — no on-premises PKI, NDES or connector |
+   | Enterprise App Management | M365 E5 (since July 2026) | Prepackaged Win32 apps with supplied detection rules |
    | Microsoft Entra ID P2 | M365 E5 | Conditional Access, dynamic groups, PIM, administrative units |
    | Defender for Endpoint Plan 2 | M365 E5 | EDR, device risk feeding compliance, incident triage |
    | Windows 11 Enterprise E5 | M365 E5 | Subscription activation from Pro to Enterprise |
    | Windows Autopatch | Windows Enterprise E3 or E5 | Autopatch groups and release management |
 
-3. Not included — these are examined, so this course covers them as walkthroughs rather than pretending you can run them:
+   > [!IMPORTANT]
+   > The six capabilities marked *since July 2026* used to be paid add-ons, together costing more than the Intune Suite. Microsoft moved them into Microsoft 365 E3 and E5 in a packaging change that completed on **1 August 2026**, with no customer action required. Almost every study guide, blog post and exam-prep video written before then will tell you these need the Intune Suite. They do not, and you will use all six in this course.
 
-   | Capability | Needs | How this course handles it |
-   | --- | --- | --- |
-   | Endpoint Privilege Management | Intune Suite | Walkthrough with exact configuration paths |
-   | Remote Help, Advanced Analytics | Intune Plan 2 or Suite | Walkthrough |
-   | Microsoft Cloud PKI, Enterprise App Catalog | Intune Suite | Walkthrough |
-   | Microsoft Tunnel for MAM | Intune Plan 2 or Suite | Walkthrough |
-   | Windows 365 Cloud PC | Windows 365 subscription | Walkthrough |
-   | Security Copilot agents in Intune | Security Compute Units | Walkthrough |
-   | Apple Business Manager, VPP | Apple organisation and hardware | Walkthrough |
+3. Not included — these are still examined, so this course covers them as walkthroughs rather than pretending you can run them:
 
-   > [!TIP]
-   > The Intune advanced capabilities each have a free 90-day trial for up to 250 users, started from **Tenant administration** in the Intune admin center. You do not need it for this course and you should not start it now — the clock runs whether you use it or not, and you only get one per capability per tenant. Module 11 tells you exactly when it is worth spending.
+   | Capability | Needs | Why it is out of reach | How this course handles it |
+   | --- | --- | --- | --- |
+   | Windows 365 Cloud PC | Windows 365 subscription | A separate per-user subscription; the July 2026 Intune packaging change did not touch it | Walkthrough — lab 21 |
+   | Security Copilot agents in Intune | Security Compute Units | Billed hourly by provisioned compute, so it cannot be trialled from inside a tenant | Walkthrough — lab 57 |
+   | Apple Business Manager, VPP | Apple organisation and hardware | Needs a D-U-N-S number and hardware bought through Apple or a reseller | Walkthrough — labs 14, 26, 49 |
+   | Microsoft Tunnel Gateway | A Linux host you run | The licence is included; the gateway is infrastructure you must host yourself | Configuration path only — lab 59 |
+
+   > [!NOTE]
+   > Only four things in this whole course are out of reach, and only two of them are licensing. Everything else — including every capability that used to require the Intune Suite — you will configure and use for real. That is a recent change and a genuinely large one.
 
 **Results:** You can state which examined capabilities you can practise and which you will study without a tenant.
 
-- [ ] You can name at least three examined capabilities that Microsoft 365 E5 does not include.
+- [ ] You can name the two examined capabilities that Microsoft 365 E5 genuinely does not license.
 
 ### Exercise 2: Read tenant status in the Intune admin center
 
@@ -6091,32 +6097,33 @@ D. An OMA-URI custom profile
 
 ---
 
-## Lab 27: Certificate profiles, Wi-Fi and VPN
+## Lab 27: Cloud PKI, certificate profiles, Wi-Fi and VPN
 
-**Access:** Hands-on · **Estimated time:** 45 minutes · **Difficulty:** advanced
+**Access:** Hands-on · **Estimated time:** 60 minutes · **Difficulty:** advanced
 
 ### Lab scenario
 
-Contoso wants certificate-based Wi-Fi authentication rather than a shared key that leaks the moment one laptop is stolen. That requires a chain: a trusted root certificate so devices trust the issuer, a device or user certificate issued automatically, and a Wi-Fi profile that references it. You will build the profiles and understand the chain, including the ordering rule that quietly breaks most first attempts.
+Contoso wants certificate-based Wi-Fi authentication rather than a shared key that leaks the moment one laptop is stolen. That requires a chain: a certification authority to issue from, a trusted root so devices trust the issuer, a client certificate delivered automatically, and a Wi-Fi profile that references it. Historically the authority was the hard part — an on-premises PKI, an NDES server and a connector. Microsoft Cloud PKI removes all three, and since the July 2026 packaging change it is included with Microsoft 365 E5, so you can build the whole chain here.
 
 ### Objectives
 
 After completing this lab, you will be able to:
 
-- Deploy a trusted root certificate profile
 - Explain the difference between SCEP and PKCS certificate profiles
-- Create a Wi-Fi profile that authenticates with a certificate
-- Describe how a VPN profile references a certificate for authentication
-- State the deployment order the certificate chain requires
+- Stand up a root and issuing certification authority with Microsoft Cloud PKI
+- Deploy a trusted root certificate profile and a SCEP profile that issues from it
+- Create a Wi-Fi profile that authenticates with the issued certificate
+- Monitor certificate health, and state the deployment order the chain requires
 
 ### Exam objectives covered
 
 - `g2.t2.s1` — Create device configuration profiles for Windows devices, including importing ADMX files and using Group Policy analytics
+- `g2.t3.s4` — Plan and implement Microsoft Cloud PKI, including setting up cloud-based PKI, automating certificate issuance, and monitoring certificate health
 
 ### Prerequisites
 
 - Completed labs: `settings-catalog`
-- Licences: M365-E5
+- Licences: M365-E5, INTUNE-CLOUD-PKI
 - Roles: Intune Administrator
 - Devices and portals: Microsoft Intune admin center
 - Personas: adele.vance
@@ -6138,10 +6145,10 @@ After completing this lab, you will be able to:
    > [!IMPORTANT]
    > SCEP is preferred because the private key is created in the device's TPM and never leaves it. PKCS exists for cases where the same key must be present on multiple devices — S/MIME being the standard example, since a user needs the same key on their laptop and their phone to read encrypted mail on both.
 
-2. Note what this lab can and cannot do:
+2. Note where the certification authority is going to come from:
 
    > [!NOTE]
-   > Both SCEP and PKCS require an on-premises certification authority and the Intune Certificate Connector, which this lab does not have. **Microsoft Cloud PKI** removes that requirement entirely by hosting the certification authority in the service — but it is an Intune Suite capability and is not in Microsoft 365 E5. Lab 59 covers it. You will build the trusted root and Wi-Fi profiles here, which need no infrastructure, and read the SCEP profile without assigning it.
+   > SCEP and PKCS both traditionally require an on-premises certification authority plus, for SCEP, an NDES server and the Intune Certificate Connector — three servers to build, patch and keep running. **Microsoft Cloud PKI** hosts the authority in the service and removes all three. It became part of Microsoft 365 E5 in the July 2026 packaging change, which is why the next exercise builds a real, working chain rather than describing one.
 
 3. Learn the ordering rule, which is the part that actually breaks deployments:
 
@@ -6153,37 +6160,127 @@ After completing this lab, you will be able to:
 - [ ] You can name the scenario that requires PKCS rather than SCEP.
 - [ ] You can state which profile must arrive first.
 
-#### Task 2: Create a trusted root certificate profile
+#### Task 2: Build the certification authority with Cloud PKI
 
-1. Export a root certificate to upload. Any root will do for the mechanics — take one from your own machine's trusted root store:
+1. In the **Microsoft Intune admin center**, select **Tenant administration**, then **Cloud PKI**, then **Create**.
+   *Path:* **Tenant administration** > **Cloud PKI** > **Create**
 
-   *Exports the first available root certificate as .cer*
-   ```powershell
-   $cert = Get-ChildItem Cert:\LocalMachine\Root | Select-Object -First 1
-   Export-Certificate -Cert $cert -FilePath C:\Temp\labroot.cer -Type CERT
-   Write-Host "Exported: $($cert.Subject)"
-   ```
+2. Create the **root** certification authority first:
 
-2. In the **Microsoft Intune admin center**, select **Devices**, **Configuration**, then **Create** > **New Policy**, platform **Windows 10 and later**, profile type **Templates** > **Trusted certificate**.
+   | Setting | Value |
+   | --- | --- |
+   | Name | **Contoso Root CA** |
+   | Description | **Offline root of the Contoso certificate hierarchy** |
+   | CA type | **Root CA** |
+   | Validity period (years) | **10** |
+   | Extended key usages | **Leave default** |
+   | Key size and algorithm | **RSA-4096, SHA-384** |
+   | Subject attributes — Common name | **Contoso Root CA** |
+
+   > [!NOTE]
+   > A root CA signs nothing except its own issuing CAs, which is why its validity is long and its key is large. Cloud PKI also supports **bring your own root** — an issuing CA anchored under an existing on-premises root — which is how an organisation adopts Cloud PKI without reissuing every trust relationship it already has.
+
+3. Create the **issuing** certification authority under it:
+
+   | Setting | Value |
+   | --- | --- |
+   | Name | **Contoso Issuing CA** |
+   | CA type | **Issuing CA** |
+   | Root CA | **Contoso Root CA** |
+   | Validity period (years) | **5** |
+   | Key size and algorithm | **RSA-2048, SHA-256** |
+   | Subject attributes — Common name | **Contoso Issuing CA** |
+
+   > [!IMPORTANT]
+   > Every certificate you issue comes from the **issuing** CA, never the root. That separation is why the root's private key can stay effectively untouched while the issuing CA does the daily work — and why compromising an issuing CA is recoverable by revoking it, whereas compromising a root is not.
+
+4. Wait for both authorities to finish provisioning, then download the root certificate.
+   *Path:* **Tenant administration** > **Cloud PKI** > **Contoso Root CA**
+
+   **Verify:** Both CAs show a status of **Active**. The root CA blade offers **Download certificate**, which produces the `.cer` you need for the trusted root profile in the next task.
+
+**Results:** A two-tier certification authority exists in the service, with no servers to maintain.
+
+- [ ] **Cloud PKI** lists an Active root CA and an Active issuing CA beneath it.
+- [ ] You have downloaded the root CA certificate.
+
+#### Task 3: Deploy the trusted root and issue certificates with SCEP
+
+1. Create the trusted root profile: **Devices** > **Configuration** > **Create** > **New Policy**, platform **Windows 10 and later**, profile type **Templates** > **Trusted certificate**.
    *Path:* **Devices** > **Configuration** > **Create** > **New Policy**
 
-3. Configure:
+2. Configure it:
 
    | Setting | Value |
    | --- | --- |
    | Name | **WIN-Cert-TrustedRoot** |
-   | Certificate file | **labroot.cer** |
+   | Certificate file | **The Contoso Root CA .cer you downloaded** |
    | Destination store | **Computer certificate store - Root** |
 
    > [!NOTE]
    > The destination store matters. A root certificate belongs in **Root**; an intermediate belongs in **Intermediate**. Putting an intermediate in the root store works but is wrong, and putting a root in the intermediate store breaks chain validation.
 
-4. Assign to `GRP-DEV-WIN-CORP` and create the profile.
+3. Assign to `GRP-DEV-WIN-CORP` and create the profile.
 
-**Results:** Corporate devices trust the issuing authority.
+4. Now create the SCEP profile that actually issues certificates. Create another profile, platform **Windows 10 and later**, profile type **Templates** > **SCEP certificate**.
+   *Path:* **Devices** > **Configuration** > **Create** > **New Policy**
 
-- [ ] `WIN-Cert-TrustedRoot` reports **Succeeded** on your devices.
-- [ ] The certificate appears in `Cert:\LocalMachine\Root` on a synced device.
+5. Configure it:
+
+   | Setting | Value |
+   | --- | --- |
+   | Name | **WIN-Cert-SCEP-Device** |
+   | Certificate type | **Device** |
+   | Subject name format | **CN={{DeviceName}}** |
+   | Subject alternative name | **DNS = {{DeviceName}}** |
+   | Certificate validity period | **1 year** |
+   | Key storage provider (KSP) | **Enroll to Trusted Platform Module (TPM) KSP, otherwise fail** <br> The vTPM from lab 2 earns its keep again — the private key is generated in hardware and cannot be exported. |
+   | Key usage | **Digital signature, Key encipherment** |
+   | Key size (bits) | **2048** |
+   | Hash algorithm | **SHA-2** |
+   | Root Certificate | **WIN-Cert-TrustedRoot** |
+   | Extended key usage | **Client Authentication** |
+   | SCEP Server URLs | **Select the Contoso Issuing CA** <br> Cloud PKI populates this for you — there is no NDES URL to type because there is no NDES server. |
+
+   > [!IMPORTANT]
+   > Compare this with what the same profile needed before Cloud PKI: an NDES server published to the internet, the Intune Certificate Connector installed and registered, a SCEP challenge password mechanism, and a certificate template configured on an on-premises CA. The profile fields are identical; three servers have disappeared from behind them.
+
+6. Assign to `GRP-DEV-WIN-CORP` and create the profile.
+
+   > [!WARNING]
+   > Assign the trusted root profile **before** the SCEP profile, or accept that the first sync fails. A certificate request whose issuing chain is not yet trusted is rejected, and Intune does not retry aggressively. This ordering rule is the single most common cause of a Cloud PKI deployment that appears broken on day one and fixes itself on day two.
+
+7. On **MD102-VM1-Adele**, sync policy, wait, then confirm the certificate arrived:
+
+   ```powershell
+   Get-ChildItem Cert:\LocalMachine\Root | Where-Object Subject -like "*Contoso Root CA*" |
+       Select-Object Subject, NotAfter
+
+   Get-ChildItem Cert:\LocalMachine\My | Where-Object Issuer -like "*Contoso Issuing CA*" |
+       Select-Object Subject, Issuer, NotAfter,
+           @{n='HasPrivateKey';e={$_.HasPrivateKey}},
+           @{n='Provider';e={$_.PrivateKey.CspKeyContainerInfo.ProviderName}}
+   ```
+
+   **Verify:** The Contoso root is in the machine Root store, and a client certificate issued by Contoso Issuing CA is in the machine Personal store with a private key. This is a real certificate, issued on demand, with no PKI infrastructure of your own.
+
+8. Check certificate health in the portal — the third part of the exam objective.
+   *Path:* **Tenant administration** > **Cloud PKI** > **Contoso Issuing CA**
+
+   | View | Shows |
+   | --- | --- |
+   | Issued certificates | Every certificate this CA has issued, with subject, serial and expiry |
+   | Certificate status | Active, expiring and revoked counts |
+   | Revoke | Revokes an individual certificate; the service maintains the revocation list |
+
+   > [!TIP]
+   > With an on-premises authority this information lives in the CA console and is nobody's job to watch. Having issued, expiring and revoked counts in the same portal as the devices is what the objective means by *monitoring certificate health* — and it is why a certificate expiry no longer has to become an outage.
+
+**Results:** Devices trust the Contoso root and hold a TPM-protected client certificate issued by Cloud PKI.
+
+- [ ] The root certificate is present in `Cert:\LocalMachine\Root`.
+- [ ] A client certificate issued by the Contoso Issuing CA is present with a private key.
+- [ ] The issuing CA reports the certificate under **Issued certificates**.
 
 ### Exercise 2: Wi-Fi and VPN profiles
 
@@ -6210,7 +6307,7 @@ After completing this lab, you will be able to:
    | EAP type | **EAP-TLS** <br> The certificate-based method. PEAP uses a password inside a TLS tunnel. |
    | Certificate server names | **The RADIUS server's certificate subject name** |
    | Root certificate for server validation | **WIN-Cert-TrustedRoot** |
-   | Client certificate for client authentication | **Your SCEP or PKCS profile** <br> Not available in this lab — the field is where the chain is joined. |
+   | Client certificate for client authentication | **WIN-Cert-SCEP-Device** <br> The SCEP profile from exercise 1. This field is where the chain is joined. |
 
    > [!IMPORTANT]
    > This is where the chain comes together. The Wi-Fi profile references the trusted root profile for server validation and the SCEP or PKCS profile for the client certificate. Deleting either certificate profile silently breaks every Wi-Fi profile that references it — which is why certificate profiles should not be tidied away without checking what points at them.
@@ -6239,11 +6336,11 @@ After completing this lab, you will be able to:
    | Split tunneling | **Whether only corporate traffic uses the tunnel** |
 
    > [!TIP]
-   > Note the **per-app VPN** option on some connection types. It routes only nominated applications through the tunnel, which is how organisations give a managed app access to an internal service without putting the whole device on the corporate network. That capability, extended to unenrolled devices, is what **Microsoft Tunnel for MAM** provides — an Intune Suite feature covered in lab 59.
+   > Note the **per-app VPN** option on some connection types. It routes only nominated applications through the tunnel, which is how organisations give a managed app access to an internal service without putting the whole device on the corporate network. That capability, extended to devices that are not enrolled at all, is what **Microsoft Tunnel for MAM** provides — covered in lab 59.
 
 **Results:** You can describe how a VPN profile authenticates with a certificate and what per-app VPN achieves.
 
-- [ ] You can name the Intune Suite feature that extends per-app VPN to unenrolled devices.
+- [ ] You can name the feature that extends per-app VPN to unenrolled devices.
 
 ### Troubleshooting
 
@@ -10632,10 +10729,10 @@ After completing this lab, you will be able to:
    | Configured in | A device restrictions profile | A dedicated FOTA policy, per vendor |
    | Vendor support required | No | **Yes** — the manufacturer must participate |
    | Example | Any fully managed Android device | Zebra LifeGuard for Zebra handhelds |
-   | Licence | Included with Intune Plan 1 | Intune Plan 2 or the Intune Suite |
+   | Licence | Intune Plan 1 | Intune Plan 2 — included with Microsoft 365 E5 since July 2026 |
 
    > [!IMPORTANT]
-   > FOTA is vendor-specific and, for Zebra devices, is an Intune Suite capability — so it is not available on Microsoft 365 E5 alone. Know that it exists, that it needs manufacturer participation, and that it is how ruggedised device estates get firmware without physically handling each unit. The exam asks about the concept, not the click path.
+   > FOTA is part of Intune Plan 2, which Microsoft 365 E5 has included since July 2026 — so the licence is not the obstacle. The **manufacturer** is: FOTA only works where the vendor participates, Zebra LifeGuard being the common example, and you need that vendor's hardware to see it work. Know that it exists, that it depends on manufacturer participation rather than licensing, and that it is how ruggedised estates get firmware without physically handling each unit.
 
 **Results:** You can distinguish an Android system update policy from a FOTA deployment.
 
@@ -11145,7 +11242,7 @@ After completing this lab, you will be able to:
    *Path:* **Devices** > **All devices** > **Query**
 
    > [!IMPORTANT]
-   > **Single-device query** is included with Intune Plan 1, which Microsoft 365 E5 provides — so this exercise works. **Multi-device query**, which runs the same KQL across many devices at once, is part of Intune Advanced Analytics and needs Plan 2 or the Suite. The exam objective says *run a device query by using KQL* without distinguishing them; know that the multi-device version is licensed separately.
+   > **Single-device query** is included with Intune Plan 1. **Multi-device query**, which runs the same KQL across many devices at once, belongs to Intune Advanced Analytics — which Microsoft 365 E5 has included since July 2026, so you have both. This lab teaches the single-device form because it is where the query language is easiest to learn; lab 59 runs the same queries across the estate.
 
 2. Run a simple query to confirm the mechanism works:
 
@@ -11247,7 +11344,7 @@ After completing this lab, you will be able to:
 
 **Symptom:** Device query returns no results or the Query option is unavailable.
 
-- **Root cause:** The device is offline, is running an unsupported operating system version, or the query targets multiple devices — which requires Intune Advanced Analytics rather than Plan 1.
+- **Root cause:** The device is offline, is running an unsupported operating system version, or Endpoint Analytics data collection does not target it — multi-device query only reaches devices that are in scope for collection.
 - **Diagnostic:**
 
   ```text
@@ -11255,7 +11352,7 @@ After completing this lab, you will be able to:
   Confirm the OS version meets the device query minimum.
   ```
 
-- **Resolution:** Device query needs the device online because it executes live. For multi-device query, confirm the tenant holds Intune Plan 2 or the Intune Suite — on Microsoft 365 E5 alone only single-device query is available.
+- **Resolution:** Device query needs the device online because it executes live — there is no cached answer to fall back on. For multi-device query, confirm the devices are in scope for Endpoint Analytics data collection, which lab 54 configures.
 
 ### Knowledge check
 
@@ -11270,7 +11367,7 @@ D. Collect diagnostics
 
 **A** — Device query executes on the device on demand and returns current state. Discovered apps is cached inventory refreshed on a schedule, and a compliance script would take a full evaluation cycle to report.
 
-*Exam tip:* Live versus cached is the distinction being tested. Note also that querying many devices at once requires Advanced Analytics, while single-device query is included with Plan 1.
+*Exam tip:* Live versus cached is the distinction being tested. Note also that querying many devices at once belongs to Advanced Analytics, while single-device query is in Plan 1 — Microsoft 365 E5 has included both since July 2026.
 
 </details>
 
@@ -11951,7 +12048,7 @@ After completing this lab, you will be able to:
 
 4. Note what Advanced Analytics adds, and what it costs:
 
-   | Capability | Plan 1 (your licence) | Advanced Analytics |
+   | Capability | Intune Plan 1 | Advanced Analytics |
    | --- | --- | --- |
    | Endpoint analytics score and components | Yes | Yes |
    | Startup, reliability and resource performance | Yes | Yes |
@@ -11962,7 +12059,7 @@ After completing this lab, you will be able to:
    | **Enhanced device scopes and reporting** | No | Yes |
 
    > [!IMPORTANT]
-   > Everything in this lab works on Microsoft 365 E5. **Advanced Analytics** — anomaly detection, device timeline, multi-device query — is Intune Plan 2 or the Suite, and is covered as a walkthrough in lab 59. The exam objective for Advanced Analytics names anomaly detection, proactive insights and risk-based recommendations specifically.
+   > The exam still draws this line between Plan 1 and Advanced Analytics, so learn the boundary — but note that **Microsoft 365 E5 has included Advanced Analytics since July 2026**, so you hold both sides of this table. Lab 59 uses anomaly detection, the device timeline and multi-device query for real. The exam objective for Advanced Analytics names anomaly detection, proactive insights and risk-based recommendations specifically.
 
 **Results:** You can identify what is degrading experience on a device and quantify it.
 
@@ -12009,9 +12106,9 @@ D. Application reliability reporting
 
 <details><summary>Answer</summary>
 
-**A** — Anomaly detection, the per-device timeline and multi-device query are Advanced Analytics capabilities requiring Intune Plan 2 or the Suite. The core score, startup performance, application reliability and proactive remediations are included with Plan 1.
+**A** — Anomaly detection, the per-device timeline and multi-device query belong to Advanced Analytics. The core score, startup performance, application reliability and proactive remediations are Plan 1 capabilities.
 
-*Exam tip:* The exam objective for Advanced Analytics names anomaly detection, proactive insights and risk-based policy recommendations. Those three phrases are the tell.
+*Exam tip:* The exam objective for Advanced Analytics names anomaly detection, proactive insights and risk-based policy recommendations — those three phrases are the tell. The plan boundary is still examined even though Microsoft 365 E5 now grants both sides of it.
 
 </details>
 
@@ -12518,30 +12615,27 @@ D. Microsoft Defender for Endpoint Plan 2
 
 ---
 
-# Module 11 — Intune Suite add-on capabilities
+# Module 11 — Advanced endpoint capabilities
 
-Examined capabilities that are not included in Microsoft 365 E5. These are walkthroughs: exact configuration paths, decision criteria and exam drills, plus how to start the free 90-day trial if you decide you want to run them for real.
+The capabilities the exam still calls Intune Suite add-ons, every one of which Microsoft 365 E5 has included since the July 2026 packaging change: Endpoint Privilege Management, Remote Help, the Enterprise App Catalog and Advanced Analytics. Each removes friction you hit earlier in the course. Cloud PKI belongs to this group too and is used in lab 27, where certificates are taught.
 
 ## Lab 58: Endpoint Privilege Management
 
-**Access:** Walkthrough — licence not included in Microsoft 365 E5 · **Estimated time:** 40 minutes · **Difficulty:** advanced
-
-> [!IMPORTANT]
-> Endpoint Privilege Management is part of the Microsoft Intune Suite and is not included in Microsoft 365 E5. A free 90-day trial for up to 250 users can be started from Tenant administration > Intune add-ons if you decide you want to run it — the last exercise explains exactly when that is worth spending. Until then this lab covers the configuration surfaces, the elevation types and the decision criteria, all of which are examined.
+**Access:** Hands-on · **Estimated time:** 55 minutes · **Difficulty:** advanced
 
 ### Lab scenario
 
-Autopilot correctly made every user a standard user in lab 17. Then the engineering team needed to install a driver, and the answer *raise a ticket every time* is not one anyone accepts for long. Endpoint Privilege Management lets a specific application run elevated for a specific user without that user being a local administrator — which is the only way to hold the line on least privilege in practice.
+Autopilot correctly made every user a standard user in lab 17. Then the engineering team needed to install a driver, and the answer *raise a ticket every time* is not one anyone accepts for long. Endpoint Privilege Management lets a specific application run elevated for a specific user without that user being a local administrator — which is the only way to hold the line on least privilege in practice. Since the July 2026 packaging change it is included with Microsoft 365 E5, so this is a lab you can actually run.
 
 ### Objectives
 
 After completing this lab, you will be able to:
 
 - Explain what EPM solves and why local administrator rights are the alternative
-- Describe the elevation settings policy and elevation rules policy
+- Create the elevation settings policy and an elevation rules policy
 - Distinguish automatic, user-confirmed and support-approved elevation
-- Interpret elevation reporting
-- Decide when starting the Intune Suite trial is worthwhile
+- Elevate an application as a standard user and see it recorded
+- Read the managed and unmanaged elevation reports and use them to drive a rollout
 
 ### Exam objectives covered
 
@@ -12550,10 +12644,10 @@ After completing this lab, you will be able to:
 ### Prerequisites
 
 - Completed labs: `whfb-laps-local-groups`
-- Licences: M365-E5, INTUNE-SUITE
+- Licences: M365-E5, INTUNE-EPM
 - Roles: Intune Administrator
-- Devices and portals: Microsoft Intune admin center
-- Personas: johanna.lorenz, helpdesk.operator
+- Devices and portals: Microsoft Intune admin center, vm1-adele (Windows 11)
+- Personas: johanna.lorenz, adele.vance
 
 ### Exercise 1: The problem and the two policies
 
@@ -12564,31 +12658,31 @@ After completing this lab, you will be able to:
    | Approach | Consequence |
    | --- | --- |
    | Make users local administrators | Any malware they run inherits full control of the device |
-   | Add them temporarily through a local group policy | Nobody removes it; the estate drifts to fully privileged |
+   | Add them temporarily to the local group | Nobody removes it; the estate drifts back to fully privileged |
    | Require a ticket for every elevation | Help desk load, user frustration, and shadow workarounds |
    | **Endpoint Privilege Management** | One application elevates, for one user, under a rule you wrote, with an audit trail |
 
    > [!IMPORTANT]
    > The key property is that elevation is scoped to the **application**, not to the user. A user granted elevation for a driver installer is not a local administrator and cannot elevate anything else. This is what makes least privilege survivable — it is the answer to the objection that standard users cannot get their work done.
 
-2. EPM is configured with two policies that must both exist:
+2. EPM is configured with two policies, and both must exist:
 
-   | Policy | Controls | Path |
-   | --- | --- | --- |
-   | **Elevation settings policy** | Whether EPM is on, the default behaviour, and reporting scope | Endpoint security > Endpoint Privilege Management > Policies |
-   | **Elevation rules policy** | The individual rules: which file, validated how, elevated in what way | The same blade, a different policy type |
+   | Policy | Controls |
+   | --- | --- |
+   | **Elevation settings policy** | Whether EPM is on for the device, the default behaviour when no rule matches, and reporting scope |
+   | **Elevation rules policy** | The individual rules: which file, validated how, elevated in what way |
 
    > [!WARNING]
-   > Rules without a settings policy do nothing, because the client component is not enabled. This is the equivalent of the two-part LAPS configuration from lab 28 — a rules policy deploying successfully while nothing elevates is almost always a missing settings policy.
+   > Rules without a settings policy do nothing, because the client component is never enabled. This is the same two-part shape as Windows LAPS in lab 28, which needed a directory setting alongside its policy. When an EPM rules policy deploys successfully and nothing elevates, a missing settings policy is the first thing to check.
 
 **Results:** You can explain what EPM solves and name both required policies.
 
 - [ ] You can state what elevation is scoped to.
-- [ ] You can name both policy types.
+- [ ] You can name both policy types and what each controls.
 
 #### Task 2: Learn the elevation types
 
-1. The elevation settings policy sets a default behaviour and each rule can override it.
+1. The settings policy sets a default behaviour, and each rule can override it.
 
    | Elevation type | User experience | Use for |
    | --- | --- | --- |
@@ -12600,30 +12694,134 @@ After completing this lab, you will be able to:
    > [!IMPORTANT]
    > **User confirmed** with a business-justification prompt is the default answer in most scenarios. It keeps the user working, creates a record of who elevated what and why, and adds no help desk load. **Automatic** removes the audit prompt and should be reserved for applications you have deliberately vetted. **Support approved** is the only type that involves another person, and it is examined as the answer for high-risk cases.
 
-2. Each rule identifies a file, and how strictly it is validated:
+**Results:** You can choose an elevation type from a requirement.
+
+- [ ] You can name the elevation type suited to most cases, and say why.
+
+### Exercise 2: Deploy the policies
+
+#### Task 1: Create the elevation settings policy
+
+1. In the **Microsoft Intune admin center**, select **Endpoint security**, then **Endpoint Privilege Management**, then the **Policies** tab, then **Create Policy**.
+   *Path:* **Endpoint security** > **Endpoint Privilege Management** > **Policies** > **Create Policy**
+
+2. Choose the platform and profile:
 
    | Setting | Value |
    | --- | --- |
-   | File name | **The executable, for example `driverinstall.exe`** |
-   | File path | **Optional, to constrain where it may run from** |
-   | Signature source | **Publisher certificate, file hash, or both** |
-   | Certificate file | **Uploaded to validate the publisher** |
-   | File hash | **SHA-256 of the exact binary** |
-   | Child process behaviour | **Allow all, require rule, deny all** |
+   | Platform | **Windows** |
+   | Profile | **Elevation settings policy** |
+   | Name | **EPM-Settings-Corporate** |
+
+3. Configure the settings:
+
+   | Setting | Value |
+   | --- | --- |
+   | Endpoint Privilege Management | **Enabled** |
+   | Default elevation response | **Deny all requests** <br> Start denied. Elevation happens only where you have written a rule, which is the point. |
+   | Send elevation data for reporting | **Diagnostic data and all endpoint elevations** <br> This is what populates the unmanaged elevations report that drives your rollout. |
+   | Validate rules for all elevation requests | **Not configured** |
+
+   > [!IMPORTANT]
+   > **Send elevation data for reporting** set to *all endpoint elevations* is the setting that makes EPM useful before you have written a single rule. It records every elevation happening on the device, including ones no rule covers — which is exactly the list of rules you still need to write.
+
+4. On **Assignments**, assign to `GRP-DEV-WIN-CORP`, then create the policy.
+
+**Results:** The EPM client component is enabled and reporting, with elevation denied by default.
+
+- [ ] `EPM-Settings-Corporate` is assigned to corporate Windows devices.
+- [ ] The default elevation response is **Deny all requests**.
+
+#### Task 2: Create an elevation rule
+
+1. You need a file to write a rule against. On **MD102-VM1-Adele**, pick something that genuinely requires elevation — the registry editor is a convenient, obviously-privileged example:
+
+   *Collect the details a rule needs*
+   ```powershell
+   $file = "C:\Windows\regedit.exe"
+   Get-FileHash -Path $file -Algorithm SHA256 | Select-Object Hash
+   (Get-Item $file).VersionInfo | Select-Object FileDescription, ProductVersion, CompanyName
+   ```
+
+   > [!TIP]
+   > Record the SHA-256 hash. A rule can match on file name alone, but a hash or a publisher certificate is what stops someone dropping their own `regedit.exe` into a writable folder and having your rule elevate it for them.
+
+2. Back in the portal, create a second policy under **Endpoint Privilege Management** > **Policies** > **Create Policy**:
+
+   | Setting | Value |
+   | --- | --- |
+   | Platform | **Windows** |
+   | Profile | **Elevation rules policy** |
+   | Name | **EPM-Rules-Engineering** |
+
+3. Add a rule and configure it:
+
+   | Setting | Value |
+   | --- | --- |
+   | Rule name | **Registry Editor — user confirmed** |
+   | Description | **Permits engineering to edit the registry without local administrator rights** |
+   | Elevation type | **User confirmed** |
+   | Validation | **Business justification** <br> The user must type a reason, which is recorded against the elevation. |
+   | File name | **regedit.exe** |
+   | File path | **C:\Windows** <br> Constrains where the file may run from. |
+   | Signature source | **File hash** |
+   | File hash | **The SHA-256 you collected above** |
+   | Child process behavior | **Deny all** <br> See the warning below — this is the setting that matters most. |
 
    > [!CAUTION]
-   > **Child process behaviour** is the setting attackers care about. An installer permitted to elevate can spawn a command prompt, and if child processes inherit elevation, the user now has an elevated shell — full local administrator by another route. Set it to **Deny all** or **Require rule** unless the application genuinely needs to launch something else.
+   > **Child process behaviour** is the setting attackers care about. An application permitted to elevate can spawn other processes, and if those inherit elevation the user has an elevated shell — full local administrator by another route. Set it to **Deny all**, or **Require rule** where the application genuinely must launch something else. Allowing all child processes converts a narrow, audited grant into a general one.
 
-**Results:** You can choose an elevation type and describe how a rule identifies an application.
+4. On **Assignments**, assign to `GRP-USR-ENGINEERING`, then create the policy.
 
-- [ ] You can name the elevation type suited to most cases and say why.
-- [ ] You can explain the risk in allowing all child processes.
+   > [!NOTE]
+   > Note the asymmetry: the settings policy targets **devices**, because it enables a client component. The rules policy targets **users**, because elevation is a permission granted to a person. Getting these the wrong way round produces a policy that deploys and does nothing.
 
-### Exercise 2: Reporting, and deciding on the trial
+**Results:** A narrowly scoped elevation rule is deployed to the engineering group.
 
-#### Task 1: Understand elevation reporting
+- [ ] `EPM-Rules-Engineering` is assigned to a user group.
+- [ ] The rule validates by file hash and denies child processes.
 
-1. Reporting lives under **Endpoint security** > **Endpoint Privilege Management** > **Reports**.
+### Exercise 3: Elevate, and read the reports
+
+#### Task 1: Elevate as a standard user
+
+1. On **MD102-VM1-Adele**, sign in as `johanna.lorenz@<tenant>.onmicrosoft.com` and sync policy.
+
+   > [!NOTE]
+   > Johanna must be a standard user for this to prove anything. Confirm with `net localgroup Administrators` — if she is a member, the elevation will succeed for the wrong reason and the rule is never exercised.
+
+2. Confirm the EPM client component arrived:
+
+   ```powershell
+   Get-Service EpmService -ErrorAction SilentlyContinue | Select-Object Name, Status, StartType
+   Get-ChildItem "C:\Program Files\Microsoft EPM Agent" -ErrorAction SilentlyContinue | Select-Object -First 3 Name
+   ```
+
+   **Verify:** The EPM agent is present and its service is running. If it is absent, the settings policy has not reached the device — check the device status on `EPM-Settings-Corporate` before going further.
+
+3. Now use the rule. Right-click `regedit.exe` in `C:\Windows` and select **Run with elevated access**.
+
+   > [!IMPORTANT]
+   > **Run with elevated access** is a new context-menu entry added by the EPM agent. It is distinct from **Run as administrator**, which still demands administrator credentials Johanna does not have. If the entry is missing, the agent is not installed.
+
+4. Enter a business justification when prompted and confirm.
+
+   **Verify:** Registry Editor opens with full privileges, without Johanna supplying any administrator credentials and without her being a local administrator.
+
+5. Prove the boundary holds. Try to elevate something the rule does not cover — `cmd.exe`, for example.
+
+   **Verify:** Elevation is refused, because the settings policy default is **Deny all requests** and no rule matches. This is the difference between EPM and local administrator rights, demonstrated on a real device.
+
+**Results:** A standard user elevated one specific application and nothing else.
+
+- [ ] Registry Editor ran elevated with no administrator credentials.
+- [ ] An application with no matching rule was refused.
+- [ ] Johanna is still not a member of the local Administrators group.
+
+#### Task 2: Read the elevation reports
+
+1. In the portal, select **Endpoint security**, **Endpoint Privilege Management**, then the **Reports** tab.
+   *Path:* **Endpoint security** > **Endpoint Privilege Management** > **Reports**
 
    | Report | Answers |
    | --- | --- |
@@ -12632,53 +12830,57 @@ After completing this lab, you will be able to:
    | **Unmanaged elevations** | Elevations that happened outside your rules — **the interesting one** |
    | Elevation requests | Pending and completed support-approved requests |
 
+2. Open **Managed elevations** and find your test.
+
+   **Verify:** The elevation is listed with Johanna's account, the device, the file, the rule that matched and the business justification she typed. That justification string is the audit trail local administrator rights never gave you.
+
+3. Open **Unmanaged elevations**.
+
    > [!TIP]
-   > **Unmanaged elevations** is the report that drives the rollout. It shows what users are actually elevating that you have not written a rule for — which is your backlog of rules to write, and occasionally your evidence that someone still holds local administrator rights they should not.
+   > This is the report that drives a real rollout. It shows what users are elevating that you have not written a rule for — which is your backlog. It is also occasionally your evidence that someone still holds local administrator rights they should not, because those elevations appear here having bypassed EPM entirely.
 
-2. Note the recommended rollout, which mirrors the audit-first pattern from ASR and App Control:
+4. Note the rollout sequence, which mirrors the audit-first pattern from attack surface reduction and App Control:
 
-   a. Deploy the elevation settings policy with the default set to **Deny**, and reporting on.
+   a. Deploy the settings policy with the default set to **Deny** and reporting on — as you did in exercise 2.
    b. Collect unmanaged elevation data for a few weeks to learn what people genuinely need.
    c. Write rules for the legitimate cases, mostly user-confirmed.
    d. Remove local administrator rights, using the local group membership policy from lab 28.
    e. Keep watching unmanaged elevations for what you missed.
 
    > [!IMPORTANT]
-   > Step 4 is the point of the whole exercise. EPM has no value while users are still local administrators — they simply never trigger a rule. The sequence matters: collect evidence, write rules, *then* remove the rights.
+   > Step 4 is the point of the whole exercise. EPM has no value while users are still local administrators — they never trigger a rule, and the reports stay empty of anything useful. The sequence matters: collect evidence, write rules, *then* remove the rights.
 
-**Results:** You can describe the reports and the correct rollout sequence.
+**Results:** Every elevation is recorded, and you know which report tells you what rules you are still missing.
 
-- [ ] You can name the report that shows what rules you are missing.
-- [ ] You can explain why removing admin rights comes after writing rules.
+- [ ] Your test elevation appears under **Managed elevations** with its justification.
+- [ ] You can name the report that reveals missing rules.
+- [ ] You can state why removing administrator rights comes after writing rules.
 
-#### Task 2: Decide whether to start the trial
+### Troubleshooting
 
-1. You can run everything above for real, free, for 90 days. Whether you should depends on what you want from it.
+**Symptom:** An elevation rules policy is deployed but no applications elevate, and the Run with elevated access menu entry is missing.
 
-   |  | Detail |
-   | --- | --- |
-   | Duration | 90 days, then a 30-day grace period |
-   | Users | Up to 250 |
-   | Limit | One trial per capability per tenant — **you get one attempt** |
-   | Path | Tenant administration > Intune add-ons > All add-ons |
-   | Requires | Global Administrator or Billing Administrator |
+- **Root cause:** No elevation settings policy is deployed to the device, so the EPM client component was never installed. Rules alone deploy successfully and do nothing.
+- **Diagnostic:**
 
-   > [!IMPORTANT]
-   > The clock runs whether you use it or not, and there is no second trial. If you start it now and sit the exam in two months, it will still be active — that is fine. If you start it now and study for six months, it will have expired long before you needed it, and you cannot get it back.
+  ```powershell
+  Get-Service EpmService -ErrorAction SilentlyContinue | Select-Object Name, Status
+  Get-ChildItem "C:\Program Files\Microsoft EPM Agent" -ErrorAction SilentlyContinue
+  ```
 
-2. Use this to decide:
+- **Resolution:** Deploy an elevation settings policy to the **device** group with Endpoint Privilege Management set to Enabled, then sync. The agent installs on the next check-in.
 
-   | Situation | Recommendation |
-   | --- | --- |
-   | Exam booked within 90 days and you want hands-on Suite experience | **Start it**, and work through labs 58 and 59 for real |
-   | Exam date not yet fixed | **Wait.** Read these two labs now and start the trial when you book |
-   | You are evaluating the Suite for your organisation | Start it, and use the EPM unmanaged elevation report as evidence for the business case |
-   | You only need the exam objectives | **Skip it.** These two labs cover what the exam asks |
+**Symptom:** Elevation succeeds for a user who should not have it, and the elevation does not appear in the managed elevations report.
 
-**Results:** You have made a deliberate decision about the trial rather than starting it by accident.
+- **Root cause:** The user is already a local administrator, so Windows elevated through the normal path and EPM was never consulted.
+- **Diagnostic:**
 
-- [ ] You can state the trial duration and the one-attempt limit.
-- [ ] You have decided whether to start it, and why.
+  ```powershell
+  net localgroup Administrators
+  whoami /groups | Select-String "S-1-5-32-544"
+  ```
+
+- **Resolution:** Remove the user from the local Administrators group using the Local Users and Groups policy from lab 28. Until administrator rights are gone, EPM rules are never exercised.
 
 ### Knowledge check
 
@@ -12701,217 +12903,295 @@ D. Deny, and handle each case through a ticket
 
 A. No elevation settings policy is deployed, so the client component is not enabled
 B. The rules use file hash validation instead of certificate validation
-C. The users are still local administrators
+C. The rules policy was assigned to a user group rather than a device group
 D. Child process behaviour is set to Deny all
 
 <details><summary>Answer</summary>
 
-**A** — EPM requires both policies. The elevation settings policy enables the client component and sets default behaviour; rules alone deploy successfully and do nothing without it.
+**A** — EPM requires both policies. The elevation settings policy enables the client component and sets default behaviour; rules alone deploy successfully and do nothing without it. Rules policies are correctly assigned to user groups.
 
 *Exam tip:* This two-part pattern recurs across Intune — LAPS needs a directory setting plus a policy, EPM needs settings plus rules. When a policy deploys and nothing happens, look for the missing half.
 
 </details>
 
+**Q3.** You create an EPM rule permitting an installer to elevate, and set child process behaviour to Allow all. What risk does this introduce?
+
+A. The elevated application can spawn a command prompt that inherits elevation, giving the user full local administrator access
+B. The rule will apply to every application on the device
+C. The elevation will not be recorded in the managed elevations report
+D. The rule will be ignored because child process behaviour must be configured
+
+<details><summary>Answer</summary>
+
+**A** — Child processes inheriting elevation turns a narrow, audited grant into a general one. Anything the elevated application can launch — including a shell — runs with the same privileges.
+
+*Exam tip:* Deny all is the safe default, with Require rule where an application genuinely needs to launch something else. This setting is what keeps EPM scoped to the application rather than to the session.
+
+</details>
+
 ---
 
-## Lab 59: Remote Help, Enterprise App Catalog, Cloud PKI, Tunnel for MAM and Advanced Analytics
+## Lab 59: Remote Help, Enterprise App Catalog, Advanced Analytics and Tunnel for MAM
 
-**Access:** Walkthrough — licence not included in Microsoft 365 E5 · **Estimated time:** 45 minutes · **Difficulty:** intermediate
-
-> [!IMPORTANT]
-> All five capabilities require Microsoft Intune Plan 2 or the Intune Suite, neither of which is part of Microsoft 365 E5. Each has a free 90-day trial for up to 250 users, started from Tenant administration > Intune add-ons — lab 58 covers whether starting it is worth your one attempt. This lab gives you the configuration surfaces, the prerequisites and the decision criteria the exam asks for.
+**Access:** Hands-on · **Estimated time:** 55 minutes · **Difficulty:** intermediate
 
 ### Lab scenario
 
-The remaining Intune Suite objectives cover five capabilities that each solve a problem you have already met in this course: helping a user you cannot see, packaging applications you would rather not package, running a certification authority you would rather not run, giving unmanaged devices access to internal services, and finding the device that is quietly degrading. Each is examined and none is included in your licence.
+Four capabilities that each remove friction you have already met in this course: helping a user you cannot see, packaging applications you would rather not package, finding the device that is quietly degrading, and giving unmanaged devices access to internal services. All four arrived in Microsoft 365 E5 with the July 2026 packaging change, so three of them you will configure and use here. The fourth, Tunnel for MAM, is licensed but needs a Linux gateway you would have to host — so it stays a walkthrough within an otherwise hands-on lab.
 
 ### Objectives
 
 After completing this lab, you will be able to:
 
-- Configure Microsoft Intune Remote Help and its security model
-- Describe the Enterprise App Catalog and what it replaces
-- Explain Microsoft Cloud PKI and how it differs from SCEP with an on-premises CA
-- Describe Microsoft Tunnel for Mobile Application Management
-- State what Intune Advanced Analytics adds beyond Endpoint Analytics
+- Configure and use Microsoft Intune Remote Help
+- Deploy an application from the Enterprise App Catalog and compare it with hand packaging
+- Use Advanced Analytics: multi-device query, anomaly detection and the device timeline
+- Describe Microsoft Tunnel for Mobile Application Management and what hosting it requires
 
 ### Exam objectives covered
 
 - `g2.t3.s2` — Manage applications by using the Enterprise App Catalog
 - `g2.t3.s3` — Configure Microsoft Intune Remote Help
-- `g2.t3.s4` — Plan and implement Microsoft Cloud PKI, including setting up cloud-based PKI, automating certificate issuance, and monitoring certificate health
 - `g2.t3.s5` — Implement Microsoft Tunnel for Mobile Application Management, including configuring Tunnel Gateway, extending support to MAM devices, and monitoring tunnel connections
 - `g2.t3.s6` — Implement Microsoft Intune Advanced Analytics, including anomaly detection, proactive insights, and risk-based policy recommendations
 
 ### Prerequisites
 
-- Completed labs: `endpoint-privilege-management`, `certificates-and-network`, `endpoint-analytics`
-- Licences: M365-E5, INTUNE-SUITE
+- Completed labs: `endpoint-privilege-management`, `win32-packaging`, `endpoint-analytics`
+- Licences: M365-E5, INTUNE-REMOTE-HELP, INTUNE-ENTERPRISE-APP-MGMT, INTUNE-ADV-ANALYTICS, INTUNE-P2
 - Roles: Intune Administrator
-- Devices and portals: Microsoft Intune admin center
-- Personas: helpdesk.operator, adele.vance
+- Devices and portals: Microsoft Intune admin center, vm1-adele (Windows 11)
+- Personas: adele.vance, helpdesk.operator
 
-### Exercise 1: Remote Help and the Enterprise App Catalog
+### Exercise 1: Remote Help
 
-#### Task 1: Remote Help
+#### Task 1: Enable Remote Help and deploy the app
 
-1. Remote Help is a secure screen-sharing and remote-control tool built into Intune. Its path is **Tenant administration** > **Remote Help**.
+1. In the **Microsoft Intune admin center**, select **Tenant administration**, then **Remote Help**.
    *Path:* **Tenant administration** > **Remote Help**
 
-2. The configuration:
+2. On the **Settings** tab, configure:
 
    | Setting | Value |
    | --- | --- |
    | Enable Remote Help | **Yes** |
-   | Allow Remote Help to unenrolled devices | **Your choice** <br> Useful for helping a user before enrollment succeeds — which is exactly when they most need help. |
+   | Allow Remote Help to unenrolled devices | **Yes** <br> Useful precisely when a user most needs help — before enrollment has succeeded. |
    | Disable chat | **No** |
-   | Application deployment | **Deploy the Remote Help app to devices as a Win32 app** |
 
-   | Property | Detail |
+3. Deploy the Remote Help application to devices. Select **Apps** > **All apps** > **Add** > **Windows app (Win32)**, or use the Enterprise App Catalog entry you will meet in the next exercise.
+
+   > [!TIP]
+   > Remote Help is itself in the Enterprise App Catalog, so the quickest route is **Add** > **Enterprise App Catalog app** and search for it. That saves packaging it by hand and is a neat demonstration of why the catalogue exists.
+
+4. Assign the app as **Required** to `GRP-DEV-WIN-CORP`.
+
+5. Confirm the permissions model, because this is what makes Remote Help enterprise-grade:
+
+   | Permission | Grants |
    | --- | --- |
-   | Trust | Both parties see the other's verified organisation identity before the session starts |
-   | Consent | The user must accept, and must accept again to grant full control |
-   | Permissions | Governed by Intune RBAC — separate permissions for view-only, full control and elevation |
-   | Audit | Every session is logged with participants, device and duration |
-   | Conditional Access | Sessions can be gated by Conditional Access policy |
+   | Remote Help app — Take full control | Full remote control of the session |
+   | Remote Help app — View screen | View only, no input |
+   | Remote Help app — Elevation | The ability to approve a UAC prompt during the session |
+
+   > [!NOTE]
+   > These are Intune RBAC permissions from lab 7, so a Help Desk Operator can be granted view-only while a senior engineer gets full control. Elevation is deliberately separate — approving a UAC prompt on someone else's device is a bigger grant than seeing their screen.
+
+**Results:** Remote Help is enabled and the application is deploying to corporate devices.
+
+- [ ] **Remote Help** shows as enabled under **Tenant administration**.
+- [ ] The Remote Help app is assigned as Required.
+
+#### Task 2: Run a session
+
+1. On **MD102-VM1-Adele**, sync policy and wait for the Remote Help application to install, then open it and sign in as Adele.
+
+2. From your admin machine, open Remote Help and sign in as `admin-intune@<tenant>.onmicrosoft.com`, then request a session with Adele's device.
 
    > [!IMPORTANT]
-   > The distinguishing feature against a generic remote-control tool is **verified identity on both sides**. The helper sees who they are connecting to and the user sees a verified organisational identity rather than a name anyone could type — which is the defence against the support-desk impersonation call. Combined with RBAC-governed permissions and per-session audit, that is what makes it enterprise-grade.
+   > Watch what both sides are shown before the session starts. The helper sees the verified organisational identity of the person they are connecting to, and the user sees the helper's verified identity — not a name someone typed. That mutual verification is the defence against the support-desk impersonation call, and it is what distinguishes Remote Help from a generic remote-control tool.
 
-**Results:** You can describe Remote Help's configuration and security model.
+3. Accept on Adele's side, then request full control and accept again.
 
-- [ ] You can name what distinguishes Remote Help from a generic remote-control tool.
+   **Verify:** The session connects. Note that full control required a **second** explicit consent — viewing and controlling are separate grants.
 
-#### Task 2: Enterprise App Catalog
+4. End the session, then check the audit trail under **Tenant administration** > **Remote Help** > **Monitor**.
 
-1. The Enterprise App Catalog is a Microsoft-curated library of prepackaged Win32 applications, found under **Apps** > **All apps** > **Add** > **Enterprise App Catalog app**.
+   **Verify:** The session is logged with both participants, the device and the duration.
 
-   |  | Manual Win32 packaging (lab 33) | Enterprise App Catalog |
+**Results:** You have run an audited remote session with verified identity on both sides.
+
+- [ ] A session completed and appears in the Remote Help monitor.
+- [ ] Full control required a separate consent from view-only.
+
+### Exercise 2: Enterprise App Catalog
+
+#### Task 1: Deploy a catalogue app and compare it with lab 33
+
+1. Select **Apps**, **All apps**, **Add**, then app type **Enterprise App Catalog app**.
+   *Path:* **Apps** > **All apps** > **Add**
+
+2. Select **Search the Enterprise App Catalog**, find a common application — 7-Zip, Notepad++ or Google Chrome are all present — and select it.
+
+3. Work through the wizard and pay attention to what you are *not* asked for:
+
+   | Step | Lab 33 — hand packaged | Enterprise App Catalog |
    | --- | --- | --- |
    | Obtain the installer | You download it | Microsoft hosts it |
    | Package it | You run IntuneWinAppUtil | Already packaged |
-   | Install and uninstall commands | You determine them | Supplied |
-   | Detection rules | **You write them** | **Supplied and correct** |
-   | Updates | You repackage each new version | New versions appear in the catalogue, with supersedence |
-   | Effort per application | An hour or more | Minutes |
+   | Install and uninstall commands | You determine them | **Supplied** |
+   | Detection rules | **You write them** | **Supplied and validated** |
+   | Requirement rules | You set them | Supplied, and editable |
+   | Updates | You repackage each version | New versions appear in the catalogue with supersedence |
 
    > [!IMPORTANT]
-   > The value is the detection rules. Lab 33 showed that `0x87D1041C` — a correct installation reported as failed — is the most common Win32 problem, and it comes from writing detection rules by hand. Catalogue applications arrive with rules Microsoft has already validated, which removes that entire class of failure along with the repackaging treadmill.
+   > The detection rules are the real value. Lab 33 showed that `0x87D1041C` — a correct installation reported as failed — is the most common Win32 problem, and it comes almost entirely from writing detection rules by hand. Catalogue applications arrive with rules Microsoft has already validated, which removes that whole class of failure along with the repackaging treadmill.
 
-**Results:** You can state what the Enterprise App Catalog removes from the Win32 workflow.
+4. Assign as **Available for enrolled devices** to `GRP-USR-PILOT`, then create the app.
 
-- [ ] You can name the Win32 error class the catalogue eliminates.
+5. Open the created app and inspect its **Detection rules**.
 
-### Exercise 2: Cloud PKI and Tunnel for MAM
+   **Verify:** Detection rules are pre-populated and correct for the packaged version. Compare with the rule you wrote by hand in lab 33 — and with the one you deliberately broke to produce `0x87D1041C`.
 
-#### Task 1: Microsoft Cloud PKI
-
-1. Lab 27 built certificate profiles but could not issue certificates, because SCEP and PKCS need an on-premises certification authority and the Intune Certificate Connector. Cloud PKI removes that requirement entirely.
-
-   |  | SCEP with on-premises CA | Microsoft Cloud PKI |
-   | --- | --- | --- |
-   | Certification authority | Yours — Active Directory Certificate Services | Hosted in the Intune service |
-   | NDES server | Required | **Not required** |
-   | Certificate Connector | Required | **Not required** |
-   | Servers to maintain and patch | Two or more | **None** |
-   | Root and issuing CA | You build the hierarchy | Created in the portal in minutes |
-   | Bring your own root | Not applicable | Supported — issuing CA under your existing root |
-   | Revocation | Your CRL infrastructure | Managed by the service |
-   | Setup time | Days | Under an hour |
-
-   > [!IMPORTANT]
-   > The exam objective names *setting up cloud-based PKI, automating certificate issuance, and monitoring certificate health*. The path is **Tenant administration** > **Cloud PKI**: create a root CA, create an issuing CA under it, then reference that issuing CA from a SCEP profile exactly as lab 27 did. The certificate profile side is unchanged — only the authority behind it moves.
-
-2. Certificate health monitoring is the third part of the objective.
+6. Note where the catalogue does not help:
 
    > [!NOTE]
-   > Cloud PKI reports issued, expiring and revoked certificates per CA in the portal, which is what *monitoring certificate health* refers to. With an on-premises authority that information lives in the CA console and is nobody's job to watch.
+   > The catalogue covers widely used third-party software. Your own line-of-business application will never be in it, so lab 33's packaging skills remain necessary — the catalogue removes the tedious 80 percent, not the difficult 20 percent.
 
-**Results:** You can explain what Cloud PKI removes and how it plugs into existing certificate profiles.
+**Results:** An application is deployed with supplied, validated detection rules.
 
-- [ ] You can name the two servers Cloud PKI makes unnecessary.
-- [ ] You can state what changes in the certificate profile itself.
+- [ ] A catalogue app exists with pre-populated detection rules.
+- [ ] You can state which Win32 error class the catalogue eliminates.
 
-#### Task 2: Microsoft Tunnel for Mobile Application Management
+### Exercise 3: Advanced Analytics
 
-1. Lab 27 mentioned per-app VPN for enrolled devices. Tunnel for MAM extends that to devices that are not enrolled at all.
+#### Task 1: Use multi-device query, anomaly detection and the device timeline
 
-   | Component | Role |
+1. Lab 51 ran a KQL query against a single device. Now run one across many. Select **Reports**, **Endpoint analytics**, then **Device query**.
+   *Path:* **Reports** > **Endpoint analytics** > **Device query**
+
+2. Run a query across your whole estate:
+
+   *Which devices have a given application, and at what version?*
+   ```kusto
+   Application
+   | where displayName contains "7-Zip"
+   | project deviceName, displayName, version, publisher
+   | sort by version asc
+   ```
+
+   **Verify:** Results return for every device that matches, not just one. This is the vulnerability-response scenario from lab 51 answered properly — that lab could only ask one device at a time.
+
+3. Open **Reports** > **Endpoint analytics** > **Anomalies**.
+
+   | Column | Meaning |
    | --- | --- |
-   | Tunnel Gateway | A Linux container you host, on-premises or in a cloud, terminating the VPN |
-   | Tunnel server configuration | IP ranges, DNS servers and split-tunnelling rules |
-   | Site | A logical grouping of gateway servers |
-   | App configuration policy | Points Microsoft Edge or a managed app at the tunnel |
-   | App protection policy | Protects the corporate data reached through it |
+   | Anomaly | What is behaving unusually — a crash pattern, a startup regression, a driver fault |
+   | Devices impacted | How many, and which |
+   | Anomaly details | The correlated signals behind the detection |
+   | First detected | When the behaviour diverged from the baseline |
+
+   > [!NOTE]
+   > With two virtual machines you will likely see nothing here, and that is the correct result — anomaly detection compares devices against their peers and needs a population to compare within. The mechanism is what matters: it finds the device you would not have thought to look at.
+
+4. Open a device and select **Device timeline**.
+
+   **Verify:** A chronological history appears: policy applications, application installs, restarts, crashes and driver events.
+
+   > [!IMPORTANT]
+   > The timeline is the capability that changes daily work. Endpoint Analytics in lab 54 told you a device was slow; the timeline tells you it became slow on the fourteenth, two hours after a configuration profile applied. That is the difference between a symptom and a cause, and it is why the exam objective names it alongside anomaly detection.
+
+**Results:** You can query the estate, spot outliers and reconstruct what happened to a device.
+
+- [ ] A multi-device query returned results from more than one device.
+- [ ] The device timeline shows a chronological event history.
+
+### Exercise 4: Microsoft Tunnel for Mobile Application Management
+
+The licence is included, but this is the one capability in the module you cannot simply switch on — it needs infrastructure you would have to host.
+
+#### Task 1: Understand what Tunnel for MAM requires
+
+1. Lab 27 configured per-app VPN for enrolled devices. Tunnel for MAM extends that to devices that are not enrolled at all.
+
+   | Component | Role | Who provides it |
+   | --- | --- | --- |
+   | Tunnel Gateway | A Linux container terminating the VPN | **You host it** — on-premises or in a cloud |
+   | Server configuration | IP ranges, DNS servers, split-tunnelling rules | You configure it in Intune |
+   | Site | A logical grouping of gateway servers | You define it in Intune |
+   | App configuration policy | Points Microsoft Edge or a managed app at the tunnel | Intune, as in lab 37 |
+   | App protection policy | Protects the corporate data reached through it | Intune, as in lab 36 |
 
    > [!IMPORTANT]
    > The scenario is Joni from lab 36 — a personally owned, unenrolled device that must reach an internal line-of-business web application. A device-wide VPN would require enrollment. Tunnel for MAM puts the tunnel inside the managed application instead, so only that application reaches the internal network and personal traffic never does.
 
-2. Note the operational commitment:
+2. Understand why this exercise stops here:
 
    > [!WARNING]
-   > Tunnel Gateway is infrastructure **you** run: a Linux host, a container, a TLS certificate to renew, and patching. Unlike the other four capabilities in this lab, buying the licence is not the end of the work. Monitoring tunnel connections and server health is named in the exam objective for exactly that reason.
+   > Tunnel Gateway is infrastructure **you** run: a Linux host, a container runtime, a TLS certificate to renew, and patching. Unlike the other three capabilities in this lab, the licence being included is not the end of the work — there is nothing to click until a gateway exists. That is also why *monitoring tunnel connections and server health* appears in the exam objective.
 
-**Results:** You can describe Tunnel for MAM's components and the scenario it answers.
+3. Note the configuration path so you recognise it:
+   *Path:* **Tenant administration** > **Microsoft Tunnel Gateway**
+
+   a. Create a **Server configuration** defining IP ranges, DNS and split tunnelling.
+   b. Create a **Site** and associate the server configuration with it.
+   c. Install the Tunnel Gateway software on a supported Linux server using the generated script.
+   d. Create an **app configuration policy** pointing the managed app at the tunnel.
+   e. Monitor server health and connection counts under the same blade.
+
+**Results:** You can describe Tunnel for MAM's components and state what it requires beyond a licence.
 
 - [ ] You can name the component you must host yourself.
-- [ ] You can state why a device-wide VPN is not the answer for unenrolled devices.
+- [ ] You can explain why a device-wide VPN is not the answer for unenrolled devices.
 
-### Exercise 3: Advanced Analytics
+#### Task 2: Place the whole module in context
 
-#### Task 1: What it adds beyond Endpoint Analytics
+1. Review all six formerly-Suite capabilities against the problem each one removes.
 
-1. Lab 54 used Endpoint Analytics on your Plan 1 licence. Advanced Analytics extends it in four ways, all named in the exam objective.
-
-   | Capability | What it does |
-   | --- | --- |
-   | **Anomaly detection** | Identifies devices behaving unlike their peers — a sudden change in crashes, startup time or resource use |
-   | **Proactive insights** | Surfaces developing problems before users report them, with the affected device population |
-   | **Risk-based policy recommendations** | Suggests configuration changes ranked by measured impact on the estate |
-   | **Device timeline** | A chronological event history per device — policy changes, application installs, restarts, crashes — for root-cause analysis |
-   | **Multi-device query** | The KQL from lab 51, run across many devices at once instead of one |
-   | **Enhanced device scopes** | Scoped analytics for delegated administrators |
-
-   > [!IMPORTANT]
-   > **Device timeline** is the one that changes daily work. Endpoint Analytics tells you a device is slow; the timeline tells you it became slow on the fourteenth, two hours after a configuration profile applied. That is the difference between a symptom and a cause, and it is why this appears in the objective alongside anomaly detection.
-
-2. Close the module by reviewing all six Intune Suite capabilities against the problems they solve:
-
-   | Capability | Solves | First met in |
+   | Capability | Removes | Friction first met in |
    | --- | --- | --- |
-   | Endpoint Privilege Management | Standard users needing occasional elevation | Lab 28, removing admin rights |
-   | Remote Help | Supporting a user you cannot see, with verified identity | Lab 38, troubleshooting |
+   | Endpoint Privilege Management | Standard users blocked from occasional elevation | Lab 28, removing admin rights |
+   | Remote Help | Supporting a user you cannot see | Lab 38, troubleshooting |
    | Enterprise App Catalog | Packaging and detection-rule effort | Lab 33, `0x87D1041C` |
-   | Cloud PKI | Running a certification authority | Lab 27, SCEP with no CA |
+   | Cloud PKI | Running a certification authority | Lab 27, where you now use it |
    | Tunnel for MAM | Unenrolled devices reaching internal services | Lab 36, BYOD app protection |
    | Advanced Analytics | Finding the cause rather than the symptom | Lab 54, Endpoint Analytics |
 
    > [!TIP]
-   > Every one of these extends something you have already built. That is not a coincidence — the Suite is positioned as the answer to the friction points a Plan 1 deployment reaches. Being able to name the friction each one removes is a better exam preparation than memorising configuration paths.
+   > Every one extends something you had already built and hit a wall with. That is not a coincidence — these capabilities are positioned as the answer to the friction a Plan 1 deployment reaches. Being able to name the friction each removes is better exam preparation than memorising configuration paths, because that is how the scenario questions are framed.
 
-**Results:** You can state what Advanced Analytics adds and map every Suite capability to the problem it solves.
+**Results:** You can pair each capability with the problem it solves.
 
-- [ ] You can name the four Advanced Analytics capabilities in the exam objective.
-- [ ] You can pair each of the six Suite capabilities with a lab that revealed its need.
+- [ ] You can name the lab where each capability's need first became obvious.
+
+### Troubleshooting
+
+**Symptom:** Remote Help sessions cannot be started and the option is greyed out for a help desk operator.
+
+- **Root cause:** The operator's Intune role does not include the Remote Help app permissions, or Remote Help is not enabled at tenant level.
+- **Diagnostic:**
+
+  ```text
+  Tenant administration > Remote Help > Settings — confirm Enable Remote Help is Yes
+  Signed in as the operator: Tenant administration > Roles > My permissions — look for Remote Help app
+  ```
+
+- **Resolution:** Grant the appropriate Remote Help app permission on the operator's role — view screen, take full control and elevation are separate grants, so a role can permit viewing without control.
+
+**Symptom:** Multi-device query returns results for only one device, or the Device query blade under Endpoint analytics is missing.
+
+- **Root cause:** Advanced Analytics has not finished provisioning, or the data collection policy from lab 54 does not target the devices you are querying.
+- **Diagnostic:**
+
+  ```text
+  Reports > Endpoint analytics > Settings — confirm the data collection policy scope
+  Tenant administration > Intune add-ons — confirm Advanced Analytics shows as Active
+  ```
+
+- **Resolution:** Confirm Advanced Analytics is active on the tenant and that the devices are in scope for Endpoint Analytics data collection. Devices excluded from data collection cannot be queried across.
 
 ### Knowledge check
 
-**Q1.** Contoso wants certificate-based Wi-Fi authentication but has no on-premises certification authority and does not want to build one. Which Intune Suite capability applies?
-
-A. Microsoft Cloud PKI, which hosts the certification authority in the service
-B. Microsoft Tunnel for MAM
-C. The Enterprise App Catalog
-D. Advanced Analytics
-
-<details><summary>Answer</summary>
-
-**A** — Cloud PKI provides a hosted root and issuing certification authority, removing the need for Active Directory Certificate Services, an NDES server and the Intune Certificate Connector. Certificate profiles then reference the cloud issuing CA instead of an on-premises one.
-
-*Exam tip:* No on-premises CA and no NDES server is the Cloud PKI signature. The certificate profile configuration itself is unchanged — only the issuing authority moves.
-
-</details>
-
-**Q2.** A user on a personally owned, unenrolled device needs access to an internal line-of-business web application. Which capability provides this without enrolling the device?
+**Q1.** A user on a personally owned, unenrolled device needs access to an internal line-of-business web application. Which capability provides this without enrolling the device?
 
 A. Microsoft Tunnel for Mobile Application Management
 B. A device-wide VPN profile
@@ -12922,11 +13202,11 @@ D. Remote Help
 
 **A** — Tunnel for MAM places the VPN inside the managed application, so an unenrolled device can reach internal resources through that application only. A device-wide VPN profile requires enrollment.
 
-*Exam tip:* Unenrolled plus internal resource access equals Tunnel for MAM. Remember it also requires you to host and maintain the Tunnel Gateway yourself.
+*Exam tip:* Unenrolled plus internal resource access equals Tunnel for MAM. Remember that the licence alone is not enough — you must also host the Tunnel Gateway yourself.
 
 </details>
 
-**Q3.** Which Intune Advanced Analytics capability helps determine the root cause of a device that recently began performing poorly?
+**Q2.** Which Intune Advanced Analytics capability helps determine the root cause of a device that recently began performing poorly?
 
 A. Device timeline, showing a chronological history of events on that device
 B. Anomaly detection
@@ -12937,7 +13217,22 @@ D. The Endpoint analytics score
 
 **A** — Device timeline shows policy changes, application installs, restarts and crashes in order, letting you correlate the onset of a problem with what changed. Anomaly detection identifies that a device is unusual; the timeline explains when and why.
 
-*Exam tip:* Anomaly detection finds the device; device timeline finds the cause. Multi-device query answers a specific question across many devices.
+*Exam tip:* Anomaly detection finds the device; device timeline finds the cause; multi-device query answers a specific question across many devices.
+
+</details>
+
+**Q3.** What is the principal advantage of deploying an application from the Enterprise App Catalog rather than packaging it as a Win32 app by hand?
+
+A. Install commands and validated detection rules are supplied, removing the most common cause of 0x87D1041C
+B. Catalogue applications install without requiring the Intune Management Extension
+C. Catalogue applications bypass assignment intents and install on all devices
+D. Catalogue applications do not require a licence to deploy
+
+<details><summary>Answer</summary>
+
+**A** — The catalogue supplies packaging, install and uninstall commands, requirement rules and — most valuably — detection rules Microsoft has validated. Hand-written detection rules are the dominant cause of an application installing correctly but reporting as failed.
+
+*Exam tip:* The catalogue covers common third-party software only. Your own line-of-business applications still need the packaging skills from lab 33.
 
 </details>
 
@@ -13116,7 +13411,7 @@ Introduce each fault, then diagnose it as though you did not know it was there. 
    | Which grant control serves unenrolled BYOD devices? | Labs 31 and 36 |
    | What two settings make BitLocker enable silently? | Lab 43 |
    | What is the exit-code contract for a proactive remediation detection script? | Lab 53 |
-   | Which capabilities require the Intune Suite rather than E5? | Labs 58 and 59 |
+   | Which examined capabilities does Microsoft 365 E5 genuinely not license? | Labs 1, 21 and 57 |
    | Retire, wipe or selective wipe — for a departing employee's own phone? | Labs 36 and 50 |
 
    > [!IMPORTANT]

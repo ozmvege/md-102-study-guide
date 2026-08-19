@@ -297,7 +297,7 @@ export default {
                     ["Which grant control serves unenrolled BYOD devices?", "Labs 31 and 36"],
                     ["What two settings make BitLocker enable silently?", "Lab 43"],
                     ["What is the exit-code contract for a proactive remediation detection script?", "Lab 53"],
-                    ["Which capabilities require the Intune Suite rather than E5?", "Labs 58 and 59"],
+                    ["Which examined capabilities does Microsoft 365 E5 genuinely not license?", "Labs 1, 21 and 57"],
                     ["Retire, wipe or selective wipe — for a departing employee's own phone?", "Labs 36 and 50"]
                   ]
                 },
