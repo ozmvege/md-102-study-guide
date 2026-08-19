@@ -1,0 +1,17 @@
+{
+  "name": "md-102-exam-lab-guide",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Hands-on MD-102 lab curriculum aligned to the 2026-07-24 skills measured outline.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "check": "node tools/build.mjs --check",
+    "validate": "node tools/build.mjs --validate",
+    "watch": "node tools/build.mjs --watch",
+    "serve": "node tools/serve.mjs"
+  }
+}

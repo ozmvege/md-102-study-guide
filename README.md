@@ -1,135 +1,160 @@
-# 🚀 Microsoft 365 Endpoint Administrator (MD-102) Interactive Master Lab Guide & Study Portal
+# MD-102 Lab Platform
 
-[![MD-102 Exam Ready](https://img.shields.io/badge/Exam-MD--102%20Ready-0078D4?style=for-the-badge&logo=microsoft)](https://learn.microsoft.com/en-us/credentials/certifications/exams/md-102/)
-[![Platform](https://img.shields.io/badge/Platform-Microsoft%20Intune%20%7C%20Entra%20ID%20%7C%20Defender-0078D4?style=for-the-badge)](https://intune.microsoft.com)
-[![License Architecture](https://img.shields.io/badge/License%20Budget-20%20Active%20%2F%205%20Reserve-107C41?style=for-the-badge)]()
-[![GitHub Pages](https://img.shields.io/badge/Deployment-GitHub%20Pages%20Live-238636?style=for-the-badge&logo=github)](index.html)
+A hands-on lab curriculum for **Exam MD-102: Managing and Securing Microsoft 365 Endpoints by using Intune**, built for a 25-seat Microsoft 365 E5 trial, three Hyper-V virtual machines and a free Android emulator.
 
-A production-grade, enterprise-hardened hands-on lab blueprint and **interactive web study guide** designed to guarantee mastery of **Microsoft Intune, Microsoft Entra ID, Microsoft Defender for Endpoint, Windows 11 Enterprise, macOS, and Android Enterprise**.
+<!-- BEGIN:SUMMARY -->
+| | |
+| --- | --- |
+| Exam | **MD-102** — Managing and Securing Microsoft 365 Endpoints by using Intune |
+| Skills outline | 2026-07-24 ([source](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/md-102)) |
+| Labs | 60 across 13 modules (52 hands-on, 8 walkthrough) |
+| Lab time | ~47 hours |
+| Objective coverage | 83 of 83 skill bullets (100%) |
+<!-- END:SUMMARY -->
 
-Whether preparing for **Exam MD-102: Managing and Securing Microsoft 365 Endpoints by using Intune** or modernizing enterprise endpoint infrastructure, this guide walks through realistic end-to-end architectures, diagnostic failure injections, and automated remediations.
+## What this is
 
----
+Every lab maps to specific **skill bullets** of the current skills measured outline — not just to a domain. That mapping is machine-checked: a lab claiming an objective that does not exist fails the build, and the coverage view lists any bullet no lab teaches. "Aligned with the exam" is a computed fact here, not a claim in a readme.
 
-## 🌟 Interactive Web Portal Features
+Labs are written in the shape Microsoft uses for its own lab guides — lab scenario, objectives, estimated time, prerequisites, then numbered exercises and tasks with exact navigation paths and settings tables, each closing with a results block telling you how to know it worked.
 
-The repository includes a zero-dependency **Single-Page Interactive Study Portal** (`index.html`):
+### Honest access badges
 
-- 🎯 **Domain-Mapped Explorer:** Filter all 22+ labs by official MD-102 Exam Domains (Deploy Windows Client, Manage Identity and Access, Manage Compliance and Device Policies, Manage and Protect Devices).
-- 🔄 **Live Tenant Variable Injector:** Enter your tenant prefix (e.g. `contoso`) and watch all PowerShell scripts, UPNs, JSON schemas, and command snippets instantly update across the portal.
-- 📋 **Persistent LocalStorage Checklists:** Track granular task completion with real-time percentage meters, phase tracking, and domain readiness scores.
-- 💡 **MD-102 Exam Mini-Quizzes:** Practice real exam-style questions with instant rationales, correct answer breakdowns, and official Microsoft documentation citations.
-- ⚠️ **Failure Injection Simulator:** Deep-dive into real-world break-fix scenarios (symptom $\rightarrow$ telemetry $\rightarrow$ root cause analysis $\rightarrow$ remediation).
-- 📦 **1-Click Script Sandbox:** Copy production PowerShell scripts, `.intunewin` packaging commands, Graph SDK queries, and JSON compliance schemas in a single click.
-- 💾 **Export / Import Progress:** Seamlessly back up and sync your learning progress across devices and browsers.
-- 🌗 **Modern Enterprise UI:** Fluent-inspired Dark & Light modes, responsive desktop and mobile design.
+The exam covers capabilities that Microsoft 365 E5 does not include. Rather than pretend otherwise, every lab carries a badge:
 
----
+| Badge | Meaning |
+| --- | --- |
+| **Hands-on** | You can complete it with Microsoft 365 E5 and the lab hardware. |
+| **Walkthrough (licence)** | Needs Intune Plan 2, the Intune Suite, Windows 365 or Security Copilot. Exact configuration paths, decision criteria and exam drills, plus how to start the free 90-day add-on trial if you want to run it for real. |
+| **Walkthrough (device)** | Needs Apple hardware or an Apple Business Manager organisation. |
 
-## 🏛️ Lab Architecture & Licensing Strategy
+## Getting started
 
-### Strict 20/5 Budget Architecture (25 Microsoft 365 E5 Licenses)
+Open `index.html`. That is the whole setup — no server, no build, no network. It works from the filesystem and from GitHub Pages, and it works offline.
 
-Standard Microsoft 365 Developer and Trial subscriptions allocate **25 E5 licenses**. To avoid license exhaustion, identity lockouts, and enrollment blockages during multi-device provisioning, this blueprint enforces:
+Set your tenant prefix in the header and every UPN, script and command across all labs rewrites itself to match your tenant.
 
-1. **20 Active Assigned Seats:** Allocated strictly via Group-Based Licensing (`GRP-LIC-M365-E5`).
-2. **5 Safety Reserve Buffer Seats:** Unassigned emergency buffer for zero lockout risk.
+Then start at lab 1. The curriculum builds one tenant from nothing and each lab depends only on labs before it, so the order is the point.
 
-```text
-[ Microsoft 365 E5 Pool: 25 Licenses ]
-   ├── 20 Active Assigned (GRP-LIC-M365-E5)
-   │     ├── 3 Admin Personas (Break-Glass, Intune Arch, SecOps Lead)
-   │     ├── 6 Business Personas (IT, Finance, HR, Sales, Mobile, Exec)
-   │     ├── 5 Specialized Test Roles (Operators, Shared Kiosk, Pilots)
-   │     └── 6 Dynamic Provisioning Buffers
-   └── 5 Unassigned Safety Buffer (Zero Lockouts)
-```
+<!-- BEGIN:COVERAGE -->
+| Exam group | Weight | Skill bullets | Labs | Lab time |
+| --- | --- | --- | --- | --- |
+| Prepare infrastructure for devices | 20–25% | 18/18 | 14 | 11 h |
+| Manage and maintain devices | 25–30% | 27/27 | 16 | 12 h |
+| Protect devices | 15–20% | 15/15 | 11 | 8 h |
+| Manage and secure applications | 15–20% | 12/12 | 7 | 6 h |
+| Optimize endpoint operations by using automation, monitoring, and reporting | 10–15% | 11/11 | 7 | 5 h |
+<!-- END:COVERAGE -->
 
----
+## The 20/5 seat budget
 
-## 🧪 Hands-On Labs Syllabus
+A Microsoft 365 E5 trial gives 25 seats. This lab uses **20 and holds 5 in reserve**.
 
-| Phase | Lab ID | Topic | MD-102 Exam Domain |
-|---|---|---|---|
-| **Phase 1** | **Lab 1** | Hardened Tenant Setup, Branding & Emergency Break-Glass | Manage Identity and Access (10–15%) |
-| | **Lab 2** | Intune RBAC, Scope Tags & Administrative Units | Manage Identity and Access (10–15%) |
-| | **Lab 2B** | Windows Subscription Activation (Pro $\rightarrow$ Enterprise) | Deploy Windows Client (25–30%) |
-| **Phase 2** | **Lab 3** | Device Identity Dissection (`dsregcmd /status`) | Manage Identity and Access (10–15%) |
-| | **Lab 4** | Enrollment Restrictions & Corporate Identifiers | Deploy Windows Client (25–30%) |
-| **Phase 3** | **Lab 5** | Windows Autopilot Classic (User-Driven + ESP Diagnostics) | Deploy Windows Client (25–30%) |
-| | **Lab 5B** | Windows Autopilot Device Preparation (Autopilot v2) | Deploy Windows Client (25–30%) |
-| **Phase 4** | **Lab 6** | Settings Catalog & Assignment Filters | Manage Compliance and Policies (45–50%) |
-| | **Lab 6B** | Group Policy Analytics & Direct CSP Migration | Manage Compliance and Policies (45–50%) |
-| | **Lab 6C** | Enterprise PKI, SCEP/PKCS Certificates & 802.1X Wi-Fi | Manage Compliance and Policies (45–50%) |
-| | **Lab 7** | Windows Hello for Business & Cloud-Native Windows LAPS | Manage Identity and Access (10–15%) |
-| **Phase 5** | **Lab 8** | Built-in Device Compliance Policies & Non-Compliance Actions | Manage Compliance and Policies (45–50%) |
-| | **Lab 8B** | Custom Compliance (PowerShell Discovery + JSON Schema) | Manage Compliance and Policies (45–50%) |
-| | **Lab 9** | Conditional Access & Cross-Workload Zero Trust Lifecycle | Manage Compliance and Policies (45–50%) |
-| **Phase 6** | **Lab 10** | Win32 App Packaging (`.intunewin`) & Custom Detection | Manage and Protect Devices (15–20%) |
-| | **Lab 11** | App Protection Policies (MAM-WE) & Selective Wipe | Manage and Protect Devices (15–20%) |
-| | **Lab 11B** | App Configuration Policies (Managed Devices vs Apps) | Manage and Protect Devices (15–20%) |
-| **Phase 7** | **Lab 12** | Microsoft Defender for Endpoint (MDE) Connector & EDR | Manage and Protect Devices (15–20%) |
-| | **Lab 13** | Attack Surface Reduction (ASR) Rules (Audit $\rightarrow$ Block) | Manage and Protect Devices (15–20%) |
-| | **Lab 14** | BitLocker Silent Encryption & Cloud Key Escrow | Manage and Protect Devices (15–20%) |
-| | **Lab 15** | Endpoint Privilege Management (EPM) & App Control (WDAC) | Manage and Protect Devices (15–20%) |
-| **Phase 8** | **Lab 16** | Windows Update for Business (WUfB) 3-Ring Deployment | Manage and Protect Devices (15–20%) |
-| **Phase 9** | **Lab 17** | Remote Actions & Data Impact Master Matrix | Manage and Protect Devices (15–20%) |
-| | **Lab 18** | Master Diagnostics Toolkit & High-Yield Error Codes | Manage and Protect Devices (15–20%) |
-| **Phase 10**| **Lab 19** | PowerShell & Microsoft Graph SDK Automation | Manage and Protect Devices (15–20%) |
-| | **Lab 20** | Proactive Remediations (Detection & Remediation Scripts) | Manage and Protect Devices (15–20%) |
-| **Phase 11**| **Lab 22** | macOS Management, APNs & Platform SSO | Manage Compliance and Policies (45–50%) |
-| | **Lab 23** | Android Enterprise Work Profile (Android Studio AVD) | Deploy Windows Client & Mobile Endpoints |
-| **Capstone**| **Final** | 20-Seat Enterprise Deployment & 3 Failure Challenges | Comprehensive Master Review |
+The reserve is not caution for its own sake. Group-based licensing assigns seats asynchronously; if the pool is empty at the moment an account lands in `GRP-LIC-M365-E5`, the assignment fails silently and the user hits enrollment error `0x80180018` with nothing in the UI to explain it. Five spare seats mean that never happens in the middle of a lab.
 
----
+Administrator accounts are deliberately **unlicensed**. Tenants created after July 2021 allow unlicensed admin access by default, so an Intune Administrator can run the whole course without consuming an E5 seat. That is what buys 20 usable end-user identities out of 25.
 
-## ⚡ Study Tracks
+The budget is enforced at build time — adding a 21st licensed persona fails `npm run validate`.
 
-- **Track A (10-Day Accelerated Sprint):** Full-time immersion (2–3 labs / ~2.5–3.5 hours per day).
-- **Track B (4-Week Modular Track):** Part-time study (~5–6 hours per week).
+## Working on the content
 
----
-
-## 💻 Local Quick Start
-
-You can run the interactive guide locally with zero build tools:
+Content lives in `content/` and is the only place any fact lives. Everything else is generated.
 
 ```bash
-# Clone repository
-git clone https://github.com/<your-username>/md-102-study-guide.git
-cd md-102-study-guide
-
-# Option 1: Open index.html directly in any modern browser
-# Double-click index.html or run:
-start index.html
-
-# Option 2: Run with local HTTP server
-npx serve .
-# or
-python -m http.server 8080
+npm run build
 ```
 
----
+| Path | Role |
+| --- | --- |
+| `content/outline.md102.mjs` | The skills measured outline. Source of truth for every coverage claim. |
+| `content/labs/NN-slug.mjs` | One lab each. The `NN` prefix sets the display number, so reordering the curriculum is a file rename. |
+| `content/meta/*.mjs` | Personas, virtual machines, licences, error dictionary, study tracks. |
+| `tools/build.mjs` | Validates, computes coverage, writes the generated artifacts. Zero npm dependencies. |
+| `js/content.bundle.js` | **Generated.** The single file the browser loads. |
+| `js/app/inline.js` | **Generated** from `tools/lib/inline.mjs`, so the browser and the Markdown emitter can never disagree about markup. |
+| `LAB_GUIDE.md` | **Generated.** Offline and print copy of the whole curriculum. |
 
-## 🚀 GitHub Actions & GitHub Pages Deployment
+Authored text uses a restricted markup with exactly five productions — `**UI element**`, `` `code` ``, `*emphasis*`, `[text](url)` and `<tenant>`. Raw HTML is rejected by the validator. That restriction is what lets the same content render to both HTML and Markdown, and it is why `LAB_GUIDE.md` can be generated instead of hand-maintained.
 
-The repository includes a ready-to-use GitHub Actions workflow (`.github/workflows/deploy.yml`) that automatically validates and deploys the interactive guide to GitHub Pages upon pushing to the `main` branch.
+```bash
+npm run validate
+```
 
-To enable GitHub Pages in your fork:
-1. Navigate to **Settings > Pages** in your GitHub repository.
-2. Under **Build and deployment > Source**, select **GitHub Actions**.
-3. Push changes to `main` to trigger the automated deployment.
+Validation fails on an unknown skill id, a lab with no primary objective mapping, a checkpoint with no way to verify it, a prerequisite pointing at a later lab, an unknown error code, raw HTML in authored text, or a seat budget over 20. CI additionally runs `npm run check`, which fails if a generated artifact is out of date with `content/`.
 
----
+<!-- BEGIN:CURRICULUM -->
+| # | Lab | Module | Access | Time |
+| --- | --- | --- | --- | --- |
+| 1 | Set up the tenant and the 20/5 licence budget | Lab environment | Hands-on | 45 min |
+| 2 | Build the virtual machines and the Android emulator | Lab environment | Hands-on | 75 min |
+| 3 | Provision 20 personas and the group structure | Lab environment | Hands-on | 50 min |
+| 4 | Break-glass access and administrator tiering | Identity foundation | Hands-on | 40 min |
+| 5 | Device identity: registered, joined and hybrid joined | Identity foundation | Hands-on | 55 min |
+| 6 | Device groups and dynamic membership rules | Identity foundation | Hands-on | 45 min |
+| 7 | Intune role-based access control and custom roles | Identity foundation | Hands-on | 45 min |
+| 8 | Scope tags, administrative units and scoped administration | Identity foundation | Hands-on | 45 min |
+| 9 | Multi-admin approval and access policies | Identity foundation | Hands-on | 35 min |
+| 10 | Automatic enrollment, enrollment settings and Company Portal branding | Enrollment | Hands-on | 40 min |
+| 11 | Enrollment restrictions, device limits and corporate identifiers | Enrollment | Hands-on | 45 min |
+| 12 | Every Windows enrollment path | Enrollment | Hands-on | 50 min |
+| 13 | Android Enterprise: work profile, fully managed and dedicated | Enrollment | Hands-on | 60 min |
+| 14 | Apple enrollment, Apple Business Manager and OEM zero-touch | Enrollment | Walkthrough (device) | 35 min |
+| 15 | Troubleshoot enrollment failures | Enrollment | Hands-on | 45 min |
+| 16 | Choose a provisioning method: Autopilot profiles or device preparation | Windows deployment | Hands-on | 30 min |
+| 17 | Windows Autopilot user-driven deployment | Windows deployment | Hands-on | 75 min |
+| 18 | Autopilot pre-provisioning and self-deploying mode | Windows deployment | Walkthrough (device) | 35 min |
+| 19 | Windows Autopilot device preparation | Windows deployment | Hands-on | 55 min |
+| 20 | Windows 11 edition upgrades and Windows Backup | Windows deployment | Hands-on | 40 min |
+| 21 | Windows 365 Cloud PCs | Windows deployment | Walkthrough (licence) | 35 min |
+| 22 | The settings catalog: profiles, assignment and conflicts | Configuration | Hands-on | 50 min |
+| 23 | ADMX templates and Group Policy analytics | Configuration | Hands-on | 45 min |
+| 24 | Assignment filters and enrollment time grouping | Configuration | Hands-on | 40 min |
+| 25 | Android configuration profiles | Configuration | Hands-on | 40 min |
+| 26 | Apple and specialty device configuration profiles | Configuration | Walkthrough (device) | 35 min |
+| 27 | Certificate profiles, Wi-Fi and VPN | Configuration | Hands-on | 45 min |
+| 28 | Windows Hello for Business, Windows LAPS and local group membership | Configuration | Hands-on | 55 min |
+| 29 | Compliance policies and actions for non-compliance | Compliance and CA | Hands-on | 50 min |
+| 30 | Extend compliance with PowerShell and JSON | Compliance and CA | Hands-on | 45 min |
+| 31 | Conditional Access: require a compliant device | Compliance and CA | Hands-on | 50 min |
+| 32 | Store apps, line-of-business apps and assignment intent | Applications | Hands-on | 45 min |
+| 33 | Win32 app packaging, detection and dependencies | Applications | Hands-on | 70 min |
+| 34 | Deploy and manage Microsoft 365 Apps | Applications | Hands-on | 50 min |
+| 35 | Mobile app stores and Quiet Time policies | Applications | Hands-on | 40 min |
+| 36 | App protection policies and selective wipe | Applications | Hands-on | 50 min |
+| 37 | App configuration policies for managed devices and managed apps | Applications | Hands-on | 35 min |
+| 38 | Monitor and troubleshoot application deployment | Applications | Hands-on | 40 min |
+| 39 | Security baselines | Protect devices | Hands-on | 40 min |
+| 40 | Antivirus policies and tamper protection | Protect devices | Hands-on | 40 min |
+| 41 | Firewall policies and rules | Protect devices | Hands-on | 40 min |
+| 42 | Attack surface reduction rules | Protect devices | Hands-on | 45 min |
+| 43 | BitLocker: silent encryption, key escrow and recovery | Protect devices | Hands-on | 50 min |
+| 44 | Defender for Endpoint: onboarding, EDR and device risk | Protect devices | Hands-on | 60 min |
+| 45 | App Control for Business | Protect devices | Hands-on | 40 min |
+| 46 | Update rings and Delivery Optimization | Updates | Hands-on | 45 min |
+| 47 | Windows Autopatch, expedited updates and Hotpatch | Updates | Hands-on | 50 min |
+| 48 | Android update management and update reporting | Updates | Hands-on | 40 min |
+| 49 | iOS, iPadOS and macOS update policies | Updates | Walkthrough (device) | 30 min |
+| 50 | Remote actions, bulk actions and credential rotation | Operate | Hands-on | 45 min |
+| 51 | Device query with KQL and diagnostics collection | Operate | Hands-on | 40 min |
+| 52 | Automate Intune with the Microsoft Graph PowerShell SDK | Automate and monitor | Hands-on | 50 min |
+| 53 | Proactive remediations: detect and fix automatically | Automate and monitor | Hands-on | 45 min |
+| 54 | Endpoint Analytics: startup, reliability and user experience | Automate and monitor | Hands-on | 40 min |
+| 55 | Intune reporting, workbooks and data export | Automate and monitor | Hands-on | 35 min |
+| 56 | Tenant health, service communications and alert rules | Automate and monitor | Hands-on | 35 min |
+| 57 | Security Copilot agents in Intune | Automate and monitor | Walkthrough (licence) | 30 min |
+| 58 | Endpoint Privilege Management | Intune Suite | Walkthrough (licence) | 40 min |
+| 59 | Remote Help, Enterprise App Catalog, Cloud PKI, Tunnel for MAM and Advanced Analytics | Intune Suite | Walkthrough (licence) | 45 min |
+| 60 | Capstone: rebuild the estate, then close your gaps | Capstone | Hands-on | 180 min |
+<!-- END:CURRICULUM -->
 
-## 📖 Complete Markdown Reference
+## Lab hardware
 
-For an offline, text-only standard operating procedure reference, see [LAB_GUIDE.md](LAB_GUIDE.md).
+Three Generation 2 Hyper-V virtual machines with a virtual TPM and Secure Boot, plus one Android Studio emulator using a **Google Play** system image.
 
----
+The vTPM is not optional. Without it you cannot silently enable BitLocker, cannot use Windows Hello for Business with hardware-backed keys, and cannot satisfy the default compliance rules — and each of those failures looks like a policy problem rather than a hardware one.
 
-## 🤝 Contributing & License
+Take a Hyper-V checkpoint of the third VM at its first out-of-box screen and revert to it before every Autopilot run. It will save you more time than anything else in this repository.
 
-Contributions, corrections, and new failure injection scenarios are welcome! Feel free to submit a pull request or open an issue.
+## Licence
 
-Distributed under the **MIT License**.
+MIT.

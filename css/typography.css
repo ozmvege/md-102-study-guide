@@ -1,0 +1,306 @@
+/*
+ * Typography for long procedural reading.
+ *
+ * The reader is following these steps in a second window while the Intune portal
+ * occupies the other half of the screen. Every choice here serves that: generous
+ * body size, a measure that does not force long return sweeps, and step numbers
+ * that hold a single left edge no matter how many steps a task has.
+ */
+
+/* --- Headings ----------------------------------------------------------- */
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  color: var(--text);
+  text-wrap: balance;
+  margin: 0;
+  /* Mandatory with a sticky header: without it every deep link lands with the
+     target hidden underneath the masthead. */
+  scroll-margin-top: var(--scroll-offset);
+}
+
+h1 {
+  font-size: 2rem;
+  line-height: 1.2;
+  font-weight: 650;
+  letter-spacing: -0.011em;
+  margin-bottom: 0.5rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  line-height: 1.25;
+  font-weight: 620;
+  letter-spacing: -0.006em;
+  margin-top: 3rem;
+  margin-bottom: 0.75rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+h3 {
+  font-size: 1.1875rem;
+  line-height: 1.3;
+  font-weight: 620;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+h4 {
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  font-weight: 650;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  margin: 0 0 1rem;
+  max-inline-size: var(--measure);
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--accent);
+  text-underline-offset: 0.18em;
+}
+a:hover {
+  color: var(--accent-hover);
+}
+
+/* Bold marks a UI element you act on. Weight only, never colour — a step with
+   six coloured bold spans reads as a ransom note and stops signalling anything. */
+strong,
+strong.ui {
+  font-weight: 650;
+  color: var(--text);
+}
+
+em {
+  font-style: italic;
+  color: var(--text);
+}
+
+/* --- Code --------------------------------------------------------------- */
+
+code,
+kbd,
+pre {
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+}
+
+:not(pre) > code {
+  font-size: 0.9em;
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: var(--code-bg);
+  color: var(--code-fg);
+  border: 1px solid var(--code-border);
+  /* Long UPNs and GUIDs must be allowed to break; block code must not. */
+  overflow-wrap: break-word;
+}
+
+pre {
+  margin: 0;
+  padding: 0.9rem 1.15rem;
+  overflow-x: auto;
+  background: var(--code-block-bg);
+  color: var(--code-block-fg);
+  border-radius: var(--radius);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  tab-size: 4;
+  /* Never pre-wrap. A wrapped PowerShell line is a line that gets mis-pasted. */
+  white-space: pre;
+}
+pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* --- Ordered step lists ------------------------------------------------- */
+
+ol.steps {
+  list-style: none;
+  margin: 0;
+  padding-inline-start: 3rem;
+  counter-reset: step;
+  max-inline-size: var(--measure-steps);
+}
+
+ol.steps > li {
+  counter-increment: step;
+  position: relative;
+  margin-block: 0.85rem;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+ol.steps > li::before {
+  content: counter(step) ".";
+  position: absolute;
+  inset-inline-start: -3rem;
+  inline-size: 2.25rem;
+  /* Right-aligned tabular figures so "9." and "10." share a decimal edge. With
+     left-aligned markers the text of step 10 shifts by a character and the eye
+     loses the return-sweep anchor exactly when a procedure gets long. */
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+  color: var(--text-muted);
+  padding-block-start: 0.05em;
+}
+
+ol.substeps {
+  list-style: lower-alpha;
+  margin-block: 0.6rem;
+  padding-inline-start: 1.75rem;
+  color: var(--text);
+}
+ol.substeps > li {
+  margin-block: 0.35rem;
+}
+
+ul.plain {
+  margin: 0 0 1rem;
+  padding-inline-start: 1.35rem;
+  max-inline-size: var(--measure);
+}
+ul.plain > li {
+  margin-block: 0.35rem;
+}
+
+/* --- Tables ------------------------------------------------------------- */
+
+.tablewrap {
+  max-inline-size: var(--measure-wide);
+  overflow-x: auto;
+  margin-block: 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+th {
+  text-align: start;
+  font-weight: 650;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--surface-2);
+  padding: 0.55rem 0.85rem;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+td {
+  padding: 0.55rem 0.85rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tr:last-child td {
+  border-bottom: 0;
+}
+
+td.value {
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+td .rownote {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+  white-space: normal;
+}
+
+@media (max-width: 640px) {
+  table.settings,
+  table.settings tbody,
+  table.settings tr,
+  table.settings td {
+    display: block;
+    width: 100%;
+  }
+  table.settings thead {
+    display: none;
+  }
+  table.settings tr {
+    border-bottom: 1px solid var(--border);
+    padding: 0.5rem 0;
+  }
+  table.settings td {
+    border: 0;
+    padding: 0.15rem 0.85rem;
+  }
+  table.settings td.value::before {
+    content: "→ ";
+    color: var(--text-faint);
+  }
+}
+
+/* --- Print -------------------------------------------------------------- */
+
+@media print {
+  .masthead,
+  .sidebar,
+  .rail,
+  .scrim,
+  .copybtn,
+  .anchor,
+  .checkpoint__box {
+    display: none !important;
+  }
+  .shell {
+    display: block;
+  }
+  .main {
+    padding: 0;
+  }
+  body {
+    font-size: 11pt;
+    background: #fff;
+    color: #000;
+  }
+  pre,
+  table,
+  .callout,
+  .result {
+    break-inside: avoid;
+  }
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+  pre {
+    background: #f4f4f4;
+    color: #000;
+    border: 1px solid #ccc;
+    white-space: pre-wrap;
+  }
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    color: #444;
+  }
+}

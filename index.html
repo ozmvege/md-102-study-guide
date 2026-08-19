@@ -1,409 +1,133 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Microsoft 365 Endpoint Administrator (MD-102) Interactive Study Guide & Lab Portal</title>
-  <meta name="description" content="Master Microsoft Intune, Entra ID, Defender for Endpoint, Autopilot, Compliance, and pass Exam MD-102 with hands-on interactive labs, persistent checklists, scripts, and practice quizzes.">
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#f0f9ff',
-              100: '#e0f2fe',
-              500: '#0ea5e9',
-              600: '#0284c7',
-              700: '#0369a1',
-              900: '#0c4a6e',
-            }
-          }
-        }
-      }
-    }
-  </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MD-102 Lab Platform</title>
+<meta name="description" content="Hands-on lab curriculum for Exam MD-102: Managing and Securing Microsoft 365 Endpoints by using Intune, aligned to the current skills measured outline.">
+<meta name="color-scheme" content="light dark">
 
-  <!-- Lucide Icons CDN -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+<!--
+  No CDN, no webfont, no framework. Everything this page needs is in the repo, so
+  it renders identically from GitHub Pages, from the filesystem, and offline.
+-->
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/typography.css">
+<link rel="stylesheet" href="css/components.css">
 
-  <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css">
+<script>
+  // Set the theme before first paint. Without this, a reader who has chosen dark
+  // gets a white flash on every load while the stylesheet and app boot.
+  (function () {
+    try {
+      var saved = JSON.parse(localStorage.getItem("md102_state_v2") || "{}");
+      if (saved.theme) document.documentElement.setAttribute("data-theme", saved.theme);
+    } catch (e) {}
+  })();
+</script>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-200">
+<body data-nav="closed">
 
-  <!-- Top Navigation Bar -->
-  <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-      
-      <!-- Brand & Title -->
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-indigo-600 flex items-center justify-center shadow-md shadow-sky-500/20 text-white flex-shrink-0">
-          <i data-lucide="shield" class="w-6 h-6"></i>
-        </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <h1 class="text-sm md:text-base font-bold text-white tracking-tight">MD-102 Master Lab Portal</h1>
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-500/20 text-sky-400 border border-sky-500/30">
-              Exam Associate
-            </span>
-          </div>
-          <p class="text-xs text-slate-400 hidden sm:block">Microsoft 365 Endpoint Administrator Hands-On Blueprint</p>
-        </div>
-      </div>
+<a class="skip-link" href="#main">Skip to content</a>
 
-      <!-- Live Tenant Parameter Injector Input -->
-      <div class="flex-1 max-w-xs sm:max-w-sm hidden md:flex items-center gap-2 bg-slate-950/80 px-3 py-1.5 rounded-xl border border-slate-800 focus-within:border-sky-500 transition">
-        <i data-lucide="building" class="w-4 h-4 text-sky-400 flex-shrink-0"></i>
-        <div class="flex-1 text-xs">
-          <span class="text-[10px] text-slate-400 uppercase font-semibold block leading-none">Your Tenant Prefix:</span>
-          <input 
-            type="text" 
-            id="tenantInput" 
-            placeholder="e.g. contoso" 
-            class="bg-transparent text-sky-300 font-mono font-bold text-xs focus:outline-none w-full placeholder-slate-600"
-          />
-        </div>
-        <span class="text-[11px] font-mono text-slate-400">.onmicrosoft.com</span>
-      </div>
+<!-- Icon sprite: the handful of Lucide glyphs actually used (MIT), inlined so the
+     page has no icon dependency and nothing has to run to draw them. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-server" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 6h.01M6 18h.01"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-building" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+</defs></svg>
 
-      <!-- Action Buttons & Navigation Modals -->
-      <div class="flex items-center gap-2">
-        <button id="btnInfra" title="VM & Hardware Infrastructure Matrix" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1.5 text-xs font-semibold border border-slate-700/60">
-          <i data-lucide="server" class="w-4 h-4 text-sky-400"></i>
-          <span class="hidden lg:inline">VMs & Infra</span>
-        </button>
+<header class="masthead">
+  <button class="iconbtn masthead__navtoggle" type="button" data-nav-toggle aria-label="Toggle the syllabus">
+    <svg class="icon"><use href="#i-menu"/></svg>
+  </button>
 
-        <button id="btnBudget" title="25-Seat License Allocation" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1.5 text-xs font-semibold border border-slate-700/60">
-          <i data-lucide="users" class="w-4 h-4 text-emerald-400"></i>
-          <span class="hidden lg:inline">20/5 Budget</span>
-        </button>
+  <a class="masthead__brand" href="#/">
+    <span class="masthead__mark">102</span>
+    <span>MD-102 Lab Platform</span>
+  </a>
 
-        <button id="btnErrors" title="Diagnostic Error Code Dictionary" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1.5 text-xs font-semibold border border-slate-700/60">
-          <i data-lucide="alert-circle" class="w-4 h-4 text-amber-400"></i>
-          <span class="hidden lg:inline">Error Guide</span>
-        </button>
+  <span class="masthead__spacer"></span>
 
-        <button id="btnSchedule" title="10-Day Sprint & 4-Week Track" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1.5 text-xs font-semibold border border-slate-700/60">
-          <i data-lucide="calendar" class="w-4 h-4 text-indigo-400"></i>
-          <span class="hidden lg:inline">Schedules</span>
-        </button>
+  <div class="masthead__tools">
+    <label class="field field--tenant" title="Your tenant prefix. Every UPN, script and command in every lab rewrites itself to match.">
+      <svg class="icon"><use href="#i-building"/></svg>
+      <input id="tenant" type="text" placeholder="contoso" aria-label="Tenant prefix" spellcheck="false" autocomplete="off">
+      <span class="field__suffix">.onmicrosoft.com</span>
+    </label>
 
-        <button id="btnProgressExport" title="Export / Import Progress" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1.5 text-xs font-semibold border border-slate-700/60">
-          <i data-lucide="download-cloud" class="w-4 h-4 text-sky-400"></i>
-          <span class="hidden xl:inline">Progress Sync</span>
-        </button>
+    <label class="field field--search">
+      <svg class="icon"><use href="#i-search"/></svg>
+      <input id="search" type="search" placeholder="Search labs  /" aria-label="Search labs" autocomplete="off">
+    </label>
 
-        <button id="themeToggle" title="Toggle Theme" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition border border-slate-700/60">
-          <i data-lucide="sun" id="themeIcon" class="w-4 h-4 text-amber-300"></i>
-        </button>
+    <a class="iconbtn" href="#/coverage" title="Objective coverage" aria-label="Objective coverage">
+      <svg class="icon"><use href="#i-target"/></svg>
+    </a>
 
-        <a href="LAB_GUIDE.md" target="_blank" title="View Markdown Master Guide" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition border border-slate-700/60 hidden sm:flex items-center">
-          <i data-lucide="file-code" class="w-4 h-4 text-slate-300"></i>
-        </a>
-      </div>
+    <a class="iconbtn" href="LAB_GUIDE.md" title="Offline lab guide" aria-label="Offline lab guide">
+      <svg class="icon"><use href="#i-book"/></svg>
+    </a>
 
-    </div>
-  </header>
+    <button class="iconbtn" type="button" data-export title="Export progress" aria-label="Export progress">
+      <svg class="icon"><use href="#i-download"/></svg>
+    </button>
 
-  <!-- Main Container -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <label class="iconbtn" title="Import progress" tabindex="0">
+      <svg class="icon"><use href="#i-upload"/></svg>
+      <input id="importFile" type="file" accept="application/json,.json" hidden>
+    </label>
 
-    <!-- Overall Metrics & Readiness Banner -->
-    <div class="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden">
-      <div class="flex flex-col md:flex-row items-center justify-between gap-5">
-        
-        <!-- Progress Summary -->
-        <div class="space-y-1.5 w-full md:w-auto">
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-bold uppercase tracking-wider text-sky-400">Exam MD-102 Readiness</span>
-            <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono">100% Hands-On Coverage</span>
-          </div>
-          <div class="flex items-baseline gap-3">
-            <span id="overallProgressText" class="text-3xl md:text-4xl font-extrabold text-white font-mono">0%</span>
-            <span class="text-xs text-slate-400">of all hands-on syllabus tasks validated</span>
-          </div>
-        </div>
+    <button class="iconbtn" type="button" data-reset title="Reset progress" aria-label="Reset progress">
+      <svg class="icon"><use href="#i-trash"/></svg>
+    </button>
 
-        <!-- Metric Stat Cards -->
-        <div class="grid grid-cols-3 gap-3 w-full md:w-auto">
-          <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 text-center">
-            <span class="text-[10px] uppercase font-bold text-slate-400 block">Total Labs</span>
-            <span id="overallLabCount" class="text-sm md:text-base font-bold text-white font-mono">29 Labs</span>
-          </div>
-          <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 text-center">
-            <span class="text-[10px] uppercase font-bold text-slate-400 block">Tasks Checked</span>
-            <span id="overallTaskCount" class="text-sm md:text-base font-bold text-sky-400 font-mono">0/0</span>
-          </div>
-          <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 text-center">
-            <span class="text-[10px] uppercase font-bold text-slate-400 block">Exam Quizzes</span>
-            <span id="overallQuizCount" class="text-sm md:text-base font-bold text-emerald-400 font-mono">0/0</span>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Master Progress Bar -->
-      <div class="mt-4 w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800/80">
-        <div id="overallProgressBar" class="h-full bg-gradient-to-r from-sky-500 to-emerald-400 transition-all duration-500" style="width: 0%"></div>
-      </div>
-    </div>
-
-    <!-- Search & Filter Controls -->
-    <div class="space-y-3">
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
-        
-        <!-- Exam Domain Filter Pills -->
-        <div id="domainFilters" class="flex flex-wrap items-center gap-1.5 w-full sm:w-auto">
-          <!-- Rendered dynamically by JS -->
-        </div>
-
-        <!-- Search Bar -->
-        <div class="w-full sm:w-72 relative">
-          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
-          <input 
-            type="text" 
-            id="searchInput" 
-            placeholder="Search labs, scripts, error codes..." 
-            class="w-full bg-slate-900/90 text-slate-100 text-xs pl-9 pr-3 py-2 rounded-xl border border-slate-800 focus:outline-none focus:border-sky-500 placeholder-slate-500 transition"
-          />
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Main Workspace Layout (2 Columns) -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-      
-      <!-- Left Column: Lab Explorer Sidebar -->
-      <div class="lg:col-span-4 space-y-4">
-        <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 shadow-sm">
-          <div class="flex items-center justify-between pb-3 mb-2 border-b border-slate-800">
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-              <i data-lucide="book-open" class="w-4 h-4 text-sky-400"></i>
-              <span>Lab Syllabus Explorer</span>
-            </h3>
-            <span class="text-[11px] font-mono text-slate-400 font-bold">22 Labs</span>
-          </div>
-
-          <!-- Dynamic Lab List Container -->
-          <div id="labListContainer" class="max-h-[calc(100vh-280px)] overflow-y-auto pr-1 space-y-3">
-            <!-- Rendered dynamically by JS -->
-          </div>
-        </div>
-      </div>
-
-      <!-- Right Column: Lab Detail Workspace -->
-      <div class="lg:col-span-8">
-        <div id="labDetailContainer">
-          <!-- Rendered dynamically by JS -->
-        </div>
-      </div>
-
-    </div>
-
-  </main>
-
-  <!-- Footer -->
-  <footer class="mt-auto border-t border-slate-800/80 bg-slate-950 py-6">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
-      <div class="flex items-center gap-2">
-        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
-        <span>Microsoft Certified: Endpoint Administrator Associate (Exam MD-102) Master Blueprint</span>
-      </div>
-      <div class="flex items-center gap-4">
-        <a href="LAB_GUIDE.md" class="hover:text-sky-400 transition font-medium">Offline Lab Guide</a>
-        <a href="README.md" class="hover:text-sky-400 transition font-medium">Architecture Doc</a>
-        <span class="text-slate-400">Strict 20/5 Budget Standard</span>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Toast Notification Floating Box -->
-  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 px-4 py-2.5 rounded-xl bg-sky-600 text-white font-semibold text-xs shadow-2xl shadow-sky-900/50 border border-sky-400 transition-all duration-300 opacity-0 translate-y-8 flex items-center gap-2 pointer-events-none">
-    <span>Notification</span>
+    <button class="iconbtn" type="button" data-theme-toggle aria-label="Switch theme">
+      <svg class="icon"><use href="#i-moon"/></svg>
+    </button>
   </div>
+</header>
 
-  <!-- Modal 0: Virtual Machines & Infrastructure Matrix -->
-  <div id="infraModal" class="modal-backdrop fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
-      <div class="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-950/80">
-        <div class="flex items-center gap-2">
-          <i data-lucide="server" class="w-5 h-5 text-sky-400"></i>
-          <h3 class="text-sm font-bold text-white">Virtual Machines & Device Infrastructure Setup</h3>
-        </div>
-        <button onclick="closeModal('infraModal')" class="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
+<div class="scrim"></div>
 
-      <div class="p-5 overflow-y-auto space-y-4">
-        <p class="text-xs text-slate-300 leading-relaxed">
-          Configure these 3 Generation-2 UEFI Virtual Machines in <strong>Hyper-V / VMware Workstation</strong> and 1 Android AVD Emulator in <strong>Android Studio</strong> for zero-cost hands-on practice.
-        </p>
+<div class="shell">
+  <nav class="sidebar" id="nav" aria-label="Lab syllabus"></nav>
+  <main class="main" id="main" tabindex="-1"></main>
+  <aside class="rail" id="rail" aria-label="On this page"></aside>
+</div>
 
-        <!-- VM Cards Grid -->
-        <div id="infraTableBody" class="space-y-3">
-          <!-- Rendered by JS -->
-        </div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-        <!-- Hyper-V Quick Setup Script -->
-        <div class="mt-4 p-4 rounded-xl border border-slate-800 bg-slate-950 space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-white flex items-center gap-1.5">
-              <i data-lucide="terminal" class="w-4 h-4 text-emerald-400"></i>
-              Hyper-V Automated VM Creation Script (Elevated PowerShell)
-            </span>
-            <button onclick="copyCode('hyperv-script')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 transition flex items-center gap-1">
-              <i data-lucide="copy" class="w-3 h-3 text-sky-400"></i> Copy Script
-            </button>
-          </div>
-          <pre class="overflow-x-auto text-[11px] text-emerald-400 font-mono leading-relaxed"><code id="hyperv-script"># Run in Elevated PowerShell on Hyper-V Host
-$VMNames = @("MD102-VM1-Adele", "MD102-VM2-Alex", "MD102-VM3-Megan")
+<noscript>
+  <p style="padding:2rem">This study guide renders its labs from a content bundle, so it needs JavaScript.
+  The complete curriculum is also available as plain Markdown in <a href="LAB_GUIDE.md">LAB_GUIDE.md</a>.</p>
+</noscript>
 
-foreach ($VM in $VMNames) {
-    New-VM -Name $VM -Generation 2 -MemoryStartupBytes 4GB -NewVHDPath "C:\Hyper-V\$VM.vhdx" -NewVHDSizeBytes 80GB -SwitchName "Default Switch"
-    Set-VMMemory -VMName $VM -DynamicMemoryEnabled $true -MinimumBytes 2GB -MaximumBytes 6GB
-    Set-VMProcessor -VMName $VM -Count 2
-    Set-VMFirmware -VMName $VM -EnableSecureBoot On -SecureBootTemplate "MicrosoftWindows"
-    Set-VMKeyProtector -VMName $VM -NewLocalKeyProtector
-    Enable-VMTPM -VMName $VM
-    Write-Host "Configured $VM with vTPM 2.0 and Secure Boot!" -ForegroundColor Green
-}</code></pre>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal 1: 25-Seat License Budget Allocation -->
-  <div id="budgetModal" class="modal-backdrop fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
-      <div class="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-950/80">
-        <div class="flex items-center gap-2">
-          <i data-lucide="users" class="w-5 h-5 text-emerald-400"></i>
-          <h3 class="text-sm font-bold text-white">25-Seat Microsoft 365 E5 License Budget Allocation (20 Active / 5 Reserve)</h3>
-        </div>
-        <button onclick="closeModal('budgetModal')" class="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-
-      <div class="p-5 overflow-y-auto space-y-4">
-        <p class="text-xs text-slate-300 leading-relaxed">
-          Standard Microsoft 365 Developer and Trial subscriptions allocate <strong>25 E5 licenses</strong>. To guarantee zero tenant exhaustion and zero admin lockouts during automated enrollments, this lab enforces a strict <strong>20-Seat Active Allocated Budget</strong> with an unassigned <strong>5-Seat Safety Reserve Buffer</strong>.
-        </p>
-
-        <div class="overflow-x-auto rounded-xl border border-slate-800">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="bg-slate-950 text-slate-400 text-[11px] uppercase tracking-wider font-semibold border-b border-slate-800">
-                <th class="py-2.5 px-3">Category</th>
-                <th class="py-2.5 px-3">Persona</th>
-                <th class="py-2.5 px-3">UPN</th>
-                <th class="py-2.5 px-3">Workload Context</th>
-                <th class="py-2.5 px-3 text-center">Seats</th>
-              </tr>
-            </thead>
-            <tbody id="budgetTableBody" class="divide-y divide-slate-800">
-              <!-- Rendered by JS -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal 2: Diagnostic Error Code Dictionary -->
-  <div id="errorsModal" class="modal-backdrop fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
-      <div class="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-950/80">
-        <div class="flex items-center gap-2">
-          <i data-lucide="alert-circle" class="w-5 h-5 text-amber-400"></i>
-          <h3 class="text-sm font-bold text-white">High-Yield Intune & Enrollment Error Code Dictionary</h3>
-        </div>
-        <button onclick="closeModal('errorsModal')" class="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-
-      <div class="p-5 overflow-y-auto space-y-4">
-        <p class="text-xs text-slate-300">
-          High-yield diagnostic error codes commonly encountered on the MD-102 exam and in production Intune deployments:
-        </p>
-
-        <div id="errorDictionaryBody" class="space-y-3">
-          <!-- Rendered by JS -->
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal 3: Study Schedules (10-Day Sprint vs 4-Week Track) -->
-  <div id="scheduleModal" class="modal-backdrop fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
-      <div class="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-950/80">
-        <div class="flex items-center gap-2">
-          <i data-lucide="calendar" class="w-5 h-5 text-indigo-400"></i>
-          <h3 class="text-sm font-bold text-white">MD-102 Study & Execution Schedules</h3>
-        </div>
-        <button onclick="closeModal('scheduleModal')" class="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-
-      <div class="p-5 overflow-y-auto space-y-4">
-        <div class="space-y-2">
-          <h4 class="text-xs font-bold uppercase tracking-wider text-sky-400">Track A: 10-Day Accelerated Intensive Sprint (~2.5–3.5 hrs/day)</h4>
-          <div id="sprintScheduleList" class="space-y-2">
-            <!-- Rendered by JS -->
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal 4: Progress Export / Import & Backup -->
-  <div id="progressModal" class="modal-backdrop fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full flex flex-col shadow-2xl overflow-hidden">
-      <div class="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-950/80">
-        <div class="flex items-center gap-2">
-          <i data-lucide="download-cloud" class="w-5 h-5 text-sky-400"></i>
-          <h3 class="text-sm font-bold text-white">Progress Synchronization & Backup</h3>
-        </div>
-        <button onclick="closeModal('progressModal')" class="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-
-      <div class="p-5 space-y-4 text-xs">
-        <p class="text-slate-300 leading-relaxed">
-          Your lab checklist tasks, custom tenant prefix, and exam quiz results are automatically stored in browser LocalStorage. Use these tools to back up or transfer your progress between machines.
-        </p>
-
-        <div class="space-y-3 pt-2">
-          <button onclick="exportProgressJSON()" class="w-full py-2.5 px-4 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-semibold flex items-center justify-center gap-2 transition">
-            <i data-lucide="download" class="w-4 h-4"></i> Export Progress as JSON File
-          </button>
-
-          <div class="p-3 rounded-xl border border-slate-800 bg-slate-950 text-center space-y-2">
-            <span class="text-slate-400 block font-medium">Import Progress JSON:</span>
-            <input type="file" accept=".json" onchange="importProgressJSON(event)" class="text-xs text-slate-400 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-sky-300 hover:file:bg-slate-700 cursor-pointer" />
-          </div>
-
-          <button onclick="resetAllProgress()" class="w-full py-2 px-4 rounded-xl bg-rose-950/30 hover:bg-rose-900/40 text-rose-300 border border-rose-800/40 font-semibold flex items-center justify-center gap-2 transition">
-            <i data-lucide="trash-2" class="w-4 h-4"></i> Reset All Progress
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Scripts -->
-  <script src="js/data.js"></script>
-  <script src="js/app.js"></script>
+<script src="js/content.bundle.js"></script>
+<script src="js/app/inline.js"></script>
+<script src="js/app/state.js"></script>
+<script src="js/app/router.js"></script>
+<script src="js/app/render-lab.js"></script>
+<script src="js/app/render-nav.js"></script>
+<script src="js/app/render-views.js"></script>
+<script src="js/app/main.js"></script>
 </body>
 </html>
