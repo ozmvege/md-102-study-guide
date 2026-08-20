@@ -4,7 +4,7 @@
 
 Hands-on lab curriculum for the Microsoft 365 Certified: Endpoint Administrator Associate certification.
 
-Aligned to the skills measured outline of **2026-07-24** ([source](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/md-102)). 60 labs across 13 modules covering 83 of 83 skill bullets.
+Aligned to the skills measured outline of **2026-07-24** ([source](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/md-102)). 61 labs across 13 modules covering 83 of 83 skill bullets.
 
 ## Exam objective coverage
 
@@ -18,108 +18,431 @@ Aligned to the skills measured outline of **2026-07-24** ([source](https://learn
 
 ## Curriculum
 
-**Module 0 — Build the lab environment** — Stand up the tenant, the virtual machines and the 20 identities everything else is built on. None of this is examined; all of it is required before any other lab will work.
+**Module 0 — Build the lab environment** — Pre-flight the host, then stand up the tenant, the virtual machines and the 20 identities everything else is built on. None of this is examined; all of it is required before any other lab will work. Start with lab 0 the evening before — it stages roughly 7 GB of downloads that later labs block on.
 
-1. [Set up the tenant and the 20/5 licence budget](#lab-1-set-up-the-tenant-and-the-20-5-licence-budget)
-2. [Build the virtual machines and the Android emulator](#lab-2-build-the-virtual-machines-and-the-android-emulator)
-3. [Provision 20 personas and the group structure](#lab-3-provision-20-personas-and-the-group-structure)
+1. [Lab 0 — Before you begin: pre-flight the host and stage the downloads](#lab-0-before-you-begin-pre-flight-the-host-and-stage-the-downloads)
+2. [Lab 1 — Set up the tenant and the 20/5 licence budget](#lab-1-set-up-the-tenant-and-the-20-5-licence-budget)
+3. [Lab 2 — Build the virtual machines and the Android emulator](#lab-2-build-the-virtual-machines-and-the-android-emulator)
+4. [Lab 3 — Provision 20 personas and the group structure](#lab-3-provision-20-personas-and-the-group-structure)
 
 **Module 1 — Identity and administration foundation** — Device identity in Microsoft Entra ID, the groups you will target for the rest of the course, and the delegated administration model — roles, scope tags, administrative units and multi-admin approval.
 
-4. [Break-glass access and administrator tiering](#lab-4-break-glass-access-and-administrator-tiering)
-5. [Device identity: registered, joined and hybrid joined](#lab-5-device-identity-registered-joined-and-hybrid-joined)
-6. [Device groups and dynamic membership rules](#lab-6-device-groups-and-dynamic-membership-rules)
-7. [Intune role-based access control and custom roles](#lab-7-intune-role-based-access-control-and-custom-roles)
-8. [Scope tags, administrative units and scoped administration](#lab-8-scope-tags-administrative-units-and-scoped-administration)
-9. [Multi-admin approval and access policies](#lab-9-multi-admin-approval-and-access-policies)
+5. [Lab 4 — Break-glass access and administrator tiering](#lab-4-break-glass-access-and-administrator-tiering)
+6. [Lab 5 — Device identity: registered, joined and hybrid joined](#lab-5-device-identity-registered-joined-and-hybrid-joined)
+7. [Lab 6 — Device groups and dynamic membership rules](#lab-6-device-groups-and-dynamic-membership-rules)
+8. [Lab 7 — Intune role-based access control and custom roles](#lab-7-intune-role-based-access-control-and-custom-roles)
+9. [Lab 8 — Scope tags, administrative units and scoped administration](#lab-8-scope-tags-administrative-units-and-scoped-administration)
+10. [Lab 9 — Multi-admin approval and access policies](#lab-9-multi-admin-approval-and-access-policies)
 
 **Module 2 — Device enrollment** — Get Windows and Android devices under management: enrollment settings, automatic enrollment, restrictions and corporate identifiers, every Windows enrollment path, Android Enterprise, and what to do when enrollment fails.
 
-10. [Automatic enrollment, enrollment settings and Company Portal branding](#lab-10-automatic-enrollment-enrollment-settings-and-company-portal-branding)
-11. [Enrollment restrictions, device limits and corporate identifiers](#lab-11-enrollment-restrictions-device-limits-and-corporate-identifiers)
-12. [Every Windows enrollment path](#lab-12-every-windows-enrollment-path)
-13. [Android Enterprise: work profile, fully managed and dedicated](#lab-13-android-enterprise-work-profile-fully-managed-and-dedicated)
-14. [Apple enrollment, Apple Business Manager and OEM zero-touch](#lab-14-apple-enrollment-apple-business-manager-and-oem-zero-touch) *(walkthrough)*
-15. [Troubleshoot enrollment failures](#lab-15-troubleshoot-enrollment-failures)
+11. [Lab 10 — Automatic enrollment, enrollment settings and Company Portal branding](#lab-10-automatic-enrollment-enrollment-settings-and-company-portal-branding)
+12. [Lab 11 — Enrollment restrictions, device limits and corporate identifiers](#lab-11-enrollment-restrictions-device-limits-and-corporate-identifiers)
+13. [Lab 12 — Every Windows enrollment path](#lab-12-every-windows-enrollment-path)
+14. [Lab 13 — Android Enterprise: work profile, fully managed and dedicated](#lab-13-android-enterprise-work-profile-fully-managed-and-dedicated)
+15. [Lab 14 — Apple enrollment, Apple Business Manager and OEM zero-touch](#lab-14-apple-enrollment-apple-business-manager-and-oem-zero-touch) *(walkthrough)*
+16. [Lab 15 — Troubleshoot enrollment failures](#lab-15-troubleshoot-enrollment-failures)
 
 **Module 3 — Windows client deployment** — Choose and implement a provisioning method: Autopilot deployment profiles versus device preparation policies, all deployment modes, the Enrollment Status Page, Windows 11 upgrades, and Windows Backup.
 
-16. [Choose a provisioning method: Autopilot profiles or device preparation](#lab-16-choose-a-provisioning-method-autopilot-profiles-or-device-preparation)
-17. [Windows Autopilot user-driven deployment](#lab-17-windows-autopilot-user-driven-deployment)
-18. [Autopilot pre-provisioning and self-deploying mode](#lab-18-autopilot-pre-provisioning-and-self-deploying-mode) *(walkthrough)*
-19. [Windows Autopilot device preparation](#lab-19-windows-autopilot-device-preparation)
-20. [Windows 11 edition upgrades and Windows Backup](#lab-20-windows-11-edition-upgrades-and-windows-backup)
-21. [Windows 365 Cloud PCs](#lab-21-windows-365-cloud-pcs) *(walkthrough)*
+17. [Lab 16 — Choose a provisioning method: Autopilot profiles or device preparation](#lab-16-choose-a-provisioning-method-autopilot-profiles-or-device-preparation)
+18. [Lab 17 — Windows Autopilot user-driven deployment](#lab-17-windows-autopilot-user-driven-deployment)
+19. [Lab 18 — Autopilot pre-provisioning and self-deploying mode](#lab-18-autopilot-pre-provisioning-and-self-deploying-mode) *(walkthrough)*
+20. [Lab 19 — Windows Autopilot device preparation](#lab-19-windows-autopilot-device-preparation)
+21. [Lab 20 — Windows 11 edition upgrades and Windows Backup](#lab-20-windows-11-edition-upgrades-and-windows-backup)
+22. [Lab 21 — Windows 365 Cloud PCs](#lab-21-windows-365-cloud-pcs) *(walkthrough)*
 
 **Module 4 — Device configuration** — Shape the desktop with the settings catalog, ADMX imports and Group Policy analytics; target precisely with assignment filters and enrollment time grouping; then layer on certificates, Windows Hello for Business and Windows LAPS.
 
-22. [The settings catalog: profiles, assignment and conflicts](#lab-22-the-settings-catalog-profiles-assignment-and-conflicts)
-23. [ADMX templates and Group Policy analytics](#lab-23-admx-templates-and-group-policy-analytics)
-24. [Assignment filters and enrollment time grouping](#lab-24-assignment-filters-and-enrollment-time-grouping)
-25. [Android configuration profiles](#lab-25-android-configuration-profiles)
-26. [Apple and specialty device configuration profiles](#lab-26-apple-and-specialty-device-configuration-profiles) *(walkthrough)*
-27. [Cloud PKI, certificate profiles, Wi-Fi and VPN](#lab-27-cloud-pki-certificate-profiles-wi-fi-and-vpn)
-28. [Windows Hello for Business, Windows LAPS and local group membership](#lab-28-windows-hello-for-business-windows-laps-and-local-group-membership)
+23. [Lab 22 — The settings catalog: profiles, assignment and conflicts](#lab-22-the-settings-catalog-profiles-assignment-and-conflicts)
+24. [Lab 23 — ADMX templates and Group Policy analytics](#lab-23-admx-templates-and-group-policy-analytics)
+25. [Lab 24 — Assignment filters and enrollment time grouping](#lab-24-assignment-filters-and-enrollment-time-grouping)
+26. [Lab 25 — Android configuration profiles](#lab-25-android-configuration-profiles)
+27. [Lab 26 — Apple and specialty device configuration profiles](#lab-26-apple-and-specialty-device-configuration-profiles) *(walkthrough)*
+28. [Lab 27 — Cloud PKI, certificate profiles, Wi-Fi and VPN](#lab-27-cloud-pki-certificate-profiles-wi-fi-and-vpn)
+29. [Lab 28 — Windows Hello for Business, Windows LAPS and local group membership](#lab-28-windows-hello-for-business-windows-laps-and-local-group-membership)
 
 **Module 5 — Compliance and Conditional Access** — Define what healthy means, extend it with PowerShell where the built-in rules stop, and turn compliance into an access decision with Conditional Access.
 
-29. [Compliance policies and actions for non-compliance](#lab-29-compliance-policies-and-actions-for-non-compliance)
-30. [Extend compliance with PowerShell and JSON](#lab-30-extend-compliance-with-powershell-and-json)
-31. [Conditional Access: require a compliant device](#lab-31-conditional-access-require-a-compliant-device)
+30. [Lab 29 — Compliance policies and actions for non-compliance](#lab-29-compliance-policies-and-actions-for-non-compliance)
+31. [Lab 30 — Extend compliance with PowerShell and JSON](#lab-30-extend-compliance-with-powershell-and-json)
+32. [Lab 31 — Conditional Access: require a compliant device](#lab-31-conditional-access-require-a-compliant-device)
 
 **Module 6 — Application management** — Deliver software: store and line-of-business apps, Win32 packaging with detection and dependencies, Microsoft 365 Apps, mobile app stores, then protect and configure those apps on managed and unmanaged devices.
 
-32. [Store apps, line-of-business apps and assignment intent](#lab-32-store-apps-line-of-business-apps-and-assignment-intent)
-33. [Win32 app packaging, detection and dependencies](#lab-33-win32-app-packaging-detection-and-dependencies)
-34. [Deploy and manage Microsoft 365 Apps](#lab-34-deploy-and-manage-microsoft-365-apps)
-35. [Mobile app stores and Quiet Time policies](#lab-35-mobile-app-stores-and-quiet-time-policies)
-36. [App protection policies and selective wipe](#lab-36-app-protection-policies-and-selective-wipe)
-37. [App configuration policies for managed devices and managed apps](#lab-37-app-configuration-policies-for-managed-devices-and-managed-apps)
-38. [Monitor and troubleshoot application deployment](#lab-38-monitor-and-troubleshoot-application-deployment)
+33. [Lab 32 — Store apps, line-of-business apps and assignment intent](#lab-32-store-apps-line-of-business-apps-and-assignment-intent)
+34. [Lab 33 — Win32 app packaging, detection and dependencies](#lab-33-win32-app-packaging-detection-and-dependencies)
+35. [Lab 34 — Deploy and manage Microsoft 365 Apps](#lab-34-deploy-and-manage-microsoft-365-apps)
+36. [Lab 35 — Mobile app stores and Quiet Time policies](#lab-35-mobile-app-stores-and-quiet-time-policies)
+37. [Lab 36 — App protection policies and selective wipe](#lab-36-app-protection-policies-and-selective-wipe)
+38. [Lab 37 — App configuration policies for managed devices and managed apps](#lab-37-app-configuration-policies-for-managed-devices-and-managed-apps)
+39. [Lab 38 — Monitor and troubleshoot application deployment](#lab-38-monitor-and-troubleshoot-application-deployment)
 
 **Module 7 — Protect devices** — Endpoint security in the order a real deployment applies it: baselines first, then antivirus, firewall, attack surface reduction, disk encryption, Defender for Endpoint and App Control for Business.
 
-39. [Security baselines](#lab-39-security-baselines)
-40. [Antivirus policies and tamper protection](#lab-40-antivirus-policies-and-tamper-protection)
-41. [Firewall policies and rules](#lab-41-firewall-policies-and-rules)
-42. [Attack surface reduction rules](#lab-42-attack-surface-reduction-rules)
-43. [BitLocker: silent encryption, key escrow and recovery](#lab-43-bitlocker-silent-encryption-key-escrow-and-recovery)
-44. [Defender for Endpoint: onboarding, EDR and device risk](#lab-44-defender-for-endpoint-onboarding-edr-and-device-risk)
-45. [App Control for Business](#lab-45-app-control-for-business)
+40. [Lab 39 — Security baselines](#lab-39-security-baselines)
+41. [Lab 40 — Antivirus policies and tamper protection](#lab-40-antivirus-policies-and-tamper-protection)
+42. [Lab 41 — Firewall policies and rules](#lab-41-firewall-policies-and-rules)
+43. [Lab 42 — Attack surface reduction rules](#lab-42-attack-surface-reduction-rules)
+44. [Lab 43 — BitLocker: silent encryption, key escrow and recovery](#lab-43-bitlocker-silent-encryption-key-escrow-and-recovery)
+45. [Lab 44 — Defender for Endpoint: onboarding, EDR and device risk](#lab-44-defender-for-endpoint-onboarding-edr-and-device-risk)
+46. [Lab 45 — App Control for Business](#lab-45-app-control-for-business)
 
 **Module 8 — Device updates** — Keep the estate current: update rings and Delivery Optimization, feature and quality updates including expedited releases, Windows Autopatch and Hotpatch, cross-platform update policies, and update reporting.
 
-46. [Update rings and Delivery Optimization](#lab-46-update-rings-and-delivery-optimization)
-47. [Windows Autopatch, expedited updates and Hotpatch](#lab-47-windows-autopatch-expedited-updates-and-hotpatch)
-48. [Android update management and update reporting](#lab-48-android-update-management-and-update-reporting)
-49. [iOS, iPadOS and macOS update policies](#lab-49-ios-ipados-and-macos-update-policies) *(walkthrough)*
+47. [Lab 46 — Update rings and Delivery Optimization](#lab-46-update-rings-and-delivery-optimization)
+48. [Lab 47 — Windows Autopatch, expedited updates and Hotpatch](#lab-47-windows-autopatch-expedited-updates-and-hotpatch)
+49. [Lab 48 — Android update management and update reporting](#lab-48-android-update-management-and-update-reporting)
+50. [Lab 49 — iOS, iPadOS and macOS update policies](#lab-49-ios-ipados-and-macos-update-policies) *(walkthrough)*
 
 **Module 9 — Operate and troubleshoot** — The day-two job: remote and bulk actions, key and password rotation, on-demand device query with KQL, and collecting the diagnostics you need to answer a support call.
 
-50. [Remote actions, bulk actions and credential rotation](#lab-50-remote-actions-bulk-actions-and-credential-rotation)
-51. [Device query with KQL and diagnostics collection](#lab-51-device-query-with-kql-and-diagnostics-collection)
+51. [Lab 50 — Remote actions, bulk actions and credential rotation](#lab-50-remote-actions-bulk-actions-and-credential-rotation)
+52. [Lab 51 — Device query with KQL and diagnostics collection](#lab-51-device-query-with-kql-and-diagnostics-collection)
 
 **Module 10 — Automation, monitoring and reporting** — The newest exam domain. Automate with the Microsoft Graph PowerShell SDK, self-heal with proactive remediations, measure with Endpoint Analytics and Intune reporting, and watch tenant health and alerts.
 
-52. [Automate Intune with the Microsoft Graph PowerShell SDK](#lab-52-automate-intune-with-the-microsoft-graph-powershell-sdk)
-53. [Proactive remediations: detect and fix automatically](#lab-53-proactive-remediations-detect-and-fix-automatically)
-54. [Endpoint Analytics: startup, reliability and user experience](#lab-54-endpoint-analytics-startup-reliability-and-user-experience)
-55. [Intune reporting, workbooks and data export](#lab-55-intune-reporting-workbooks-and-data-export)
-56. [Tenant health, service communications and alert rules](#lab-56-tenant-health-service-communications-and-alert-rules)
-57. [Security Copilot agents in Intune](#lab-57-security-copilot-agents-in-intune) *(walkthrough)*
+53. [Lab 52 — Automate Intune with the Microsoft Graph PowerShell SDK](#lab-52-automate-intune-with-the-microsoft-graph-powershell-sdk)
+54. [Lab 53 — Proactive remediations: detect and fix automatically](#lab-53-proactive-remediations-detect-and-fix-automatically)
+55. [Lab 54 — Endpoint Analytics: startup, reliability and user experience](#lab-54-endpoint-analytics-startup-reliability-and-user-experience)
+56. [Lab 55 — Intune reporting, workbooks and data export](#lab-55-intune-reporting-workbooks-and-data-export)
+57. [Lab 56 — Tenant health, service communications and alert rules](#lab-56-tenant-health-service-communications-and-alert-rules)
+58. [Lab 57 — Security Copilot agents in Intune](#lab-57-security-copilot-agents-in-intune) *(walkthrough)*
 
 **Module 11 — Advanced endpoint capabilities** — The capabilities the exam still calls Intune Suite add-ons, every one of which Microsoft 365 E5 has included since the July 2026 packaging change: Endpoint Privilege Management, Remote Help, the Enterprise App Catalog and Advanced Analytics. Each removes friction you hit earlier in the course. Cloud PKI belongs to this group too and is used in lab 27, where certificates are taught.
 
-58. [Endpoint Privilege Management](#lab-58-endpoint-privilege-management)
-59. [Remote Help, Enterprise App Catalog, Advanced Analytics and Tunnel for MAM](#lab-59-remote-help-enterprise-app-catalog-advanced-analytics-and-tunnel-for-mam)
+59. [Lab 58 — Endpoint Privilege Management](#lab-58-endpoint-privilege-management)
+60. [Lab 59 — Remote Help, Enterprise App Catalog, Advanced Analytics and Tunnel for MAM](#lab-59-remote-help-enterprise-app-catalog-advanced-analytics-and-tunnel-for-mam)
 
 **Module 12 — Capstone and exam readiness** — Rebuild the whole estate from a clean tenant against a deadline with faults injected, then close your remaining gaps with a domain-weighted timed practice run.
 
-60. [Capstone: rebuild the estate, then close your gaps](#lab-60-capstone-rebuild-the-estate-then-close-your-gaps)
+61. [Lab 60 — Capstone: rebuild the estate, then close your gaps](#lab-60-capstone-rebuild-the-estate-then-close-your-gaps)
 
 # Module 0 — Build the lab environment
 
-Stand up the tenant, the virtual machines and the 20 identities everything else is built on. None of this is examined; all of it is required before any other lab will work.
+Pre-flight the host, then stand up the tenant, the virtual machines and the 20 identities everything else is built on. None of this is examined; all of it is required before any other lab will work. Start with lab 0 the evening before — it stages roughly 7 GB of downloads that later labs block on.
+
+## Lab 0: Before you begin: pre-flight the host and stage the downloads
+
+**Access:** Hands-on · **Estimated time:** 25 minutes · **Difficulty:** foundational
+
+### Lab scenario
+
+Do this the evening before you start, not on the morning you start. The course needs roughly 7 GB of downloads and a host with virtualisation enabled, and every one of those requirements otherwise surfaces in the middle of a lab rather than before it. Twenty-five minutes here — most of it spent waiting on downloads you kick off and walk away from — is the difference between opening lab 1 and getting straight to work, and losing the first two hours of day one to a Windows 11 ISO and an Android system image.
+
+### Objectives
+
+After completing this lab, you will be able to:
+
+- Confirm the host meets the memory, disk and virtualisation requirements for three virtual machines and an emulator
+- Enable Hyper-V, or confirm it is already enabled, before the day you need it
+- Stage every large download the course depends on
+- Install the PowerShell modules labs 3 and 52 require
+- Confirm the Microsoft 365 E5 tenant is reachable and has seats
+
+### Prerequisites
+
+- Roles: Local Administrator on the Hyper-V host
+- Devices and portals: Windows 11 Pro host with Hyper-V
+
+### Exercise 1: Check the host
+
+Three Windows virtual machines and an Android emulator are a real load. The numbers below are what the course actually needs, not a vendor minimum.
+
+#### Task 1: Confirm memory, disk and processor
+
+1. Compare your host against the table below. Run the pre-flight script in the **Scripts** section at the end of this lab if you would rather read the answers than look them up.
+
+   | Resource | Minimum | Comfortable | Why |
+   | --- | --- | --- | --- |
+   | Memory | 16 GB | 32 GB | Each virtual machine starts at 4096 MB. At 16 GB you run one at a time and close the emulator first. |
+   | Free disk | 150 GB | 250 GB | Three 80 GB dynamic VHDX files grow to roughly 25 GB each once Windows is installed, plus a 6 GB ISO and the Android SDK. |
+   | Processor | 4 cores with Intel VT-x or AMD-V | 8 or more cores | Two virtual processors per machine. Virtualisation must be enabled in firmware, not merely supported. |
+   | Host edition | Windows 11 Pro | Windows 11 Pro or Enterprise | Hyper-V is not available on Windows 11 Home. There is no workaround. |
+
+   > [!IMPORTANT]
+   > The three virtual machines and the Android emulator are *not* meant to run at the same time. No lab in this course needs more than two guests at once, and lab 17 needs exactly one. Starting all four on a 32 GB host will page heavily and make Autopilot look broken when it is only starved.
+
+**Results:** You know whether the host can carry the lab, before you have spent an evening finding out it cannot.
+
+- [ ] Free space on the volume that will hold the virtual machines is at least 150 GB.
+- [ ] The host runs Windows 11 **Pro**, **Enterprise** or **Education**.
+
+#### Task 2: Enable Hyper-V, or confirm it is already on
+
+1. Open **Windows PowerShell** as an administrator and check the current state:
+
+   ```powershell
+   Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All | Select-Object FeatureName, State
+   ```
+
+   > [!TIP]
+   > If **State** already reads `Enabled`, you are done — skip the rest of this task and the restart with it. Hyper-V is already on for many developer machines, and lab 2 assumes you have to turn it on.
+
+2. If it reads `Disabled`, enable it and restart. Do that restart tonight rather than tomorrow.
+
+   ```powershell
+   Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All -All
+   ```
+
+   > [!WARNING]
+   > If `Get-ComputerInfo` reports `HyperVRequirementVirtualizationFirmwareEnabled` as `False`, virtualisation is switched off in BIOS or UEFI. Nothing in Windows will fix that — reboot into firmware settings and enable Intel VT-x or AMD-V first. This is the one item on this list that cannot be resolved from a command prompt.
+
+3. After restarting, confirm the default virtual switch exists:
+
+   ```powershell
+   Get-VMSwitch | Select-Object Name, SwitchType
+   ```
+
+   **Verify:** A switch named **Default Switch** of type **Internal** is listed. That NAT switch is all the lab virtual machines need.
+
+**Results:** Hyper-V is enabled and the restart it requires is behind you.
+
+- [ ] `Get-VMSwitch` returns **Default Switch**.
+- [ ] `Get-VM` runs without error, even if it returns nothing yet.
+
+### Exercise 2: Stage the downloads
+
+Start these now and let them run while you do something else. Sizes are approximate and the two large ones dominate.
+
+#### Task 1: Download the Windows 11 Pro installation media
+
+1. Open the [Windows 11 download page](https://www.microsoft.com/software-download/windows11) and use the section titled *Download Windows 11 Disk Image (ISO) for x64 devices*. Choose the multi-edition ISO, pick your language, and save it to a short path such as `C:\Hyper-V\ISO\`.
+
+   > [!IMPORTANT]
+   > Download **Pro**, not the Enterprise evaluation, and it matters more than it looks. Lab 20 exists to watch subscription activation step a device from Pro to Enterprise on sign-in — on a device already running Enterprise there is nothing left to demonstrate. The Enterprise evaluation image also expires after 90 days, which falls inside the window you will still be using these machines.
+
+2. Note the full path to the ISO. The virtual machine build script in lab 2 needs it as its one required edit.
+
+   | Setting | Value |
+   | --- | --- |
+   | Download size | **Roughly 6 GB** <br> The single largest item on this list. Start it first. |
+   | Suggested path | **C:\Hyper-V\ISO\Windows11.iso** <br> Avoid spaces in the path — it keeps the lab 2 script simple. |
+
+**Results:** A Windows 11 Pro ISO is on disk and you know its path.
+
+- [ ] The ISO file exists and is roughly 6 GB.
+- [ ] You have written down its full path.
+
+#### Task 2: Install Android Studio and a Google Play system image
+
+1. If Android Studio is not installed, get it from [developer.android.com](https://developer.android.com/studio) and run the standard setup. Roughly 1 GB.
+
+2. Open **Device Manager** in Android Studio, choose **Create virtual device**, pick a **Pixel** hardware profile, and download an **Android 14** or later system image. Roughly 1.5 GB.
+   *Path:* **Device Manager** > **Create virtual device**
+
+3. Choose the system image carefully:
+
+   | Image label | Use it? | What happens |
+   | --- | --- | --- |
+   | **Google Play** | Yes — this is the one | Ships the Play Store, so Company Portal installs and a work profile can be provisioned. |
+   | Google APIs | No | Google services without the Play Store. Company Portal cannot be installed on the device. |
+   | AOSP, or no label | No | No Google services at all. Android Enterprise enrollment is impossible. |
+
+   > [!WARNING]
+   > Choosing the wrong image is the single most common reason the Android labs cannot be finished, and the failure appears much later — at enrollment, in lab 13 — looking like an Intune problem rather than an image problem. If you already have virtual devices from other projects, they are almost certainly *not* Google Play images. Check rather than assume.
+
+4. Start the emulator once to confirm it boots and that the **Play Store** application is present.
+
+**Results:** An Android 14 or later virtual device with Google Play is created and boots.
+
+- [ ] The emulator starts and shows a normal Android home screen.
+- [ ] The **Play Store** app is present in the app drawer.
+
+#### Task 3: Install the PowerShell modules
+
+1. Install the Microsoft Graph PowerShell SDK. Lab 3 provisions all 20 personas with it, and lab 52 uses it for automation.
+
+   ```powershell
+   Install-Module Microsoft.Graph -Scope CurrentUser -Force
+   ```
+
+   > [!NOTE]
+   > This is a large module set and takes several minutes. Installing it under `-Scope CurrentUser` avoids needing an elevated session, which is the scope every lab script assumes.
+
+2. Confirm it is available and report the version:
+
+   ```powershell
+   Get-Module -ListAvailable Microsoft.Graph.Authentication | Select-Object Name, Version
+   ```
+
+**Results:** The Graph SDK is installed and importable.
+
+- [ ] `Microsoft.Graph.Authentication` is listed with a version of 2.0 or later.
+
+### Exercise 3: Confirm the tenant is reachable
+
+A two-minute check, not a configuration exercise. Lab 1 does the real work — this only proves you can sign in and that there are seats to spend, before you build anything that depends on both.
+
+#### Task 1: Sign in and confirm the seat pool
+
+1. Sign in to the **Microsoft 365 admin center** at `https://admin.microsoft.com` with the Global Administrator account for your trial tenant.
+
+2. Select **Billing**, then **Your products**, and confirm there is an active **Microsoft 365 E5** subscription with its seat count.
+   *Path:* **Billing** > **Your products**
+
+3. Record your tenant prefix — the part before `.onmicrosoft.com` — and enter it in the field at the top of this page.
+
+   > [!TIP]
+   > Setting the tenant prefix once rewrites every UPN, script and command across every lab to match your tenant. Do it now and you will never have to mentally substitute `<tenant>` while following a step.
+
+4. Confirm you can also reach the other two portals you will live in: `https://intune.microsoft.com` and `https://entra.microsoft.com`.
+
+**Results:** The tenant is reachable, has seats, and the guide is set to your tenant name.
+
+- [ ] **Your products** lists an active **Microsoft 365 E5** subscription.
+- [ ] The tenant field in the header of this page shows your prefix.
+- [ ] Both the Intune and Microsoft Entra admin centers load.
+
+### Scripts
+
+#### Pre-flight check: report what is ready and what is missing
+
+> [!NOTE]
+> Run this in Windows PowerShell on the host, ideally **as an administrator** — the Hyper-V switch check is skipped otherwise, because an unelevated session cannot tell an absent switch from a permission error. It changes nothing: every line reads state. Anything reported as `MISSING` is work to do tonight rather than tomorrow.
+
+```powershell
+# MD-102 lab pre-flight. Read-only: this script changes nothing.
+$results = [System.Collections.Generic.List[object]]::new()
+
+function Add-Check {
+    param($Item, $Found, $Wanted, $Ok)
+    $results.Add([pscustomobject]@{
+        Check  = $Item
+        Found  = $Found
+        Wanted = $Wanted
+        Status = if ($Ok) { "PASS" } else { "MISSING" }
+    })
+}
+
+# Several Hyper-V cmdlets require elevation. Without knowing whether we have it,
+# an "access denied" is indistinguishable from "the thing is not there" — which is
+# exactly the false alarm this script exists to prevent.
+$identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+$elevated = (New-Object Security.Principal.WindowsPrincipal($identity)).IsInRole(
+    [Security.Principal.WindowsBuiltInRole]::Administrator)
+
+# --- Host resources ---------------------------------------------------------
+$cs  = Get-CimInstance Win32_ComputerSystem
+$os  = Get-CimInstance Win32_OperatingSystem
+$ram = [math]::Round($cs.TotalPhysicalMemory / 1GB, 1)
+Add-Check "Memory" "$ram GB" "16 GB min" ($ram -ge 16)
+
+$sys  = Get-Volume -DriveLetter ($env:SystemDrive.TrimEnd(':'))
+$free = [math]::Round($sys.SizeRemaining / 1GB, 1)
+Add-Check "Free disk on $env:SystemDrive" "$free GB" "150 GB min" ($free -ge 150)
+
+$cores = [int](Get-CimInstance Win32_Processor | Measure-Object -Property NumberOfCores -Sum).Sum
+Add-Check "Processor cores" $cores "4 min" ($cores -ge 4)
+Add-Check "Host edition" $os.Caption "Pro/Enterprise/Education" ($os.Caption -notmatch "Home")
+
+# --- Virtualisation ---------------------------------------------------------
+# InstallState: 1 = Enabled, 2 = Disabled, 3 = Absent
+$hv = Get-CimInstance Win32_OptionalFeature -Filter "Name='Microsoft-Hyper-V-All'"
+Add-Check "Hyper-V feature" $(if ($hv.InstallState -eq 1) { "Enabled" } else { "Not enabled" }) "Enabled" ($hv.InstallState -eq 1)
+
+$hvModule = [bool](Get-Module -ListAvailable Hyper-V)
+Add-Check "Hyper-V PowerShell module" $(if ($hvModule) { "Present" } else { "Absent" }) "Present" $hvModule
+
+if (-not $elevated) {
+    # Not a failure: just unknowable from an unelevated prompt. Reported as PASS so
+    # it does not send you hunting for a switch that is probably there.
+    Add-Check "Default Switch" "Not checked (needs elevation)" "Present" $true
+} else {
+    $switch = $null
+    try { $switch = Get-VMSwitch -ErrorAction Stop | Where-Object Name -eq "Default Switch" } catch { }
+    Add-Check "Default Switch" $(if ($switch) { "Present" } else { "Not found" }) "Present" ([bool]$switch)
+}
+
+# --- Tooling ----------------------------------------------------------------
+$graph = Get-Module -ListAvailable Microsoft.Graph.Authentication |
+         Sort-Object Version -Descending | Select-Object -First 1
+Add-Check "Microsoft.Graph SDK" $(if ($graph) { $graph.Version.ToString() } else { "Absent" }) "2.0 or later" ([bool]$graph)
+
+$sdk = Join-Path $env:LOCALAPPDATA "Android\Sdk"
+Add-Check "Android SDK" $(if (Test-Path $sdk) { "Present" } else { "Absent" }) "Present" (Test-Path $sdk)
+
+$play = @()
+$images = Join-Path $sdk "system-images"
+if (Test-Path $images) {
+    $play = @(Get-ChildItem $images -Recurse -Directory -ErrorAction SilentlyContinue |
+              Where-Object { $_.FullName -match "google_apis_playstore" })
+}
+Add-Check "Android Google Play image" $(if ($play.Count) { "$($play.Count) found" } else { "None" }) "1 or more" ($play.Count -gt 0)
+
+# --- Installation media -----------------------------------------------------
+$iso = Get-ChildItem "$env:SystemDrive\" -Filter *.iso -Recurse -Depth 3 -ErrorAction SilentlyContinue |
+       Where-Object { $_.Length -gt 3GB } | Select-Object -First 1
+Add-Check "Windows 11 ISO" $(if ($iso) { $iso.FullName } else { "Not found" }) "One ISO over 3 GB" ([bool]$iso)
+
+# --- Report -----------------------------------------------------------------
+$results | Format-Table -AutoSize
+
+if (-not $elevated) {
+    Write-Host "Running unelevated - Hyper-V switch state was not checked. Re-run as administrator for a complete result." -ForegroundColor DarkGray
+}
+
+$missing = @($results | Where-Object Status -eq "MISSING")
+if ($missing.Count -eq 0) {
+    Write-Host "Pre-flight clear. Start at lab 1." -ForegroundColor Green
+} else {
+    Write-Host "$($missing.Count) item(s) to resolve before lab 2:" -ForegroundColor Yellow
+    $missing | ForEach-Object { Write-Host "  - $($_.Check): have '$($_.Found)', need $($_.Wanted)" }
+}
+```
+
+### Troubleshooting
+
+**Symptom:** `Enable-WindowsOptionalFeature` succeeds and the restart completes, but `Get-VMSwitch` reports that the term is not recognised.
+
+- **Root cause:** The hypervisor is installed but the Hyper-V PowerShell management module is not. `Microsoft-Hyper-V-All` normally pulls it in, but a feature enabled through a management tool or baked into an image can leave the sub-feature out.
+- **Diagnostic:**
+
+  ```powershell
+  Get-CimInstance Win32_OptionalFeature -Filter "Name LIKE 'Microsoft-Hyper-V%'" |
+      Select-Object Name, InstallState
+  ```
+
+- **Resolution:** Enable the missing sub-feature directly with `Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-Management-PowerShell -All`, then reopen PowerShell. An `InstallState` of `1` means enabled, `2` means disabled and `3` means absent.
+
+**Symptom:** The Android emulator boots, but there is no **Play Store** and Company Portal cannot be installed.
+
+- **Root cause:** The virtual device was created from a Google APIs or AOSP system image rather than a Google Play image. The distinction is only visible at image-selection time and cannot be changed afterwards.
+- **Resolution:** Delete the virtual device and create a new one, selecting a system image explicitly labelled **Google Play**. Virtual devices created previously for application development are usually Google APIs images and will not work for the Android Enterprise labs.
+
+### Knowledge check
+
+**Q1.** You are choosing installation media for the lab virtual machines. Which should you use so that every lab in this course can be completed?
+
+A. A Windows 11 Pro ISO, so subscription activation to Enterprise can be demonstrated
+B. The Windows 11 Enterprise evaluation ISO, because the labs require Enterprise features
+C. A Windows 11 Home ISO, upgraded in place later
+D. Any Windows 11 ISO — the edition has no bearing on Intune management
+
+<details><summary>Answer</summary>
+
+**A** — Subscription activation steps a Pro device up to Enterprise using the Windows 11 Enterprise E5 entitlement in Microsoft 365 E5. Starting from Enterprise leaves nothing to activate, and the evaluation image additionally expires after 90 days.
+
+*Exam tip:* Subscription activation needs three things and all three fail silently: the device Microsoft Entra joined, the user holding a Windows Enterprise entitlement, and ClipSVC running.
+
+</details>
+
+**Q2.** You create an Android virtual device to practise Android Enterprise enrollment. Which system image must you choose?
+
+A. An image labelled Google Play
+B. An image labelled Google APIs
+C. An AOSP image, because it is closest to a managed device
+D. Any image — Company Portal is sideloaded during enrollment
+
+<details><summary>Answer</summary>
+
+**A** — Only a Google Play system image includes the Play Store, and Managed Google Play is what delivers Company Portal and provisions the work profile. Google APIs images carry Google services but no store.
+
+*Exam tip:* Android Enterprise enrollment always depends on Managed Google Play. If a scenario removes Google Play services, work profile and fully managed enrollment are both off the table.
+
+</details>
+
+---
 
 ## Lab 1: Set up the tenant and the 20/5 licence budget
 
@@ -141,6 +464,7 @@ After completing this lab, you will be able to:
 
 ### Prerequisites
 
+- Completed labs: `before-you-begin`
 - Licences: M365-E5
 - Roles: Global Administrator
 - Devices and portals: Microsoft 365 admin center, Microsoft Intune admin center, Microsoft Entra admin center
@@ -202,12 +526,12 @@ About a quarter of the MD-102 objectives cover capabilities that are *not* in Mi
    | Capability | Needs | Why it is out of reach | How this course handles it |
    | --- | --- | --- | --- |
    | Windows 365 Cloud PC | Windows 365 subscription | A separate per-user subscription; the July 2026 Intune packaging change did not touch it | Walkthrough — lab 21 |
-   | Security Copilot agents in Intune | Security Compute Units | Billed hourly by provisioned compute, so it cannot be trialled from inside a tenant | Walkthrough — lab 57 |
+   | Security Copilot agents in Intune | Paid E5 seats, or purchased capacity | Included with E5 since mid-2026, but as 400 SCU per month per 1,000 *paid* seats — a 25-seat trial earns no usable capacity | Walkthrough — lab 57 |
    | Apple Business Manager, VPP | Apple organisation and hardware | Needs a D-U-N-S number and hardware bought through Apple or a reseller | Walkthrough — labs 14, 26, 49 |
    | Microsoft Tunnel Gateway | A Linux host you run | The licence is included; the gateway is infrastructure you must host yourself | Configuration path only — lab 59 |
 
    > [!NOTE]
-   > Only four things in this whole course are out of reach, and only two of them are licensing. Everything else — including every capability that used to require the Intune Suite — you will configure and use for real. That is a recent change and a genuinely large one.
+   > Only four things in this whole course are out of reach, and only two of them are licensing. Everything else — including every capability that used to require the Intune Suite — you will configure and use for real. That is a recent change and a genuinely large one. Note the shape of the Security Copilot row in particular: it is *licensed* to you and still not *usable* here, because the entitlement is monthly capacity scaled to paid seats rather than a per-user right. Exam questions about entitlement and questions about capacity are not the same question.
 
 **Results:** You can state which examined capabilities you can practise and which you will study without a tenant.
 
@@ -455,6 +779,9 @@ After completing this lab, you will be able to:
 
 1. On the host, open **Windows PowerShell** as an administrator.
 
+   > [!TIP]
+   > If you ran the pre-flight in lab 0 and it reported Hyper-V as **Enabled**, this whole exercise is already done — jump to exercise 2. Hyper-V is on by default on many developer machines, and the restart below is the slowest step in this lab.
+
 2. Confirm the processor supports virtualisation and that it is enabled in firmware:
 
    ```powershell
@@ -493,10 +820,13 @@ After completing this lab, you will be able to:
 
 #### Task 2: Download the Windows 11 installation media
 
-1. Download a **Windows 11 Enterprise evaluation** ISO from the [Microsoft Evaluation Center](https://www.microsoft.com/evalcenter/evaluate-windows-11-enterprise), or a Windows 11 Pro ISO if you have one.
+1. Download a **Windows 11 Pro** ISO from the [Windows 11 download page](https://www.microsoft.com/software-download/windows11), using the section titled *Download Windows 11 Disk Image (ISO) for x64 devices*. Choose the multi-edition ISO and select **Windows 11 Pro** during setup.
 
-   > [!TIP]
-   > Install **Pro**, not Enterprise, if you have the choice. Lab 20 steps a Pro device up to Enterprise using subscription activation, which is a genuinely useful thing to watch happen — and you cannot watch it on a device that is already Enterprise.
+   > [!IMPORTANT]
+   > Install **Pro**, not Enterprise, and treat that as a requirement rather than a preference. Lab 20 exists to watch subscription activation step a Pro device up to Enterprise on sign-in — on a device already running Enterprise there is nothing left to demonstrate.
+
+   > [!NOTE]
+   > The [Microsoft Evaluation Center](https://www.microsoft.com/evalcenter/evaluate-windows-11-enterprise) offers only a Windows 11 **Enterprise** evaluation, which is why it is not the link above. It works as a fallback if you cannot obtain Pro media, at the cost of lab 20 and of an image that expires after 90 days — inside the window you will still be using these machines.
 
 2. Save the ISO somewhere with a short path such as `C:\Hyper-V\ISO\`, and note the full path. The script in the next exercise needs it.
 
@@ -12466,7 +12796,7 @@ D. The device configuration profile status for iOS
 **Access:** Walkthrough — licence not included in Microsoft 365 E5 · **Estimated time:** 30 minutes · **Difficulty:** intermediate
 
 > [!IMPORTANT]
-> Microsoft Security Copilot is billed by provisioned Security Compute Units and is not part of Microsoft 365 E5. There is no free tier and no trial that can be started from inside the tenant, so the agents cannot be run here. They were added to the MD-102 outline in the July 2026 revision, so this lab covers what they do, what they produce and how you are expected to act on their output.
+> Microsoft Security Copilot *is* now included with Microsoft 365 E5 — that changed in the April to June 2026 rollout, and study material written before then says otherwise. The catch is how the capacity is granted: 400 Security Compute Units per month for every 1,000 **paid** E5 seats, capped at 10,000. A 25-seat trial is not a paid allocation of that size, so a trial tenant receives no usable SCU grant and the agents cannot actually be run here. The objectives were added in the July 2026 outline revision, so this lab covers what the agents do, what they produce and how you are expected to act on their output.
 
 ### Lab scenario
 

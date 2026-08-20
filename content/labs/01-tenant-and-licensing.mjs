@@ -37,7 +37,7 @@ export default {
       { kind: "portal", id: "Microsoft Entra admin center" }
     ],
     personas: [],
-    labs: []
+    labs: ["before-you-begin"]
   },
 
   exercises: [
@@ -133,7 +133,7 @@ export default {
                   headers: ["Capability", "Needs", "Why it is out of reach", "How this course handles it"],
                   rows: [
                     ["Windows 365 Cloud PC", "Windows 365 subscription", "A separate per-user subscription; the July 2026 Intune packaging change did not touch it", "Walkthrough — lab 21"],
-                    ["Security Copilot agents in Intune", "Security Compute Units", "Billed hourly by provisioned compute, so it cannot be trialled from inside a tenant", "Walkthrough — lab 57"],
+                    ["Security Copilot agents in Intune", "Paid E5 seats, or purchased capacity", "Included with E5 since mid-2026, but as 400 SCU per month per 1,000 *paid* seats — a 25-seat trial earns no usable capacity", "Walkthrough — lab 57"],
                     ["Apple Business Manager, VPP", "Apple organisation and hardware", "Needs a D-U-N-S number and hardware bought through Apple or a reseller", "Walkthrough — labs 14, 26, 49"],
                     ["Microsoft Tunnel Gateway", "A Linux host you run", "The licence is included; the gateway is infrastructure you must host yourself", "Configuration path only — lab 59"]
                   ]
@@ -141,7 +141,7 @@ export default {
                 {
                   kind: "callout",
                   variant: "note",
-                  text: "Only four things in this whole course are out of reach, and only two of them are licensing. Everything else — including every capability that used to require the Intune Suite — you will configure and use for real. That is a recent change and a genuinely large one."
+                  text: "Only four things in this whole course are out of reach, and only two of them are licensing. Everything else — including every capability that used to require the Intune Suite — you will configure and use for real. That is a recent change and a genuinely large one. Note the shape of the Security Copilot row in particular: it is *licensed* to you and still not *usable* here, because the entitlement is monthly capacity scaled to paid seats rather than a per-user right. Exam questions about entitlement and questions about capacity are not the same question."
                 }
               ]
             }

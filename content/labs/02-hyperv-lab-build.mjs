@@ -45,7 +45,14 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "On the host, open **Windows PowerShell** as an administrator."
+              text: "On the host, open **Windows PowerShell** as an administrator.",
+              parts: [
+                {
+                  kind: "callout",
+                  variant: "tip",
+                  text: "If you ran the pre-flight in lab 0 and it reported Hyper-V as **Enabled**, this whole exercise is already done — jump to exercise 2. Hyper-V is on by default on many developer machines, and the restart below is the slowest step in this lab."
+                }
+              ]
             },
             {
               text: "Confirm the processor supports virtualisation and that it is enabled in firmware:",
@@ -107,12 +114,17 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Download a **Windows 11 Enterprise evaluation** ISO from the [Microsoft Evaluation Center](https://www.microsoft.com/evalcenter/evaluate-windows-11-enterprise), or a Windows 11 Pro ISO if you have one.",
+              text: "Download a **Windows 11 Pro** ISO from the [Windows 11 download page](https://www.microsoft.com/software-download/windows11), using the section titled *Download Windows 11 Disk Image (ISO) for x64 devices*. Choose the multi-edition ISO and select **Windows 11 Pro** during setup.",
               parts: [
                 {
                   kind: "callout",
-                  variant: "tip",
-                  text: "Install **Pro**, not Enterprise, if you have the choice. Lab 20 steps a Pro device up to Enterprise using subscription activation, which is a genuinely useful thing to watch happen — and you cannot watch it on a device that is already Enterprise."
+                  variant: "important",
+                  text: "Install **Pro**, not Enterprise, and treat that as a requirement rather than a preference. Lab 20 exists to watch subscription activation step a Pro device up to Enterprise on sign-in — on a device already running Enterprise there is nothing left to demonstrate."
+                },
+                {
+                  kind: "callout",
+                  variant: "note",
+                  text: "The [Microsoft Evaluation Center](https://www.microsoft.com/evalcenter/evaluate-windows-11-enterprise) offers only a Windows 11 **Enterprise** evaluation, which is why it is not the link above. It works as a fallback if you cannot obtain Pro media, at the cost of lab 20 and of an image that expires after 90 days — inside the window you will still be using these machines."
                 }
               ]
             },

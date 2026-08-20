@@ -4,7 +4,7 @@ export default {
   title: "Security Copilot agents in Intune",
   access: "walkthrough-license",
   accessReason:
-    "Microsoft Security Copilot is billed by provisioned Security Compute Units and is not part of Microsoft 365 E5. There is no free tier and no trial that can be started from inside the tenant, so the agents cannot be run here. They were added to the MD-102 outline in the July 2026 revision, so this lab covers what they do, what they produce and how you are expected to act on their output.",
+    "Microsoft Security Copilot *is* now included with Microsoft 365 E5 — that changed in the April to June 2026 rollout, and study material written before then says otherwise. The catch is how the capacity is granted: 400 Security Compute Units per month for every 1,000 **paid** E5 seats, capped at 10,000. A 25-seat trial is not a paid allocation of that size, so a trial tenant receives no usable SCU grant and the agents cannot actually be run here. The objectives were added in the July 2026 outline revision, so this lab covers what the agents do, what they produce and how you are expected to act on their output.",
   difficulty: "intermediate",
   estimatedMinutes: 30,
 

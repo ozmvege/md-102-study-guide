@@ -299,12 +299,14 @@ export function emitMarkdown({ outline, modules, labs, coverage, outlineIndex })
     for (const lab of inMod) {
       n++;
       const badge = lab.access === "hands-on" ? "" : " *(walkthrough)*";
-      out.push(n + ". [" + md(lab.title) + "](#lab-" + n + "-" + slug(lab.title) + ")" + badge);
+      // Numbering comes from lab.number (the filename prefix), never from the
+      // position in this loop: authored text cross-references labs by that number,
+      // and a lab 0 would otherwise shift every label by one.
+      out.push(n + ". [Lab " + lab.number + " — " + md(lab.title) + "](#lab-" + lab.number + "-" + slug(lab.title) + ")" + badge);
     }
     out.push("");
   }
 
-  let number = 0;
   for (const mod of modules) {
     const inMod = labs.filter((l) => l.moduleId === mod.id);
     if (!inMod.length) continue;
@@ -313,8 +315,7 @@ export function emitMarkdown({ outline, modules, labs, coverage, outlineIndex })
     out.push(md(mod.description));
     out.push("");
     for (const lab of inMod) {
-      number++;
-      out.push(...renderLab(lab, number, outlineIndex));
+      out.push(...renderLab(lab, lab.number, outlineIndex));
     }
   }
 

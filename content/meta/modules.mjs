@@ -13,7 +13,7 @@ export default [
     shortTitle: "Lab environment",
     title: "Module 0 — Build the lab environment",
     description:
-      "Stand up the tenant, the virtual machines and the 20 identities everything else is built on. None of this is examined; all of it is required before any other lab will work."
+      "Pre-flight the host, then stand up the tenant, the virtual machines and the 20 identities everything else is built on. None of this is examined; all of it is required before any other lab will work. Start with lab 0 the evening before — it stages roughly 7 GB of downloads that later labs block on."
   },
   {
     id: "m1",

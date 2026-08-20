@@ -7,7 +7,7 @@ A hands-on lab curriculum for **Exam MD-102: Managing and Securing Microsoft 365
 | --- | --- |
 | Exam | **MD-102** — Managing and Securing Microsoft 365 Endpoints by using Intune |
 | Skills outline | 2026-07-24 ([source](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/md-102)) |
-| Labs | 60 across 13 modules (54 hands-on, 6 walkthrough) |
+| Labs | 61 across 13 modules (55 hands-on, 6 walkthrough) |
 | Lab time | ~48 hours |
 | Objective coverage | 83 of 83 skill bullets (100%) |
 <!-- END:SUMMARY -->
@@ -87,66 +87,67 @@ Validation fails on an unknown skill id, a lab with no primary objective mapping
 <!-- BEGIN:CURRICULUM -->
 | # | Lab | Module | Access | Time |
 | --- | --- | --- | --- | --- |
-| 1 | Set up the tenant and the 20/5 licence budget | Lab environment | Hands-on | 45 min |
-| 2 | Build the virtual machines and the Android emulator | Lab environment | Hands-on | 75 min |
-| 3 | Provision 20 personas and the group structure | Lab environment | Hands-on | 50 min |
-| 4 | Break-glass access and administrator tiering | Identity foundation | Hands-on | 40 min |
-| 5 | Device identity: registered, joined and hybrid joined | Identity foundation | Hands-on | 55 min |
-| 6 | Device groups and dynamic membership rules | Identity foundation | Hands-on | 45 min |
-| 7 | Intune role-based access control and custom roles | Identity foundation | Hands-on | 45 min |
-| 8 | Scope tags, administrative units and scoped administration | Identity foundation | Hands-on | 45 min |
-| 9 | Multi-admin approval and access policies | Identity foundation | Hands-on | 35 min |
-| 10 | Automatic enrollment, enrollment settings and Company Portal branding | Enrollment | Hands-on | 40 min |
-| 11 | Enrollment restrictions, device limits and corporate identifiers | Enrollment | Hands-on | 45 min |
-| 12 | Every Windows enrollment path | Enrollment | Hands-on | 50 min |
-| 13 | Android Enterprise: work profile, fully managed and dedicated | Enrollment | Hands-on | 60 min |
-| 14 | Apple enrollment, Apple Business Manager and OEM zero-touch | Enrollment | Walkthrough (device) | 35 min |
-| 15 | Troubleshoot enrollment failures | Enrollment | Hands-on | 45 min |
-| 16 | Choose a provisioning method: Autopilot profiles or device preparation | Windows deployment | Hands-on | 30 min |
-| 17 | Windows Autopilot user-driven deployment | Windows deployment | Hands-on | 75 min |
-| 18 | Autopilot pre-provisioning and self-deploying mode | Windows deployment | Walkthrough (device) | 35 min |
-| 19 | Windows Autopilot device preparation | Windows deployment | Hands-on | 55 min |
-| 20 | Windows 11 edition upgrades and Windows Backup | Windows deployment | Hands-on | 40 min |
-| 21 | Windows 365 Cloud PCs | Windows deployment | Walkthrough (licence) | 35 min |
-| 22 | The settings catalog: profiles, assignment and conflicts | Configuration | Hands-on | 50 min |
-| 23 | ADMX templates and Group Policy analytics | Configuration | Hands-on | 45 min |
-| 24 | Assignment filters and enrollment time grouping | Configuration | Hands-on | 40 min |
-| 25 | Android configuration profiles | Configuration | Hands-on | 40 min |
-| 26 | Apple and specialty device configuration profiles | Configuration | Walkthrough (device) | 35 min |
-| 27 | Cloud PKI, certificate profiles, Wi-Fi and VPN | Configuration | Hands-on | 60 min |
-| 28 | Windows Hello for Business, Windows LAPS and local group membership | Configuration | Hands-on | 55 min |
-| 29 | Compliance policies and actions for non-compliance | Compliance and CA | Hands-on | 50 min |
-| 30 | Extend compliance with PowerShell and JSON | Compliance and CA | Hands-on | 45 min |
-| 31 | Conditional Access: require a compliant device | Compliance and CA | Hands-on | 50 min |
-| 32 | Store apps, line-of-business apps and assignment intent | Applications | Hands-on | 45 min |
-| 33 | Win32 app packaging, detection and dependencies | Applications | Hands-on | 70 min |
-| 34 | Deploy and manage Microsoft 365 Apps | Applications | Hands-on | 50 min |
-| 35 | Mobile app stores and Quiet Time policies | Applications | Hands-on | 40 min |
-| 36 | App protection policies and selective wipe | Applications | Hands-on | 50 min |
-| 37 | App configuration policies for managed devices and managed apps | Applications | Hands-on | 35 min |
-| 38 | Monitor and troubleshoot application deployment | Applications | Hands-on | 40 min |
-| 39 | Security baselines | Protect devices | Hands-on | 40 min |
-| 40 | Antivirus policies and tamper protection | Protect devices | Hands-on | 40 min |
-| 41 | Firewall policies and rules | Protect devices | Hands-on | 40 min |
-| 42 | Attack surface reduction rules | Protect devices | Hands-on | 45 min |
-| 43 | BitLocker: silent encryption, key escrow and recovery | Protect devices | Hands-on | 50 min |
-| 44 | Defender for Endpoint: onboarding, EDR and device risk | Protect devices | Hands-on | 60 min |
-| 45 | App Control for Business | Protect devices | Hands-on | 40 min |
-| 46 | Update rings and Delivery Optimization | Updates | Hands-on | 45 min |
-| 47 | Windows Autopatch, expedited updates and Hotpatch | Updates | Hands-on | 50 min |
-| 48 | Android update management and update reporting | Updates | Hands-on | 40 min |
-| 49 | iOS, iPadOS and macOS update policies | Updates | Walkthrough (device) | 30 min |
-| 50 | Remote actions, bulk actions and credential rotation | Operate | Hands-on | 45 min |
-| 51 | Device query with KQL and diagnostics collection | Operate | Hands-on | 40 min |
-| 52 | Automate Intune with the Microsoft Graph PowerShell SDK | Automate and monitor | Hands-on | 50 min |
-| 53 | Proactive remediations: detect and fix automatically | Automate and monitor | Hands-on | 45 min |
-| 54 | Endpoint Analytics: startup, reliability and user experience | Automate and monitor | Hands-on | 40 min |
-| 55 | Intune reporting, workbooks and data export | Automate and monitor | Hands-on | 35 min |
-| 56 | Tenant health, service communications and alert rules | Automate and monitor | Hands-on | 35 min |
-| 57 | Security Copilot agents in Intune | Automate and monitor | Walkthrough (licence) | 30 min |
-| 58 | Endpoint Privilege Management | Advanced capabilities | Hands-on | 55 min |
-| 59 | Remote Help, Enterprise App Catalog, Advanced Analytics and Tunnel for MAM | Advanced capabilities | Hands-on | 55 min |
-| 60 | Capstone: rebuild the estate, then close your gaps | Capstone | Hands-on | 180 min |
+| 1 | Before you begin: pre-flight the host and stage the downloads | Lab environment | Hands-on | 25 min |
+| 2 | Set up the tenant and the 20/5 licence budget | Lab environment | Hands-on | 45 min |
+| 3 | Build the virtual machines and the Android emulator | Lab environment | Hands-on | 75 min |
+| 4 | Provision 20 personas and the group structure | Lab environment | Hands-on | 50 min |
+| 5 | Break-glass access and administrator tiering | Identity foundation | Hands-on | 40 min |
+| 6 | Device identity: registered, joined and hybrid joined | Identity foundation | Hands-on | 55 min |
+| 7 | Device groups and dynamic membership rules | Identity foundation | Hands-on | 45 min |
+| 8 | Intune role-based access control and custom roles | Identity foundation | Hands-on | 45 min |
+| 9 | Scope tags, administrative units and scoped administration | Identity foundation | Hands-on | 45 min |
+| 10 | Multi-admin approval and access policies | Identity foundation | Hands-on | 35 min |
+| 11 | Automatic enrollment, enrollment settings and Company Portal branding | Enrollment | Hands-on | 40 min |
+| 12 | Enrollment restrictions, device limits and corporate identifiers | Enrollment | Hands-on | 45 min |
+| 13 | Every Windows enrollment path | Enrollment | Hands-on | 50 min |
+| 14 | Android Enterprise: work profile, fully managed and dedicated | Enrollment | Hands-on | 60 min |
+| 15 | Apple enrollment, Apple Business Manager and OEM zero-touch | Enrollment | Walkthrough (device) | 35 min |
+| 16 | Troubleshoot enrollment failures | Enrollment | Hands-on | 45 min |
+| 17 | Choose a provisioning method: Autopilot profiles or device preparation | Windows deployment | Hands-on | 30 min |
+| 18 | Windows Autopilot user-driven deployment | Windows deployment | Hands-on | 75 min |
+| 19 | Autopilot pre-provisioning and self-deploying mode | Windows deployment | Walkthrough (device) | 35 min |
+| 20 | Windows Autopilot device preparation | Windows deployment | Hands-on | 55 min |
+| 21 | Windows 11 edition upgrades and Windows Backup | Windows deployment | Hands-on | 40 min |
+| 22 | Windows 365 Cloud PCs | Windows deployment | Walkthrough (licence) | 35 min |
+| 23 | The settings catalog: profiles, assignment and conflicts | Configuration | Hands-on | 50 min |
+| 24 | ADMX templates and Group Policy analytics | Configuration | Hands-on | 45 min |
+| 25 | Assignment filters and enrollment time grouping | Configuration | Hands-on | 40 min |
+| 26 | Android configuration profiles | Configuration | Hands-on | 40 min |
+| 27 | Apple and specialty device configuration profiles | Configuration | Walkthrough (device) | 35 min |
+| 28 | Cloud PKI, certificate profiles, Wi-Fi and VPN | Configuration | Hands-on | 60 min |
+| 29 | Windows Hello for Business, Windows LAPS and local group membership | Configuration | Hands-on | 55 min |
+| 30 | Compliance policies and actions for non-compliance | Compliance and CA | Hands-on | 50 min |
+| 31 | Extend compliance with PowerShell and JSON | Compliance and CA | Hands-on | 45 min |
+| 32 | Conditional Access: require a compliant device | Compliance and CA | Hands-on | 50 min |
+| 33 | Store apps, line-of-business apps and assignment intent | Applications | Hands-on | 45 min |
+| 34 | Win32 app packaging, detection and dependencies | Applications | Hands-on | 70 min |
+| 35 | Deploy and manage Microsoft 365 Apps | Applications | Hands-on | 50 min |
+| 36 | Mobile app stores and Quiet Time policies | Applications | Hands-on | 40 min |
+| 37 | App protection policies and selective wipe | Applications | Hands-on | 50 min |
+| 38 | App configuration policies for managed devices and managed apps | Applications | Hands-on | 35 min |
+| 39 | Monitor and troubleshoot application deployment | Applications | Hands-on | 40 min |
+| 40 | Security baselines | Protect devices | Hands-on | 40 min |
+| 41 | Antivirus policies and tamper protection | Protect devices | Hands-on | 40 min |
+| 42 | Firewall policies and rules | Protect devices | Hands-on | 40 min |
+| 43 | Attack surface reduction rules | Protect devices | Hands-on | 45 min |
+| 44 | BitLocker: silent encryption, key escrow and recovery | Protect devices | Hands-on | 50 min |
+| 45 | Defender for Endpoint: onboarding, EDR and device risk | Protect devices | Hands-on | 60 min |
+| 46 | App Control for Business | Protect devices | Hands-on | 40 min |
+| 47 | Update rings and Delivery Optimization | Updates | Hands-on | 45 min |
+| 48 | Windows Autopatch, expedited updates and Hotpatch | Updates | Hands-on | 50 min |
+| 49 | Android update management and update reporting | Updates | Hands-on | 40 min |
+| 50 | iOS, iPadOS and macOS update policies | Updates | Walkthrough (device) | 30 min |
+| 51 | Remote actions, bulk actions and credential rotation | Operate | Hands-on | 45 min |
+| 52 | Device query with KQL and diagnostics collection | Operate | Hands-on | 40 min |
+| 53 | Automate Intune with the Microsoft Graph PowerShell SDK | Automate and monitor | Hands-on | 50 min |
+| 54 | Proactive remediations: detect and fix automatically | Automate and monitor | Hands-on | 45 min |
+| 55 | Endpoint Analytics: startup, reliability and user experience | Automate and monitor | Hands-on | 40 min |
+| 56 | Intune reporting, workbooks and data export | Automate and monitor | Hands-on | 35 min |
+| 57 | Tenant health, service communications and alert rules | Automate and monitor | Hands-on | 35 min |
+| 58 | Security Copilot agents in Intune | Automate and monitor | Walkthrough (licence) | 30 min |
+| 59 | Endpoint Privilege Management | Advanced capabilities | Hands-on | 55 min |
+| 60 | Remote Help, Enterprise App Catalog, Advanced Analytics and Tunnel for MAM | Advanced capabilities | Hands-on | 55 min |
+| 61 | Capstone: rebuild the estate, then close your gaps | Capstone | Hands-on | 180 min |
 <!-- END:CURRICULUM -->
 
 ## Lab hardware

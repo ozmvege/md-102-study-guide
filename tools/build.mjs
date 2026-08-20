@@ -74,7 +74,12 @@ async function loadContent(bust) {
 
 /** Copy the shared inline-markup parser into the browser app, exports rewritten. */
 async function buildInlineForBrowser() {
-  const src = await readFile(join(ROOT, "tools/lib/inline.mjs"), "utf8");
+  // Normalize BEFORE the indent below, not after. In a JavaScript regular
+  // expression a bare carriage return is itself a line terminator, so /^/gm on a
+  // CRLF source matches after the CR as well as after the LF and injects a second
+  // indent between the two, producing stray two-space lines that a LF checkout
+  // never reproduces. Normalizing the finished artifact is too late to undo that.
+  const src = normalizeEol(await readFile(join(ROOT, "tools/lib/inline.mjs"), "utf8"));
   const body = src.replace(
     /^export \{[^}]*\};\s*$/m,
     "root.MD102Inline = { esc: esc, toHtml: toHtml, toMarkdown: toMarkdown, toPlain: toPlain, validateInline: validateInline };"
@@ -118,6 +123,19 @@ async function checkBrowserScripts() {
   return errors;
 }
 
+/**
+ * Force LF line endings on a generated artifact.
+ *
+ * The site is authored on Windows and built on Linux in CI. Sources arrive CRLF
+ * on one and LF on the other, and buildInlineForBrowser copies its source
+ * verbatim, so an artifact built on Windows would otherwise carry CR bytes that
+ * CI could never reproduce — failing --check over line endings rather than
+ * content. Generated files are byte-identical on every platform because of this.
+ */
+function normalizeEol(body) {
+  return String(body).split("\r\n").join("\n").split("\r").join("\n");
+}
+
 async function build(bust) {
   const { outline, meta, labs } = await loadContent(bust);
 
@@ -155,6 +173,8 @@ async function build(bust) {
     const existing = await readFile(readmePath, "utf8");
     artifacts.set("README.md", emitReadme(existing, { outline, modules: meta.modules, labs, coverage }));
   }
+
+  for (const [rel, body] of artifacts) artifacts.set(rel, normalizeEol(body));
 
   return { outline, meta, labs, coverage, errors, warnings, artifacts };
 }
@@ -221,7 +241,7 @@ async function main() {
     const stale = [];
     for (const [rel, body] of result.artifacts) {
       const abs = join(ROOT, rel);
-      const current = existsSync(abs) ? await readFile(abs, "utf8") : null;
+      const current = existsSync(abs) ? normalizeEol(await readFile(abs, "utf8")) : null;
       if (current !== body) stale.push(rel);
     }
     if (stale.length) {

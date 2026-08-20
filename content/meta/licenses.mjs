@@ -18,6 +18,13 @@
  * whole Intune Suite feature set. Anything written before August 2026 — including
  * most third-party study material — will tell you otherwise.
  * https://www.microsoft.com/en-us/licensing/news/2026-M365-Packaging-Pricing-Updates-FAQ
+ *
+ * Security Copilot moved separately and earlier, in the April to June 2026 rollout,
+ * and is included with E5 as monthly SCU capacity scaled to PAID seats rather than
+ * as a per-user right. It stays `included: false` here because a 25-seat trial earns
+ * no usable capacity — the distinction matters, so the note on that entry spells it
+ * out rather than leaving "not included" to imply "not licensed".
+ * https://mc.merill.net/message/MC1187672
  */
 
 const LEARN_LICENSING = "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/licenses";
@@ -171,10 +178,10 @@ export default [
     id: "SECURITY-COPILOT",
     name: "Microsoft Security Copilot",
     included: false,
-    verifiedOn: "2026-08-19",
-    source: "https://learn.microsoft.com/en-us/copilot/security/",
+    verifiedOn: "2026-08-20",
+    source: "https://mc.merill.net/message/MC1187672",
     notes:
-      "Billed by provisioned Security Compute Units on an hourly basis rather than per user, which is why it cannot be trialled from inside a tenant the way Intune add-ons could. The Security Copilot agents in Intune are examined in the automation domain but cannot be run on Microsoft 365 E5 alone."
+      "Included with Microsoft 365 E5 since the April to June 2026 rollout — but the entitlement is capacity, not a per-user right: 400 Security Compute Units per month for every 1,000 PAID E5 seats, capped at 10,000 SCU. A 25-seat trial does not earn a usable allocation, which is why this is marked not included for lab purposes rather than not licensed. Organisations without E5 buy capacity separately. The Security Copilot agents in Intune are examined in the automation domain; the exam expects you to know what they produce and how to act on it, which does not require running them."
   },
   {
     id: "APPLE-BUSINESS-MANAGER",

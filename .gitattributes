@@ -1,3 +1,7 @@
-js/content.bundle.js linguist-generated=true
-js/app/inline.js linguist-generated=true
-LAB_GUIDE.md linguist-generated=true
+# Generated artifacts. Marked so GitHub collapses them in diffs, and pinned to LF
+# so a Windows checkout does not rewrite them to CRLF: the build emits LF on every
+# platform, and a CRLF working copy would otherwise show as a permanent local diff.
+js/content.bundle.js linguist-generated=true eol=lf
+js/app/inline.js     linguist-generated=true eol=lf
+LAB_GUIDE.md         linguist-generated=true eol=lf
+README.md            eol=lf
