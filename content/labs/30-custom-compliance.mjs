@@ -328,6 +328,7 @@ return $result | ConvertTo-Json -Compress`
 
   quiz: [
     {
+      id: "q1",
       question:
         "A custom compliance discovery script runs correctly when tested manually, but every device reports an error for the custom compliance policy. What is the most likely cause?",
       options: [
@@ -344,6 +345,7 @@ return $result | ConvertTo-Json -Compress`
       skills: ["g5.t1.s5"]
     },
     {
+      id: "q2",
       question:
         "In a custom compliance JSON rules file, what is the purpose of RemediationStrings?",
       options: [

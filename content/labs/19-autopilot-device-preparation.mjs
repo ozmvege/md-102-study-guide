@@ -305,6 +305,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "A Windows Autopilot device preparation deployment fails and the target device group is empty. Configuration otherwise looks correct. What should you check?",
       options: [

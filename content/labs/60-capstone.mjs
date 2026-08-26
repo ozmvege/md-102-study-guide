@@ -337,6 +337,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "You have finished this curriculum and your coverage view shows quiz accuracy below 100 percent across several bullets in three different exam groups. How should you prioritise revision?",
       options: [

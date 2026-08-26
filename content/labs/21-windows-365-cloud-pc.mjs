@@ -254,6 +254,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "Contoso needs Cloud PCs that can reach an on-premises file server and be hybrid Microsoft Entra joined. Which network configuration is required?",
       options: [
@@ -270,6 +271,7 @@ export default {
       skills: ["g2.t1.s7"]
     },
     {
+      id: "q2",
       question:
         "You update the image on an existing Windows 365 provisioning policy. What happens to Cloud PCs already provisioned by that policy?",
       options: [

@@ -290,6 +290,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "You enable multi-admin approval for Apps and name an approver group containing only your own administrator account. What happens when you submit an app change?",
       options: [

@@ -221,6 +221,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "How does Android update management on fully managed devices differ from Windows update rings?",
       options: [

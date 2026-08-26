@@ -341,6 +341,7 @@ Get-MgDeviceManagementManagedDevice -All -Property DeviceName,RoleScopeTagIds |
 
   quiz: [
     {
+      id: "q1",
       question:
         "You scope a Help Desk Operator assignment to the tag `TAG-FINANCE` but leave the **Default** tag also selected. What is the result?",
       options: [
@@ -357,6 +358,7 @@ Get-MgDeviceManagementManagedDevice -All -Property DeviceName,RoleScopeTagIds |
       skills: ["g1.t3.s2"]
     },
     {
+      id: "q2",
       question:
         "A regional help desk must reset passwords only for users in its own region. Which feature achieves this?",
       options: [

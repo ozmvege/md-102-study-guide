@@ -236,6 +236,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "Contoso wants to improve its Endpoint analytics score without purchasing new hardware. Which score component is most improvable through configuration?",
       options: [
@@ -252,6 +253,7 @@ export default {
       skills: ["g5.t2.s4"]
     },
     {
+      id: "q2",
       question:
         "Which Endpoint Analytics capability requires Intune Advanced Analytics rather than Plan 1?",
       options: [

@@ -305,6 +305,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "Contoso has 400 Windows devices already joined to an on-premises Active Directory domain. They must be managed by Intune without visiting each device or reimaging. What should you implement?",
       options: [
@@ -321,6 +322,7 @@ export default {
       skills: ["g1.t2.s2"]
     },
     {
+      id: "q2",
       question:
         "Devices enrolled using a bulk enrollment provisioning package do not receive an application assigned to a user group. Device-targeted policies apply correctly. Why?",
       options: [

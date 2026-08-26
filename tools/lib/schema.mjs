@@ -285,8 +285,15 @@ export function validateLab(lab, ctx) {
     });
   });
 
+  // A quiz id is the key a reader's answer is stored under, so a question without
+  // one silently shares its neighbours' saved answer and the whole knowledge check
+  // locks up on the second visit. Required and unique, exactly like an exercise id.
+  const quizIds = new Set();
   (lab.quiz || []).forEach((q, i) => {
     const at = where + ".quiz[" + i + "]";
+    req(errors, ID_RE.test(q.id || ""), at + ': quiz id must be kebab-case, got "' + q.id + '"');
+    if (quizIds.has(q.id)) errors.push(where + ": duplicate quiz id " + q.id);
+    quizIds.add(q.id);
     req(errors, typeof q.question === "string" && q.question.trim(), at + ": missing question");
     req(errors, Array.isArray(q.options) && q.options.length >= 3, at + ": needs at least 3 options");
     req(errors, Number.isInteger(q.correctIndex) && q.correctIndex >= 0 && q.correctIndex < (q.options || []).length,

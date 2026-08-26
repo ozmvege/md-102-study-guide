@@ -345,6 +345,7 @@ $rows | Sort-Object Role | Format-Table -AutoSize`
 
   quiz: [
     {
+      id: "q1",
       question:
         "You create a custom Intune role granting only application permissions and assign it to a help desk group. One member reports they can also edit compliance policies. What is the most likely explanation?",
       options: [
@@ -361,6 +362,7 @@ $rows | Sort-Object Role | Format-Table -AutoSize`
       skills: ["g1.t3.s1"]
     },
     {
+      id: "q2",
       question:
         "In an Intune role assignment, what does the Scope Groups setting control?",
       options: [

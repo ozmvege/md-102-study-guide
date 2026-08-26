@@ -276,6 +276,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "Contoso must deploy iPads that run a single application in kiosk mode and from which users cannot remove management. Which enrollment method is required?",
       options: [
@@ -292,6 +293,7 @@ export default {
       skills: ["g1.t2.s3", "g1.t2.s5"]
     },
     {
+      id: "q2",
       question:
         "Contoso bought 200 Samsung handsets from a high-street retailer and wants them to enrol automatically at first power-on with non-removable management. What should you tell them?",
       options: [

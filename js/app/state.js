@@ -19,6 +19,21 @@
     legacyFound: false
   };
 
+  /**
+   * Drop quiz answers with an empty question id.
+   *
+   * Before questions carried ids, every answer in a lab was written to the single
+   * key "<labId>/". No question can ever match one again, so they are the wreckage
+   * of that bug rather than progress worth carrying forward.
+   */
+  function pruneQuiz(saved) {
+    var out = {};
+    Object.keys(saved).forEach(function (k) {
+      if (k.slice(k.lastIndexOf("/") + 1)) out[k] = saved[k];
+    });
+    return out;
+  }
+
   function load() {
     try {
       var raw = localStorage.getItem(KEY);
@@ -27,7 +42,7 @@
         if (saved.tenant) state.tenant = saved.tenant;
         if (saved.theme) state.theme = saved.theme;
         if (saved.done) state.done = saved.done;
-        if (saved.quiz) state.quiz = saved.quiz;
+        if (saved.quiz) state.quiz = pruneQuiz(saved.quiz);
       }
       // Progress from the previous version keyed checklist items that no longer
       // exist. A fuzzy remap would be wrong more often than right, so the old blob
@@ -184,7 +199,7 @@
   function importProgress(json) {
     var data = JSON.parse(json);
     if (data.done) state.done = data.done;
-    if (data.quiz) state.quiz = data.quiz;
+    if (data.quiz) state.quiz = pruneQuiz(data.quiz);
     if (data.tenant) state.tenant = data.tenant;
     save();
   }

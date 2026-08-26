@@ -220,6 +220,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "Contoso deploys Zebra handheld scanners and needs to configure the barcode scanner's trigger behaviour, which is not a standard Android setting. What should you use?",
       options: [
@@ -236,6 +237,7 @@ export default {
       skills: ["g2.t2.s5"]
     },
     {
+      id: "q2",
       question:
         "Which profile type should you use on macOS when the setting you need is not present in the settings catalog and comes as an Apple property list from a vendor?",
       options: [

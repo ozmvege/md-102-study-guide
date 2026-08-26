@@ -446,6 +446,7 @@ if ($missing.Count -eq 0) {
 
   quiz: [
     {
+      id: "q1",
       question:
         "You are choosing installation media for the lab virtual machines. Which should you use so that every lab in this course can be completed?",
       options: [
@@ -462,6 +463,7 @@ if ($missing.Count -eq 0) {
       skills: []
     },
     {
+      id: "q2",
       question:
         "You create an Android virtual device to practise Android Enterprise enrollment. Which system image must you choose?",
       options: [

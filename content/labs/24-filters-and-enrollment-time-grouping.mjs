@@ -262,6 +262,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "A configuration profile is assigned to a group with an include filter. A device is a member of that group, matches the filter, and is also a member of a group excluded from the same profile. What does the device receive?",
       options: [
@@ -278,6 +279,7 @@ export default {
       skills: ["g2.t2.s6"]
     },
     {
+      id: "q2",
       question:
         "During Autopilot deployments, devices frequently reach the desktop without their configuration profiles, because dynamic group membership has not yet been evaluated. Which feature addresses this?",
       options: [

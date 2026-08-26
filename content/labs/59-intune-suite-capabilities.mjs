@@ -432,6 +432,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "A user on a personally owned, unenrolled device needs access to an internal line-of-business web application. Which capability provides this without enrolling the device?",
       options: [
@@ -448,6 +449,7 @@ export default {
       skills: ["g2.t3.s5"]
     },
     {
+      id: "q2",
       question:
         "Which Intune Advanced Analytics capability helps determine the root cause of a device that recently began performing poorly?",
       options: [
@@ -464,6 +466,7 @@ export default {
       skills: ["g2.t3.s6"]
     },
     {
+      id: "q3",
       question:
         "What is the principal advantage of deploying an application from the Enterprise App Catalog rather than packaging it as a Win32 app by hand?",
       options: [

@@ -196,6 +196,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "A Security Copilot agent in Intune recommends tightening a configuration policy across all devices. What is the appropriate response?",
       options: [
@@ -212,6 +213,7 @@ export default {
       skills: ["g5.t1.s4"]
     },
     {
+      id: "q2",
       question:
         "What licensing is required to use Security Copilot agents in Intune?",
       options: [

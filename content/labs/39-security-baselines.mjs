@@ -243,6 +243,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "A security baseline and a settings catalog profile both configure the same setting to different values on the same device. What happens?",
       options: [

@@ -325,6 +325,7 @@ Get-MgGroup -All |
 
   quiz: [
     {
+      id: "q1",
       question:
         "You need a dynamic device group containing every device registered with Windows Autopilot. Which membership rule is correct?",
       options: [
@@ -341,6 +342,7 @@ Get-MgGroup -All |
       skills: ["g1.t1.s4"]
     },
     {
+      id: "q2",
       question:
         "A dynamic device group uses the rule `(device.deviceOwnership -eq \"Corporate\")`. The group has no members despite many corporate devices being enrolled. What is wrong?",
       options: [

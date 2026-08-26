@@ -245,6 +245,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "Which App Control for Business setting causes applications deployed through Intune to be trusted automatically?",
       options: [
@@ -261,6 +262,7 @@ export default {
       skills: ["g3.t1.s8"]
     },
     {
+      id: "q2",
       question:
         "Which event ID indicates that App Control for Business would have blocked a file, but did not because the policy is in audit mode?",
       options: [

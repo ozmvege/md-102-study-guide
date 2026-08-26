@@ -400,6 +400,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "Contoso needs S/MIME certificates so users can read encrypted email on both their laptop and their phone. Which certificate profile type is required?",
       options: [
@@ -416,6 +417,7 @@ export default {
       skills: ["g2.t2.s1"]
     },
     {
+      id: "q2",
       question:
         "A Wi-Fi profile using EAP-TLS fails to connect on newly enrolled devices but works on devices enrolled last week. What is the most likely cause?",
       options: [

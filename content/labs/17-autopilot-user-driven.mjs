@@ -442,6 +442,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "You configure an Autopilot device name template as `CONTOSO-FINANCE-%SERIAL%`. Deployments fail during naming. Why?",
       options: [
@@ -458,6 +459,7 @@ export default {
       skills: ["g2.t1.s3"]
     },
     {
+      id: "q2",
       question:
         "During an Autopilot deployment the Enrollment Status Page reports an error after the configured timeout. Which change is most likely to fix the underlying problem?",
       options: [

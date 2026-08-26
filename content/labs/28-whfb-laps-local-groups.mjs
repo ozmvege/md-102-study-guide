@@ -352,6 +352,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "Which statement about a Windows Hello for Business PIN is correct?",
       options: [
@@ -368,6 +369,7 @@ export default {
       skills: ["g1.t3.s6"]
     },
     {
+      id: "q2",
       question:
         "You deploy a Windows LAPS policy backing up to Microsoft Entra ID. The policy reports success but no passwords appear in the portal. What is the most likely cause?",
       options: [
@@ -384,6 +386,7 @@ export default {
       skills: ["g1.t3.s7"]
     },
     {
+      id: "q3",
       question:
         "Which action should you use in a Local Users and Groups policy when you want to add a group to the local Administrators group without disturbing existing members?",
       options: [

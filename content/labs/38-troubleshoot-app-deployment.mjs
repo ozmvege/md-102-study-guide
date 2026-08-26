@@ -233,6 +233,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "An application reports Not applicable for 40 devices. What does this indicate?",
       options: [
@@ -249,6 +250,7 @@ export default {
       skills: ["g4.t1.s9"]
     },
     {
+      id: "q2",
       question:
         "Which log file explains why a Win32 application's detection rule evaluated as not detected?",
       options: [

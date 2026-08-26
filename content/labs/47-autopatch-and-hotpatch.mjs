@@ -273,6 +273,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "A critical security update must reach all devices today, but your update rings have deferrals of 3 and 7 days and one ring is paused. What should you use?",
       options: [
@@ -289,6 +290,7 @@ export default {
       skills: ["g3.t2.s2"]
     },
     {
+      id: "q2",
       question:
         "Which statement about Windows Hotpatch is correct?",
       options: [

@@ -168,11 +168,14 @@
     var choice = parseInt(button.getAttribute("data-opt"), 10);
     if (S.quizAnswer(labId, qId) !== null) return;
 
-    S.setQuizAnswer(labId, qId, choice);
-
+    // Resolve the question before recording the answer. The other order writes a
+    // result under a key nothing can render, and that write survives the reload:
+    // the question comes back answered, disabled, and with no way to undo it.
     var lab = ctx.labById[labId];
-    var q = (lab.quiz || []).find(function (x) { return x.id === qId; });
+    var q = lab && (lab.quiz || []).find(function (x) { return x.id === qId; });
     if (!q) return;
+
+    S.setQuizAnswer(labId, qId, choice);
 
     var box = button.closest(".quiz");
     var correct = choice === q.correctIndex;
