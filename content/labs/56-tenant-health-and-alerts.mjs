@@ -214,6 +214,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "Why should an alert rule threshold be based on a recorded operational baseline rather than an arbitrary number?",
       options: [
@@ -230,6 +231,7 @@ export default {
       skills: ["g5.t2.s6"]
     },
     {
+      id: "q2",
       question:
         "Every iOS and macOS device stops checking in on the same morning. Where should you look first?",
       options: [

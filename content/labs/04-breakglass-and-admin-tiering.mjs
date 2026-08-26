@@ -270,6 +270,7 @@ $rows | Sort-Object Role, Principal | Format-Table -AutoSize`
 
   quiz: [
     {
+      id: "q1",
       question:
         "Which configuration is correct for an emergency access account intended to survive a Conditional Access misconfiguration?",
       options: [

@@ -291,6 +291,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "Two compliance policies target the same Windows device. One requires a minimum password length of 6, the other 8. What is enforced?",
       options: [
@@ -307,6 +308,7 @@ export default {
       skills: ["g1.t3.s4"]
     },
     {
+      id: "q2",
       question:
         "You want users to have several days to fix a compliance failure before losing access to corporate resources. Which configuration achieves this?",
       options: [

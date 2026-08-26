@@ -226,6 +226,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "A vulnerability is announced in a widely deployed application. You need to know within the hour which devices have it and at what version. Which capability gives live results?",
       options: [
@@ -242,6 +243,7 @@ export default {
       skills: ["g2.t4.s6"]
     },
     {
+      id: "q2",
       question:
         "A user reports that an application will not install, and they cannot reliably follow instructions to gather logs. What is the most efficient way to obtain the diagnostic data?",
       options: [

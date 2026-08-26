@@ -308,6 +308,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "You configure a compliance policy requiring devices to be at or under a machine risk score of Clear. What is the practical consequence?",
       options: [
@@ -324,6 +325,7 @@ export default {
       skills: ["g3.t1.s6"]
     },
     {
+      id: "q2",
       question:
         "Which Defender for Endpoint response action isolates a compromised device from the network while preserving the ability to investigate it remotely?",
       options: [

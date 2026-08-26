@@ -278,6 +278,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "Which BitLocker policy setting prevents a device from encrypting before its recovery key has been successfully escrowed?",
       options: [
@@ -294,6 +295,7 @@ export default {
       skills: ["g3.t1.s2"]
     },
     {
+      id: "q2",
       question:
         "Silent BitLocker enablement fails on devices where the signed-in user is a standard user. What setting resolves this?",
       options: [

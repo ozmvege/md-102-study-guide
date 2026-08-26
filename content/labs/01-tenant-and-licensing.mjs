@@ -449,6 +449,7 @@ Disconnect-MgGraph`
 
   quiz: [
     {
+      id: "q1",
       question:
         "You assign Microsoft 365 E5 to a security group. A new user is added to the group but remains unlicensed. Every other member of the group is licensed correctly and 8 seats are free. What is the most likely cause?",
       options: [
@@ -465,6 +466,7 @@ Disconnect-MgGraph`
       skills: []
     },
     {
+      id: "q2",
       question:
         "Your tenant was created in 2024. You want your Intune administrators to manage the service without consuming Microsoft 365 E5 seats. What must you do?",
       options: [

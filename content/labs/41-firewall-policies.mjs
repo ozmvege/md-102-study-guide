@@ -222,6 +222,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "You deploy a firewall policy blocking inbound connections by default. A line-of-business application's installer creates a local firewall rule to open its port, and the application works. What setting would have prevented that?",
       options: [

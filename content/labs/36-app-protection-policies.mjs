@@ -314,6 +314,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "An employee leaves and returns their corporate laptop, but their personal phone had corporate mail through Outlook with an app protection policy. What action removes corporate data without affecting their personal content?",
       options: [
@@ -330,6 +331,7 @@ export default {
       skills: ["g4.t2.s1"]
     },
     {
+      id: "q2",
       question:
         "You create a Conditional Access policy combining Require device to be marked as compliant and Require app protection policy, and set it to require all selected controls. What is the effect on a BYOD user with an unenrolled but app-protected device?",
       options: [

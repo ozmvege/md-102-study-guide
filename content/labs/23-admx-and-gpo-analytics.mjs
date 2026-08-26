@@ -283,6 +283,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "Group Policy analytics reports that a GPO has 62 percent MDM support. What does this mean?",
       options: [
@@ -299,6 +300,7 @@ export default {
       skills: ["g2.t2.s1"]
     },
     {
+      id: "q2",
       question:
         "You imported a third-party ADMX successfully but cannot find its settings in the settings catalog. Why?",
       options: [

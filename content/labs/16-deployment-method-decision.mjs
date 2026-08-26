@@ -167,6 +167,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "Contoso has 200 laptops returned from a closed office. They were previously domain joined, no hardware hashes were ever collected, and the vendor is out of business. They must be redeployed as Microsoft Entra joined, Intune managed devices. What should you use?",
       options: [
@@ -183,6 +184,7 @@ export default {
       skills: ["g2.t1.s1"]
     },
     {
+      id: "q2",
       question:
         "Which Autopilot deployment mode should be used for shared meeting-room devices that must provision with no user interaction and no assigned user?",
       options: [

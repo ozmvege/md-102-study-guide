@@ -394,6 +394,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "A Win32 application installs correctly on the device but Intune reports it as failed with 0x87D1041C. What should you correct?",
       options: [
@@ -410,6 +411,7 @@ export default {
       skills: ["g4.t1.s2"]
     },
     {
+      id: "q2",
       question:
         "You write a PowerShell detection rule for a Win32 app. What must the script do to indicate the application is detected?",
       options: [

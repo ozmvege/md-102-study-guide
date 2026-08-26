@@ -271,6 +271,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "Two settings catalog profiles assigned to the same device group set the same setting to different values. What happens on the device?",
       options: [
@@ -287,6 +288,7 @@ export default {
       skills: ["g2.t2.s1"]
     },
     {
+      id: "q2",
       question:
         "A device belongs to a group included on a configuration profile and also to a group excluded from it. What does the device receive?",
       options: [

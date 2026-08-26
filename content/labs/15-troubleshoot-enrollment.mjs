@@ -343,6 +343,7 @@ Get-MgDeviceManagementManagedDevice -All |
 
   quiz: [
     {
+      id: "q1",
       question:
         "A user with a valid Microsoft 365 E5 licence cannot enrol a Windows 11 device. The client reports `0x80180014`. What is the cause?",
       options: [
@@ -359,6 +360,7 @@ Get-MgDeviceManagementManagedDevice -All |
       skills: ["g1.t2.s4"]
     },
     {
+      id: "q2",
       question:
         "A user reports `0x80180026` when enrolling a new laptop. They physically own one device. What is the most likely explanation?",
       options: [

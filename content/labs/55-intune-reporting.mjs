@@ -204,6 +204,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "You need to confirm right now whether a specific device is compliant after remediating it. Which Intune reporting surface should you use?",
       options: [
@@ -220,6 +221,7 @@ export default {
       skills: ["g5.t2.s1"]
     },
     {
+      id: "q2",
       question:
         "Contoso needs a dashboard correlating Intune compliance data with Microsoft Entra sign-in logs, retained for two years. What is required?",
       options: [

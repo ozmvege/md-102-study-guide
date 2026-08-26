@@ -278,6 +278,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "A user's Windows 11 Pro device is Microsoft Entra joined and the user holds Microsoft 365 E5. Which additional step is required to upgrade the device to Enterprise?",
       options: [
@@ -294,6 +295,7 @@ export default {
       skills: ["g2.t1.s6"]
     },
     {
+      id: "q2",
       question:
         "A user's device is reset and redeployed with Autopilot. Windows Backup is enabled. Which of the following is restored?",
       options: [

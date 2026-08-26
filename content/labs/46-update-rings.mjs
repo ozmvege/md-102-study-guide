@@ -262,6 +262,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "A quality update released three days ago is causing crashes on pilot devices. You need to prevent it reaching the broad ring, which has a 7-day quality deferral. What should you do?",
       options: [
@@ -278,6 +279,7 @@ export default {
       skills: ["g3.t2.s2"]
     },
     {
+      id: "q2",
       question:
         "What is the purpose of the grace period setting in an update ring?",
       options: [

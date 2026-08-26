@@ -211,6 +211,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "Contoso deploys shared iPads in retail stores. Users do not have individual Apple Accounts. Which VPP licensing mode should be used?",
       options: [
@@ -227,6 +228,7 @@ export default {
       skills: ["g4.t1.s8"]
     },
     {
+      id: "q2",
       question:
         "What does a Quiet Time policy control?",
       options: [

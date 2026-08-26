@@ -188,6 +188,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "You configure an enforced software update policy specifying iOS 18.1 by a deadline. Corporate iPads enrolled through Apple Business Manager comply, but personally enrolled iPhones do not. Why?",
       options: [

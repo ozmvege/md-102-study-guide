@@ -206,6 +206,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "You want IT to install a large application before shipping laptops, so users wait only a few minutes at first sign-in. Which deployment mode should the Autopilot profile use?",
       options: [
@@ -222,6 +223,7 @@ export default {
       skills: ["g2.t1.s2"]
     },
     {
+      id: "q2",
       question:
         "A meeting-room device provisioned with self-deploying mode does not receive an application assigned to a user group. Why?",
       options: [

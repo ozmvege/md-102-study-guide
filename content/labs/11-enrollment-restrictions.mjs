@@ -308,6 +308,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "A user belongs to two groups, each assigned a different Windows enrollment restriction. One allows personally owned devices and one blocks them. What happens?",
       options: [
@@ -324,6 +325,7 @@ export default {
       skills: ["g1.t2.s1"]
     },
     {
+      id: "q2",
       question:
         "You import a CSV of serial numbers under Corporate device identifiers. Devices already enrolled still show as Personal. Why?",
       options: [

@@ -548,6 +548,7 @@ if ($failures) { exit 1 }`
 
   quiz: [
     {
+      id: "q1",
       question:
         "A script creates twenty users and adds them to a group that has Microsoft 365 E5 assigned. All twenty appear in the group, ten receive licences and ten do not. Sixty seats are available. What should you check first?",
       options: [
@@ -564,6 +565,7 @@ if ($failures) { exit 1 }`
       skills: []
     },
     {
+      id: "q2",
       question:
         "You are connected to Microsoft Graph as a Global Administrator with the scope `User.Read.All`. You attempt to create a group and receive an authorisation error. What is the cause?",
       options: [

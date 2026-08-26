@@ -265,6 +265,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "A user is in a group with an application assigned as Required and another group with the same application assigned as Uninstall. What happens on their device?",
       options: [
@@ -281,6 +282,7 @@ export default {
       skills: ["g4.t1.s2"]
     },
     {
+      id: "q2",
       question:
         "You want to publish an optional application that users can install themselves from Company Portal. Which assignment must you use, and to what kind of group?",
       options: [

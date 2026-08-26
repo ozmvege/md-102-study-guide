@@ -434,6 +434,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "Contoso removes local administrator rights from all users. Engineers must still install a specific approved driver utility. Which Endpoint Privilege Management elevation type best balances productivity and audit?",
       options: [
@@ -450,6 +451,7 @@ export default {
       skills: ["g2.t3.s1"]
     },
     {
+      id: "q2",
       question:
         "An Endpoint Privilege Management elevation rules policy is deployed but no applications elevate. What is the most likely cause?",
       options: [
@@ -466,6 +468,7 @@ export default {
       skills: ["g2.t3.s1"]
     },
     {
+      id: "q3",
       question:
         "You create an EPM rule permitting an installer to elevate, and set child process behaviour to Allow all. What risk does this introduce?",
       options: [

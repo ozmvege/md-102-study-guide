@@ -319,6 +319,7 @@ Write-Host "Assigned to $($group.DisplayName)" -ForegroundColor Green`
 
   quiz: [
     {
+      id: "q1",
       question:
         "You are writing an unattended script that runs nightly to retire stale devices. Which permission type should it use?",
       options: [
@@ -335,6 +336,7 @@ Write-Host "Assigned to $($group.DisplayName)" -ForegroundColor Green`
       skills: ["g5.t1.s1"]
     },
     {
+      id: "q2",
       question:
         "You need to automate an Intune action that has no dedicated Graph PowerShell cmdlet. What is the most practical approach?",
       options: [

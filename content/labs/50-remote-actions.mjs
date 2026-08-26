@@ -313,6 +313,7 @@ foreach ($device in $stale) {
 
   quiz: [
     {
+      id: "q1",
       question:
         "An employee leaves the company. Their personally owned Android phone has a work profile with corporate mail. Which remote action should you use?",
       options: [
@@ -329,6 +330,7 @@ foreach ($device in $stale) {
       skills: ["g2.t4.s1"]
     },
     {
+      id: "q2",
       question:
         "A corporate laptop is being reassigned to a different employee. It must return to a business-ready state and redeploy automatically without IT reimaging it. Which action is appropriate?",
       options: [

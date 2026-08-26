@@ -338,6 +338,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "You are about to enable a Conditional Access policy requiring compliant devices for all users. What must you do first?",
       options: [
@@ -354,6 +355,7 @@ export default {
       skills: ["g1.t3.s5"]
     },
     {
+      id: "q2",
       question:
         "Joni uses a personally owned Windows device that is deliberately blocked from MDM enrollment. She must still reach corporate email with data protection. Which Conditional Access grant control applies?",
       options: [

@@ -468,6 +468,7 @@ Get-VM MD102-* | ForEach-Object {
 
   quiz: [
     {
+      id: "q1",
       question:
         "You created a Hyper-V virtual machine for a Windows 11 lab, but BitLocker will not enable silently and the device reports non-compliant against a rule requiring a TPM. The machine runs Windows 11 correctly. What is the most likely cause?",
       options: [

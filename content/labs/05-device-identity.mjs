@@ -393,6 +393,7 @@ Get-MgDevice -All |
 
   quiz: [
     {
+      id: "q1",
       question:
         "A user's personally owned Windows 11 laptop must access corporate email with data protection applied, but the organisation must not take ownership of the device or control its sign-in. Which device identity is appropriate?",
       options: [
@@ -409,6 +410,7 @@ Get-MgDevice -All |
       skills: ["g1.t1.s1", "g1.t1.s3"]
     },
     {
+      id: "q2",
       question:
         "`dsregcmd /status` on a Windows 11 device reports `AzureAdJoined : YES`, `DomainJoined : YES` and `AzureAdPrt : YES`. What is this device?",
       options: [

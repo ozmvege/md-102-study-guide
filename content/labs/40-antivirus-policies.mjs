@@ -267,6 +267,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "After enabling tamper protection, an administrator finds that `Set-MpPreference` no longer changes Defender settings on managed devices. What is the explanation?",
       options: [
@@ -283,6 +284,7 @@ export default {
       skills: ["g3.t1.s1"]
     },
     {
+      id: "q2",
       question:
         "Which pair of settings work together to let Defender block a file it has never seen before?",
       options: [

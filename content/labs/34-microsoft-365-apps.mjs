@@ -268,6 +268,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "Contoso wants Microsoft 365 Apps feature updates on a predictable monthly schedule with security updates every month. Which update channel should you configure?",
       options: [
@@ -284,6 +285,7 @@ export default {
       skills: ["g4.t1.s4"]
     },
     {
+      id: "q2",
       question:
         "You need an Office macro policy to follow users onto devices that Intune does not manage. Which tool should you use?",
       options: [

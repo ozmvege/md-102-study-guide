@@ -295,6 +295,7 @@ catch {
 
   quiz: [
     {
+      id: "q1",
       question:
         "In a proactive remediation detection script, what does exit code 1 signify?",
       options: [
@@ -311,6 +312,7 @@ catch {
       skills: ["g5.t2.s3"]
     },
     {
+      id: "q2",
       question:
         "A remediation consistently reports Issue not remediated. What does this indicate?",
       options: [

@@ -276,6 +276,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "Users report that their Microsoft Entra joined Windows devices are not enrolling into Intune, although they can sign in and access corporate resources. Automatic enrollment shows MDM user scope set to All. What should you check next?",
       options: [

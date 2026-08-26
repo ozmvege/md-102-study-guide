@@ -220,6 +220,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "Joni's personally owned device is blocked from enrollment but has app protection policies. You need to set the home page in Microsoft Edge on that device. Which policy type do you use?",
       options: [
@@ -236,6 +237,7 @@ export default {
       skills: ["g4.t2.s3"]
     },
     {
+      id: "q2",
       question:
         "In an app configuration policy, what does the value {{userprincipalname}} do?",
       options: [

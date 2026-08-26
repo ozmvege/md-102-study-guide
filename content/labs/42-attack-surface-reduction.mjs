@@ -278,6 +278,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "You are deploying attack surface reduction rules to 500 devices. What should you do first?",
       options: [
@@ -294,6 +295,7 @@ export default {
       skills: ["g3.t1.s4"]
     },
     {
+      id: "q2",
       question:
         "A line-of-business application is repeatedly audited by the rule blocking Office applications from creating child processes. You need the rule enforced but this application to keep working. What should you configure?",
       options: [

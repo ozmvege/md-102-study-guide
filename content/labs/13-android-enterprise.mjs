@@ -324,6 +324,7 @@ export default {
 
   quiz: [
     {
+      id: "q1",
       question:
         "A field engineer enrolls their personal Android phone with a work profile. Which action can the Intune administrator perform?",
       options: [
@@ -340,6 +341,7 @@ export default {
       skills: ["g1.t2.s4"]
     },
     {
+      id: "q2",
       question:
         "Contoso is deploying shop-floor scanners that must run one application, have no user sign-in, and be locked down. Which Android Enterprise scenario applies?",
       options: [
