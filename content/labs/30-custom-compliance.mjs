@@ -97,7 +97,7 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Save the discovery script from the **Scripts** section below as `Detect-ContosoCompliance.ps1`."
+              text: "Save the discovery script from the [Scripts](#scripts) section below as `Detect-ContosoCompliance.ps1`."
             },
             {
               text: "Test it locally on **MD102-VM2-Alex** before uploading anything:",
@@ -151,7 +151,7 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Save the JSON rules from the **Scripts** section below as `Rules-ContosoCompliance.json`."
+              text: "Save the JSON rules from the [Scripts](#scripts) section below as `Rules-ContosoCompliance.json`."
             },
             {
               text: "Check each `SettingName` against your script output character by character.",

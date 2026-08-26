@@ -81,7 +81,7 @@ export default {
                   kind: "code",
                   lang: "powershell",
                   caption: "Run from your host with an active Graph session",
-                  code: "Connect-MgGraph -Scopes \"User.Read.All\"\n(Get-MgUserLicenseDetail -UserId \"adele.vance@<tenant>.onmicrosoft.com\").ServicePlans |\n    Where-Object ServicePlanName -like \"*WIN10*\" -or $_.ServicePlanName -like \"*WINDOWS*\" |\n    Select-Object ServicePlanName, ProvisioningStatus"
+                  code: "Connect-MgGraph -Scopes \"User.Read.All\"\n(Get-MgUserLicenseDetail -UserId \"adele.vance@<tenant>.onmicrosoft.com\").ServicePlans |\n    Where-Object { $_.ServicePlanName -like \"*WIN10*\" -or $_.ServicePlanName -like \"*WINDOWS*\" } |\n    Select-Object ServicePlanName, ProvisioningStatus"
                 },
                 {
                   kind: "verify",

@@ -234,7 +234,9 @@ $roles = Get-MgRoleManagementDirectoryRoleDefinition -All |
              "Privileged Role Administrator"
          )}
 
-foreach ($role in $roles) {
+# Collected into a variable first: foreach is a statement, and a statement
+# cannot be piped. "foreach (...) { } | Sort-Object" is a parse error.
+$rows = foreach ($role in $roles) {
     $assignments = Get-MgRoleManagementDirectoryRoleAssignment \`
         -Filter "roleDefinitionId eq '$($role.Id)'" -All
 
@@ -246,7 +248,9 @@ foreach ($role in $roles) {
             UPN       = $principal.AdditionalProperties.userPrincipalName
         }
     }
-} | Sort-Object Role, Principal | Format-Table -AutoSize`
+}
+
+$rows | Sort-Object Role, Principal | Format-Table -AutoSize`
     }
   ],
 

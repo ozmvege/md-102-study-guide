@@ -176,7 +176,7 @@ export default {
                 {
                   kind: "code",
                   lang: "powershell",
-                  code: "Get-CimInstance -Namespace \"root\\cimv2\\mdm\\dmmap\" `\n    -ClassName MDM_DevDetail_Ext01 -ErrorAction SilentlyContinue |\n    Select-Object DeviceHardwareData -ExcludeProperty DeviceHardwareData\nmanage-bde -status C:"
+                  code: "Get-CimInstance -Namespace \"root\\cimv2\\mdm\\dmmap\" `\n    -ClassName MDM_DevDetail_Ext01 -ErrorAction SilentlyContinue |\n    Select-Object InstanceID, @{n='HardwareDataPresent'; e={ [bool]$_.DeviceHardwareData }}\nmanage-bde -status C:"
                 }
               ]
             },

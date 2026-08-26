@@ -145,7 +145,7 @@ export default {
                   kind: "code",
                   lang: "cmd",
                   caption: "Produces MDMDiagReport.html and supporting files",
-                  code: "mkdir C:\\Temp\\MDMDiag\nmdmdiagnosticstool.exe -area DeviceEnrollment;DeviceProvisioning;Autopilot -zip C:\\Temp\\MDMDiag\\report.zip"
+                  code: "mkdir C:\\Temp\\MDMDiag\nmdmdiagnosticstool.exe -area \"DeviceEnrollment;DeviceProvisioning;Autopilot\" -zip C:\\Temp\\MDMDiag\\report.zip"
                 },
                 {
                   kind: "callout",

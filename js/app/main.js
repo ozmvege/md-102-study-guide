@@ -88,20 +88,8 @@
   }
 
   function scrollToTarget(route) {
-    if (route.view === "lab" && route.anchor) {
-      // Exercise/task anchors are 1-based positions in the URL; resolve them to
-      // the stable element ids so links survive an exercise being renamed.
-      var lab = ctx.labById[route.labId];
-      if (!lab) return;
-      var m = /^e(\d+)(?:-t(\d+))?$/.exec(route.anchor);
-      if (!m) return;
-      var ex = lab.exercises[parseInt(m[1], 10) - 1];
-      if (!ex) return;
-      var id = ex.id;
-      if (m[2]) {
-        var task = ex.tasks[parseInt(m[2], 10) - 1];
-        if (task) id = ex.id + "-" + task.id;
-      }
+    var id = anchorElementId(route);
+    if (id) {
       var el = document.getElementById(id);
       if (el) {
         el.scrollIntoView();
@@ -109,6 +97,26 @@
       }
     }
     window.scrollTo(0, 0);
+  }
+
+  /** Route anchor -> the id of the element it addresses, or null. */
+  function anchorElementId(route) {
+    if (route.view !== "lab" || !route.anchor) return null;
+    var lab = ctx.labById[route.labId];
+    if (!lab) return null;
+
+    // Trailing sections are named and render with that name as their id.
+    if (Router.isLabSection(route.anchor)) return route.anchor;
+
+    // Exercise/task anchors are 1-based positions in the URL; resolve them to
+    // the stable element ids so links survive an exercise being renamed.
+    var m = /^e(\d+)(?:-t(\d+))?$/.exec(route.anchor);
+    if (!m) return null;
+    var ex = lab.exercises[parseInt(m[1], 10) - 1];
+    if (!ex) return null;
+    if (!m[2]) return ex.id;
+    var task = ex.tasks[parseInt(m[2], 10) - 1];
+    return task ? ex.id + "-" + task.id : ex.id;
   }
 
   /* --- Targeted updates (never a full re-render) --------------------------- */
@@ -226,7 +234,11 @@
       var anchor = e.target.closest("[data-anchor]");
       if (anchor) {
         var id = anchor.getAttribute("data-anchor");
-        var url = location.href.split("#")[0] + location.hash.split("?")[0];
+        // The button copies the route for the heading it sits on, not whatever the
+        // address bar happens to say — the reader is usually part-way down a lab
+        // whose hash is still the bare "#/lab/<id>" they arrived on.
+        var path = anchor.getAttribute("data-link");
+        var url = location.href.split("#")[0] + (path ? "#" + path : location.hash.split("?")[0]);
         var target = document.getElementById(id);
         if (target) target.scrollIntoView();
         if (navigator.clipboard) navigator.clipboard.writeText(url).then(function () { toast("Link copied"); });

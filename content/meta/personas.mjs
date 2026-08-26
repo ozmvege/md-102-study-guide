@@ -14,6 +14,12 @@
  *
  * Names are Microsoft's standard sample-data personas, so they match the names you
  * will see in Microsoft documentation and demo tenants.
+ *
+ * `groups` lists assigned membership only — the groups the lab-3 provisioning
+ * script actually puts the account in. The dynamic device groups (GRP-DEV-WIN-*,
+ * GRP-DEV-ANDROID-*, GRP-DEV-AUTOPILOT) are deliberately absent: their membership
+ * comes from a rule evaluated against the enrolled device, and Entra rejects an
+ * attempt to add a member to them by hand.
  */
 
 export default [
@@ -82,7 +88,7 @@ export default [
     licensed: true,
     device: "MD102-VM3-Megan",
     purpose: "Kept clean and un-enrolled so it can be wiped repeatedly for Autopilot and device preparation runs.",
-    groups: ["GRP-LIC-M365-E5", "GRP-USR-HR", "GRP-USR-AUTOPILOT"]
+    groups: ["GRP-LIC-M365-E5", "GRP-USR-HR"]
   },
   {
     id: "joni.sherman",
@@ -103,7 +109,7 @@ export default [
     licensed: true,
     device: "Android AVD (Pixel, Google Play)",
     purpose: "Android Enterprise personally-owned work profile on the emulator.",
-    groups: ["GRP-LIC-M365-E5", "GRP-USR-FIELD", "GRP-DEV-ANDROID-WP"]
+    groups: ["GRP-LIC-M365-E5", "GRP-USR-FIELD"]
   },
   {
     id: "lee.gu",
@@ -114,7 +120,7 @@ export default [
     licensed: true,
     device: "Android AVD (second profile)",
     purpose: "Android Enterprise fully managed and dedicated (kiosk) enrollment.",
-    groups: ["GRP-LIC-M365-E5", "GRP-USR-MANUFACTURING", "GRP-DEV-ANDROID-FM"]
+    groups: ["GRP-LIC-M365-E5", "GRP-USR-MANUFACTURING"]
   },
   {
     id: "miriam.graham",

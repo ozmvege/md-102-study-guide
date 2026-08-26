@@ -22,8 +22,20 @@ const ACCESS_LABEL = {
   "walkthrough-device": "Walkthrough — required device not available in this lab"
 };
 
+/**
+ * Lab-relative section tokens -> the heading anchor GitHub will generate for the
+ * lab currently being emitted. Set by renderLab; emission is a single synchronous
+ * walk, so a module-level cursor is enough.
+ */
+let sectionAnchors = null;
+
+function resolveHref(href) {
+  if (!sectionAnchors) return href;
+  return sectionAnchors[href] || href;
+}
+
 function md(s) {
-  return toMarkdown(s);
+  return toMarkdown(s, resolveHref);
 }
 
 function indent(text, pad) {
@@ -114,7 +126,8 @@ function renderTask(task, taskNumber) {
   return out;
 }
 
-function renderLab(lab, number, outlineIndex) {
+function renderLab(lab, number, outlineIndex, anchors) {
+  sectionAnchors = anchors;
   const out = [];
   out.push("## Lab " + number + ": " + md(lab.title));
   out.push("");
@@ -245,7 +258,36 @@ function renderLab(lab, number, outlineIndex) {
   return out;
 }
 
+/**
+ * Where each lab's trailing sections land in the finished document.
+ *
+ * LAB_GUIDE.md is one file containing every lab, so sixty labs contribute sixty
+ * "### Scripts" headings and GitHub disambiguates them by appending an occurrence
+ * index. That numbering is deterministic in document order, so it can be computed
+ * here rather than guessed — which is what lets an authored "#scripts" link work
+ * in the Markdown mirror as well as in the browser.
+ */
+const SECTION_SLUG = { scripts: "scripts", troubleshooting: "troubleshooting", quiz: "knowledge-check" };
+
+function sectionAnchorMap(modules, labs) {
+  const anchors = new Map();
+  const seen = { scripts: 0, troubleshooting: 0, quiz: 0 };
+  for (const mod of modules) {
+    for (const lab of labs.filter((l) => l.moduleId === mod.id)) {
+      const map = {};
+      for (const key of Object.keys(SECTION_SLUG)) {
+        if (!(lab[key] || []).length) continue;
+        const n = seen[key]++;
+        map["#" + key] = "#" + SECTION_SLUG[key] + (n ? "-" + n : "");
+      }
+      anchors.set(lab.id, map);
+    }
+  }
+  return anchors;
+}
+
 export function emitMarkdown({ outline, modules, labs, coverage, outlineIndex }) {
+  const anchors = sectionAnchorMap(modules, labs);
   const out = [];
   out.push("<!-- GENERATED FILE — edit content/labs/*.mjs and run: npm run build -->");
   out.push("");
@@ -315,7 +357,7 @@ export function emitMarkdown({ outline, modules, labs, coverage, outlineIndex })
     out.push(md(mod.description));
     out.push("");
     for (const lab of inMod) {
-      out.push(...renderLab(lab, lab.number, outlineIndex));
+      out.push(...renderLab(lab, lab.number, outlineIndex, anchors.get(lab.id)));
     }
   }
 

@@ -151,7 +151,7 @@ Three Windows virtual machines and an Android emulator are a real load. The numb
 
 #### Task 1: Confirm memory, disk and processor
 
-1. Compare your host against the table below. Run the pre-flight script in the **Scripts** section at the end of this lab if you would rather read the answers than look them up.
+1. Compare your host against the table below. Run the pre-flight script in the [Scripts](#scripts) section at the end of this lab if you would rather read the answers than look them up.
 
    | Resource | Minimum | Comfortable | Why |
    | --- | --- | --- | --- |
@@ -842,7 +842,7 @@ The script below is idempotent: it removes any existing lab virtual machine of t
 
 1. Open **Windows PowerShell** as an administrator on the host.
 
-2. Read the script in the **Scripts** section at the end of this lab, change `$IsoPath` to your ISO, then run it.
+2. Read the script in the [Scripts](#scripts-2) section at the end of this lab, change `$IsoPath` to your ISO, then run it.
 
 3. While it runs, understand what each setting buys you:
 
@@ -1174,7 +1174,7 @@ A naming standard is worth agreeing before you have forty groups, not after. Eve
 
 #### Task 2: Create the security groups
 
-1. Run the group provisioning script from the **Scripts** section below. It creates each group only if it does not already exist, so re-running it is safe.
+1. Run the group provisioning script from the [Scripts](#scripts-3) section below. It creates each group only if it does not already exist, so re-running it is safe.
 
 2. Confirm the groups were created:
 
@@ -1206,7 +1206,7 @@ A naming standard is worth agreeing before you have forty groups, not after. Eve
 
 #### Task 1: Run the persona provisioning script
 
-1. Read the persona script in the **Scripts** section. Note two things it does that the previous version of this lab guide did not.
+1. Read the persona script in the [Scripts](#scripts-3) section. Note two things it does that the previous version of this lab guide did not.
 
 2. First, it sets a **usage location** on every account.
 
@@ -1227,7 +1227,7 @@ A naming standard is worth agreeing before you have forty groups, not after. Eve
 
 5. Watch the output. Every account should report **created** or **exists**, and the summary line at the end should report zero failures.
 
-   **Verify:** The final line reads `20 personas processed, 0 failures`. If it does not, fix the reported errors before continuing — every later lab assumes these identities exist.
+   **Verify:** The final line reads `23 accounts processed (3 admins, 20 personas), 0 failures`. If it does not, fix the reported errors before continuing — every later lab assumes these identities exist.
 
 **Results:** Twenty licensed personas and three unlicensed administrators exist in the tenant.
 
@@ -1240,7 +1240,7 @@ A naming standard is worth agreeing before you have forty groups, not after. Eve
 
    ```powershell
    Get-MgSubscribedSku |
-       Where-Object SkuPartNumber -like "*ENTERPRISEPREMIUM*" -or $_.SkuPartNumber -like "*E5*" |
+       Where-Object { $_.SkuPartNumber -like "*ENTERPRISEPREMIUM*" -or $_.SkuPartNumber -like "*E5*" } |
        ForEach-Object {
            [pscustomobject]@{
                Sku       = $_.SkuPartNumber
@@ -1358,7 +1358,7 @@ foreach ($g in $Dynamic) {
 #### Provision the twenty personas
 
 > [!NOTE]
-> Sets a usage location on every account, reports every failure, and exits non-zero if anything went wrong. Change `$UsageLocation` and `$Password` before running.
+> Checks that every group it will need exists before it creates anything, sets a usage location on every account, reports every failure, and exits non-zero if anything went wrong. Change `$UsageLocation` and `$Password` before running.
 
 ```powershell
 # Requires an active Connect-MgGraph session with User.ReadWrite.All and Group.ReadWrite.All.
@@ -1369,10 +1369,13 @@ $Password      = "ChangeMeToAPassphrase!2026"  # <-- change this
 
 # Administrators are NOT licensed: unlicensed admin access is enabled by default
 # on tenants created after July 2021, which is what buys us 20 end-user seats.
+# Every admin carries the same keys as a persona, including an empty Groups list.
+# A missing key is $null rather than a helpful error, and $null is what turned
+# "create three administrators" into three different failures further down.
 $Admins = @(
-    @{ First="Break-glass"; Last="Emergency Access"; Alias="admin-breakglass" }
-    @{ First="Intune";      Last="Administrator";    Alias="admin-intune"; Groups=@("GRP-ADM-INTUNE") }
-    @{ First="Security";    Last="Administrator";    Alias="admin-security"; Groups=@("GRP-ADM-SECURITY") }
+    @{ First="Break-glass"; Last="Emergency Access"; Alias="admin-breakglass"; Dept="IT"; Groups=@() }
+    @{ First="Intune";      Last="Administrator";    Alias="admin-intune";    Dept="IT"; Groups=@("GRP-ADM-INTUNE") }
+    @{ First="Security";    Last="Administrator";    Alias="admin-security";  Dept="IT"; Groups=@("GRP-ADM-SECURITY") }
 )
 
 $Personas = @(
@@ -1398,40 +1401,61 @@ $Personas = @(
     @{ First="Staging";   Last="User 01";   Alias="staging.user01";    Dept="Test";          Groups=@() }
 )
 
-$profile = @{ Password = $Password; ForceChangePasswordNextSignIn = $false }
+# Not $profile: that is an automatic variable holding the path to your PowerShell
+# profile script, and assigning to it in a console session silently replaces it.
+$PwdProfile = @{ Password = $Password; ForceChangePasswordNextSignIn = $false }
 $failures = 0
+
+function Resolve-LabGroup {
+    param([string]$Name)
+    $group = Get-MgGroup -Filter "displayName eq '$Name'" -ErrorAction Stop
+    if (-not $group) {
+        throw "Group '$Name' does not exist. Run the group script above; GRP-LIC-M365-E5 comes from lab 1."
+    }
+    return $group
+}
 
 function New-LabUser {
     param($Person, [bool]$Licensed)
 
     $upn = "$($Person.Alias)@$Domain"
 
-    if (Get-MgUser -Filter "userPrincipalName eq '$upn'" -ErrorAction SilentlyContinue) {
+    $user = Get-MgUser -Filter "userPrincipalName eq '$upn'" -ErrorAction SilentlyContinue
+
+    if ($user) {
         Write-Host "exists  $upn" -ForegroundColor DarkGray
     }
     else {
-        # No SilentlyContinue here. A provisioning script that hides its failures
-        # produces identical output whether it worked or not.
-        New-MgUser -DisplayName "$($Person.First) $($Person.Last)" `
-                   -GivenName $Person.First `
-                   -Surname $Person.Last `
-                   -UserPrincipalName $upn `
-                   -MailNickname $Person.Alias `
-                   -Department $Person.Dept `
-                   -UsageLocation $UsageLocation `
-                   -AccountEnabled:$true `
-                   -PasswordProfile $profile `
-                   -ErrorAction Stop | Out-Null
+        # Splatted rather than a run of -Parameter arguments, so that a property
+        # the record does not have is an omitted property and not an empty one:
+        # $Person.Dept on a record without that key is $null, -Department $null
+        # binds to "", and the account is created with a blank department.
+        $params = @{
+            DisplayName       = "$($Person.First) $($Person.Last)"
+            GivenName         = $Person.First
+            Surname           = $Person.Last
+            UserPrincipalName = $upn
+            MailNickname      = $Person.Alias
+            UsageLocation     = $UsageLocation
+            AccountEnabled    = $true
+            PasswordProfile   = $PwdProfile
+            ErrorAction       = "Stop"   # no SilentlyContinue: see the note above
+        }
+        if ($Person.Dept) { $params.Department = $Person.Dept }
+
+        # Keep what Graph returns. Re-reading the account by UPN races directory
+        # replication, and a lost race hands the group loop an empty user id.
+        $user = New-MgUser @params
         Write-Host "created $upn" -ForegroundColor Green
     }
 
-    $user   = Get-MgUser -Filter "userPrincipalName eq '$upn'"
-    $groups = @($Person.Groups)
+    # @($null) is an array containing one null, not an empty array. Filtering
+    # first is what stops an account with no groups looking one up by no name.
+    $groups = @($Person.Groups | Where-Object { $_ })
     if ($Licensed) { $groups += "GRP-LIC-M365-E5" }
 
     foreach ($name in $groups) {
-        $group = Get-MgGroup -Filter "displayName eq '$name'" -ErrorAction Stop
-        if (-not $group) { throw "Group $name does not exist" }
+        $group = Resolve-LabGroup -Name $name
 
         $already = Get-MgGroupMember -GroupId $group.Id -All |
                    Where-Object Id -eq $user.Id
@@ -1440,6 +1464,19 @@ function New-LabUser {
             Write-Host "        + $name" -ForegroundColor DarkCyan
         }
     }
+}
+
+# Check every group this run will need before creating a single account. Twenty
+# identical "group does not exist" errors halfway through a run is a far worse
+# diagnostic than one line naming what is missing before anything has changed.
+$needed = @($Admins + $Personas | ForEach-Object { $_.Groups }) + "GRP-LIC-M365-E5"
+$missing = @(
+    $needed | Where-Object { $_ } | Sort-Object -Unique |
+        Where-Object { -not (Get-MgGroup -Filter "displayName eq '$_'" -ErrorAction SilentlyContinue) }
+)
+if ($missing) {
+    Write-Host "Missing groups: $($missing -join ', ')" -ForegroundColor Red
+    throw "Create the groups first: the group script above, and lab 1 for GRP-LIC-M365-E5."
 }
 
 foreach ($p in $Admins) {
@@ -1452,9 +1489,11 @@ foreach ($p in $Personas) {
     catch { $failures++; Write-Host "FAILED  $($p.Alias): $_" -ForegroundColor Red }
 }
 
+$total  = $Admins.Count + $Personas.Count
+$colour = if ($failures) { "Red" } else { "Green" }
+
 Write-Host ""
-Write-Host "$($Personas.Count) personas processed, $failures failures" `
-    -ForegroundColor $(if ($failures) { "Red" } else { "Green" })
+Write-Host "$total accounts processed ($($Admins.Count) admins, $($Personas.Count) personas), $failures failures" -ForegroundColor $colour
 if ($failures) { exit 1 }
 ```
 
@@ -1666,7 +1705,9 @@ $roles = Get-MgRoleManagementDirectoryRoleDefinition -All |
              "Privileged Role Administrator"
          )}
 
-foreach ($role in $roles) {
+# Collected into a variable first: foreach is a statement, and a statement
+# cannot be piped. "foreach (...) { } | Sort-Object" is a parse error.
+$rows = foreach ($role in $roles) {
     $assignments = Get-MgRoleManagementDirectoryRoleAssignment `
         -Filter "roleDefinitionId eq '$($role.Id)'" -All
 
@@ -1678,7 +1719,9 @@ foreach ($role in $roles) {
             UPN       = $principal.AdditionalProperties.userPrincipalName
         }
     }
-} | Sort-Object Role, Principal | Format-Table -AutoSize
+}
+
+$rows | Sort-Object Role, Principal | Format-Table -AutoSize
 ```
 
 ### Troubleshooting
@@ -2428,7 +2471,8 @@ Connect-MgGraph -Scopes "DeviceManagementRBAC.Read.All"
 
 $roles = Get-MgDeviceManagementRoleDefinition -All
 
-foreach ($role in $roles) {
+# foreach is a statement, and a statement cannot be piped: collect first.
+$rows = foreach ($role in $roles) {
     $assignments = Get-MgDeviceManagementRoleDefinitionRoleAssignment -RoleDefinitionId $role.Id -All
     if (-not $assignments) { continue }
 
@@ -2439,7 +2483,9 @@ foreach ($role in $roles) {
             Assignment = $a.DisplayName
         }
     }
-} | Sort-Object Role | Format-Table -AutoSize
+}
+
+$rows | Sort-Object Role | Format-Table -AutoSize
 ```
 
 ### Troubleshooting
@@ -2683,7 +2729,7 @@ $tags | Select-Object Id, DisplayName, Description | Format-Table -AutoSize
 Write-Host ""
 Write-Host "Devices without a non-default scope tag:" -ForegroundColor Yellow
 Get-MgDeviceManagementManagedDevice -All -Property DeviceName,RoleScopeTagIds |
-    Where-Object { -not $_.RoleScopeTagIds -or $_.RoleScopeTagIds -eq @("0") } |
+    Where-Object { @($_.RoleScopeTagIds | Where-Object { $_ -ne "0" }).Count -eq 0 } |
     Select-Object DeviceName |
     Format-Table -AutoSize
 ```
@@ -4095,7 +4141,7 @@ Meeting these failures under controlled conditions is far cheaper than meeting t
    *Produces MDMDiagReport.html and supporting files*
    ```cmd
    mkdir C:\Temp\MDMDiag
-   mdmdiagnosticstool.exe -area DeviceEnrollment;DeviceProvisioning;Autopilot -zip C:\Temp\MDMDiag\report.zip
+   mdmdiagnosticstool.exe -area "DeviceEnrollment;DeviceProvisioning;Autopilot" -zip C:\Temp\MDMDiag\report.zip
    ```
 
    > [!NOTE]
@@ -4680,7 +4726,7 @@ After completing this lab, you will be able to:
 - **Diagnostic:**
 
   ```cmd
-  mdmdiagnosticstool.exe -area Autopilot;DeviceEnrollment -zip C:\Temp\esp.zip
+  mdmdiagnosticstool.exe -area "Autopilot;DeviceEnrollment" -zip C:\Temp\esp.zip
   ```
 
 - **Resolution:** Reduce the blocking application list to the minimum, confirm each one installs correctly outside Autopilot first, and only then raise the timeout. Raising the timeout without fixing the app just fails more slowly.
@@ -5146,7 +5192,7 @@ After completing this lab, you will be able to:
    ```powershell
    Connect-MgGraph -Scopes "User.Read.All"
    (Get-MgUserLicenseDetail -UserId "adele.vance@<tenant>.onmicrosoft.com").ServicePlans |
-       Where-Object ServicePlanName -like "*WIN10*" -or $_.ServicePlanName -like "*WINDOWS*" |
+       Where-Object { $_.ServicePlanName -like "*WIN10*" -or $_.ServicePlanName -like "*WINDOWS*" } |
        Select-Object ServicePlanName, ProvisioningStatus
    ```
 
@@ -7109,7 +7155,7 @@ After completing this lab, you will be able to:
    ```powershell
    Get-CimInstance -Namespace "root\cimv2\mdm\dmmap" `
        -ClassName MDM_DevDetail_Ext01 -ErrorAction SilentlyContinue |
-       Select-Object DeviceHardwareData -ExcludeProperty DeviceHardwareData
+       Select-Object InstanceID, @{n='HardwareDataPresent'; e={ [bool]$_.DeviceHardwareData }}
    manage-bde -status C:
    ```
 
@@ -7269,7 +7315,7 @@ After completing this lab, you will be able to:
 
 #### Task 1: Upload the discovery script
 
-1. Save the discovery script from the **Scripts** section below as `Detect-ContosoCompliance.ps1`.
+1. Save the discovery script from the [Scripts](#scripts-10) section below as `Detect-ContosoCompliance.ps1`.
 
 2. Test it locally on **MD102-VM2-Alex** before uploading anything:
 
@@ -7306,7 +7352,7 @@ After completing this lab, you will be able to:
 
 #### Task 2: Create the JSON rules and the policy
 
-1. Save the JSON rules from the **Scripts** section below as `Rules-ContosoCompliance.json`.
+1. Save the JSON rules from the [Scripts](#scripts-10) section below as `Rules-ContosoCompliance.json`.
 
 2. Check each `SettingName` against your script output character by character.
 
@@ -9768,7 +9814,9 @@ After completing this lab, you will be able to:
 
    ```powershell
    $p = Get-MpPreference
-   for ($i = 0; $i -lt $p.AttackSurfaceReductionRules_Ids.Count; $i++) {
+
+   # Collected first: for is a statement, and a statement cannot be piped.
+   $rules = for ($i = 0; $i -lt $p.AttackSurfaceReductionRules_Ids.Count; $i++) {
        [pscustomobject]@{
            RuleId = $p.AttackSurfaceReductionRules_Ids[$i]
            Action = switch ($p.AttackSurfaceReductionRules_Actions[$i]) {
@@ -9778,7 +9826,9 @@ After completing this lab, you will be able to:
                6 { "Warn" }
            }
        }
-   } | Format-Table -AutoSize
+   }
+
+   $rules | Format-Table -AutoSize
    ```
 
    **Verify:** Eight rule identifiers are listed, all reporting **Audit**.
@@ -11803,7 +11853,7 @@ After completing this lab, you will be able to:
 
 #### Task 1: Report across the estate
 
-1. Run the reporting script from the **Scripts** section. It answers several questions the portal makes you click through separately.
+1. Run the reporting script from the [Scripts](#scripts-12) section. It answers several questions the portal makes you click through separately.
 
    **Verify:** You get device counts by platform and compliance state, a list of stale devices, and every non-compliant device with its user — in one pass.
 
@@ -11829,7 +11879,7 @@ After completing this lab, you will be able to:
 
 #### Task 2: Create a policy from PowerShell
 
-1. Run the compliance policy creation script from the **Scripts** section.
+1. Run the compliance policy creation script from the [Scripts](#scripts-12) section.
 
    **Verify:** A new compliance policy appears under **Devices** > **Compliance**, created and assigned without touching the portal.
 
@@ -12067,7 +12117,7 @@ After completing this lab, you will be able to:
 
 #### Task 1: Test the script pair locally
 
-1. Save both scripts from the **Scripts** section as `Detect-DeliveryOptimization.ps1` and `Remediate-DeliveryOptimization.ps1`.
+1. Save both scripts from the [Scripts](#scripts-13) section as `Detect-DeliveryOptimization.ps1` and `Remediate-DeliveryOptimization.ps1`.
 
    > [!TIP]
    > This example checks that Delivery Optimization is set to the peer-caching mode from lab 46 and corrects it if a user or another process has changed it. That is a realistic remediation: a setting that matters, drifts quietly, and has a clear correct value.
@@ -12528,12 +12578,17 @@ After completing this lab, you will be able to:
        -Uri "https://graph.microsoft.com/beta/deviceManagement/reports/exportJobs" `
        -Body $body -ContentType "application/json"
 
+   # Bounded, and it stops on failed as well as completed. Polling only for
+   # "completed" spins forever on a job that will never reach it.
+   $deadline = (Get-Date).AddMinutes(5)
    do {
        Start-Sleep -Seconds 5
        $status = Invoke-MgGraphRequest -Method GET `
            -Uri "https://graph.microsoft.com/beta/deviceManagement/reports/exportJobs('$($job.id)')"
        Write-Host "Status: $($status.status)"
-   } while ($status.status -ne "completed")
+   } while ($status.status -notin @("completed", "failed") -and (Get-Date) -lt $deadline)
+
+   if ($status.status -ne "completed") { throw "Export job did not complete: $($status.status)" }
 
    Invoke-WebRequest -Uri $status.url -OutFile "C:\Temp\DeviceCompliance.zip"
    Write-Host "Downloaded to C:\Temp\DeviceCompliance.zip" -ForegroundColor Green

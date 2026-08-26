@@ -117,7 +117,7 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Run the reporting script from the **Scripts** section. It answers several questions the portal makes you click through separately.",
+              text: "Run the reporting script from the [Scripts](#scripts) section. It answers several questions the portal makes you click through separately.",
               parts: [
                 {
                   kind: "verify",
@@ -163,7 +163,7 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Run the compliance policy creation script from the **Scripts** section.",
+              text: "Run the compliance policy creation script from the [Scripts](#scripts) section.",
               parts: [
                 {
                   kind: "verify",

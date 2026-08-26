@@ -8,11 +8,19 @@
  *   #/lab/<labId>                   a lab
  *   #/lab/<labId>/e/<n>             scroll to exercise n
  *   #/lab/<labId>/e/<n>/t/<m>       scroll to task m of exercise n
+ *   #/lab/<labId>/scripts           scroll to the lab's Scripts section
+ *   #/lab/<labId>/troubleshooting   ... its Troubleshooting section
+ *   #/lab/<labId>/quiz              ... its Knowledge check
  *   #/coverage                      objective coverage, ?skill=g3.t1.s2 to focus one
  *   #/reference/<topic>             personas | vms | licenses | errors | tracks
  */
 (function (root) {
   "use strict";
+
+  // Trailing sections are named rather than numbered: there is at most one of each
+  // per lab, and a bare "#scripts" cannot be used because this is a hash router —
+  // it would replace the route entirely and land the reader on the overview.
+  var LAB_SECTIONS = { scripts: true, troubleshooting: true, quiz: true };
 
   function parse(hash) {
     var raw = String(hash || "").replace(/^#/, "");
@@ -35,6 +43,8 @@
       if (parts[2] === "e" && parts[3]) {
         route.anchor = "e" + parts[3];
         if (parts[4] === "t" && parts[5]) route.anchor += "-t" + parts[5];
+      } else if (parts[2] && LAB_SECTIONS[parts[2]]) {
+        route.anchor = parts[2];
       }
       return route;
     }
@@ -62,5 +72,21 @@
     return "/lab/" + labId;
   }
 
-  root.AppRouter = { parse: parse, current: current, go: go, labPath: labPath };
+  /** "/lab/<id>/scripts" — the deep link a Scripts cross-reference points at. */
+  function sectionPath(labId, section) {
+    return "/lab/" + labId + "/" + section;
+  }
+
+  function isLabSection(name) {
+    return !!LAB_SECTIONS[name];
+  }
+
+  root.AppRouter = {
+    parse: parse,
+    current: current,
+    go: go,
+    labPath: labPath,
+    sectionPath: sectionPath,
+    isLabSection: isLabSection
+  };
 })(window);

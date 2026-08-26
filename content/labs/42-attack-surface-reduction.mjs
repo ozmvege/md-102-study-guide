@@ -100,7 +100,7 @@ export default {
                 {
                   kind: "code",
                   lang: "powershell",
-                  code: "$p = Get-MpPreference\nfor ($i = 0; $i -lt $p.AttackSurfaceReductionRules_Ids.Count; $i++) {\n    [pscustomobject]@{\n        RuleId = $p.AttackSurfaceReductionRules_Ids[$i]\n        Action = switch ($p.AttackSurfaceReductionRules_Actions[$i]) {\n            0 { \"Disabled\" }\n            1 { \"Block\" }\n            2 { \"Audit\" }\n            6 { \"Warn\" }\n        }\n    }\n} | Format-Table -AutoSize"
+                  code: "$p = Get-MpPreference\n\n# Collected first: for is a statement, and a statement cannot be piped.\n$rules = for ($i = 0; $i -lt $p.AttackSurfaceReductionRules_Ids.Count; $i++) {\n    [pscustomobject]@{\n        RuleId = $p.AttackSurfaceReductionRules_Ids[$i]\n        Action = switch ($p.AttackSurfaceReductionRules_Actions[$i]) {\n            0 { \"Disabled\" }\n            1 { \"Block\" }\n            2 { \"Audit\" }\n            6 { \"Warn\" }\n        }\n    }\n}\n\n$rules | Format-Table -AutoSize"
                 },
                 {
                   kind: "verify",

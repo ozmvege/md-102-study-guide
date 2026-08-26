@@ -140,7 +140,7 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Run the group provisioning script from the **Scripts** section below. It creates each group only if it does not already exist, so re-running it is safe."
+              text: "Run the group provisioning script from the [Scripts](#scripts) section below. It creates each group only if it does not already exist, so re-running it is safe."
             },
             {
               text: "Confirm the groups were created:",
@@ -197,7 +197,7 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Read the persona script in the **Scripts** section. Note two things it does that the previous version of this lab guide did not."
+              text: "Read the persona script in the [Scripts](#scripts) section. Note two things it does that the previous version of this lab guide did not."
             },
             {
               text: "First, it sets a **usage location** on every account.",
@@ -236,7 +236,7 @@ export default {
               parts: [
                 {
                   kind: "verify",
-                  text: "The final line reads `20 personas processed, 0 failures`. If it does not, fix the reported errors before continuing — every later lab assumes these identities exist."
+                  text: "The final line reads `23 accounts processed (3 admins, 20 personas), 0 failures`. If it does not, fix the reported errors before continuing — every later lab assumes these identities exist."
                 }
               ]
             }
@@ -260,7 +260,7 @@ export default {
                 {
                   kind: "code",
                   lang: "powershell",
-                  code: "Get-MgSubscribedSku |\n    Where-Object SkuPartNumber -like \"*ENTERPRISEPREMIUM*\" -or $_.SkuPartNumber -like \"*E5*\" |\n    ForEach-Object {\n        [pscustomobject]@{\n            Sku       = $_.SkuPartNumber\n            Total     = $_.PrepaidUnits.Enabled\n            Assigned  = $_.ConsumedUnits\n            Remaining = $_.PrepaidUnits.Enabled - $_.ConsumedUnits\n        }\n    } | Format-Table -AutoSize"
+                  code: "Get-MgSubscribedSku |\n    Where-Object { $_.SkuPartNumber -like \"*ENTERPRISEPREMIUM*\" -or $_.SkuPartNumber -like \"*E5*\" } |\n    ForEach-Object {\n        [pscustomobject]@{\n            Sku       = $_.SkuPartNumber\n            Total     = $_.PrepaidUnits.Enabled\n            Assigned  = $_.ConsumedUnits\n            Remaining = $_.PrepaidUnits.Enabled - $_.ConsumedUnits\n        }\n    } | Format-Table -AutoSize"
                 },
                 {
                   kind: "verify",
@@ -382,7 +382,7 @@ foreach ($g in $Dynamic) {
       title: "Provision the twenty personas",
       lang: "powershell",
       note:
-        "Sets a usage location on every account, reports every failure, and exits non-zero if anything went wrong. Change `$UsageLocation` and `$Password` before running.",
+        "Checks that every group it will need exists before it creates anything, sets a usage location on every account, reports every failure, and exits non-zero if anything went wrong. Change `$UsageLocation` and `$Password` before running.",
       code: `# Requires an active Connect-MgGraph session with User.ReadWrite.All and Group.ReadWrite.All.
 
 $Domain        = "<tenant>.onmicrosoft.com"
@@ -391,10 +391,13 @@ $Password      = "ChangeMeToAPassphrase!2026"  # <-- change this
 
 # Administrators are NOT licensed: unlicensed admin access is enabled by default
 # on tenants created after July 2021, which is what buys us 20 end-user seats.
+# Every admin carries the same keys as a persona, including an empty Groups list.
+# A missing key is $null rather than a helpful error, and $null is what turned
+# "create three administrators" into three different failures further down.
 $Admins = @(
-    @{ First="Break-glass"; Last="Emergency Access"; Alias="admin-breakglass" }
-    @{ First="Intune";      Last="Administrator";    Alias="admin-intune"; Groups=@("GRP-ADM-INTUNE") }
-    @{ First="Security";    Last="Administrator";    Alias="admin-security"; Groups=@("GRP-ADM-SECURITY") }
+    @{ First="Break-glass"; Last="Emergency Access"; Alias="admin-breakglass"; Dept="IT"; Groups=@() }
+    @{ First="Intune";      Last="Administrator";    Alias="admin-intune";    Dept="IT"; Groups=@("GRP-ADM-INTUNE") }
+    @{ First="Security";    Last="Administrator";    Alias="admin-security";  Dept="IT"; Groups=@("GRP-ADM-SECURITY") }
 )
 
 $Personas = @(
@@ -420,40 +423,61 @@ $Personas = @(
     @{ First="Staging";   Last="User 01";   Alias="staging.user01";    Dept="Test";          Groups=@() }
 )
 
-$profile = @{ Password = $Password; ForceChangePasswordNextSignIn = $false }
+# Not $profile: that is an automatic variable holding the path to your PowerShell
+# profile script, and assigning to it in a console session silently replaces it.
+$PwdProfile = @{ Password = $Password; ForceChangePasswordNextSignIn = $false }
 $failures = 0
+
+function Resolve-LabGroup {
+    param([string]$Name)
+    $group = Get-MgGroup -Filter "displayName eq '$Name'" -ErrorAction Stop
+    if (-not $group) {
+        throw "Group '$Name' does not exist. Run the group script above; GRP-LIC-M365-E5 comes from lab 1."
+    }
+    return $group
+}
 
 function New-LabUser {
     param($Person, [bool]$Licensed)
 
     $upn = "$($Person.Alias)@$Domain"
 
-    if (Get-MgUser -Filter "userPrincipalName eq '$upn'" -ErrorAction SilentlyContinue) {
+    $user = Get-MgUser -Filter "userPrincipalName eq '$upn'" -ErrorAction SilentlyContinue
+
+    if ($user) {
         Write-Host "exists  $upn" -ForegroundColor DarkGray
     }
     else {
-        # No SilentlyContinue here. A provisioning script that hides its failures
-        # produces identical output whether it worked or not.
-        New-MgUser -DisplayName "$($Person.First) $($Person.Last)" \`
-                   -GivenName $Person.First \`
-                   -Surname $Person.Last \`
-                   -UserPrincipalName $upn \`
-                   -MailNickname $Person.Alias \`
-                   -Department $Person.Dept \`
-                   -UsageLocation $UsageLocation \`
-                   -AccountEnabled:$true \`
-                   -PasswordProfile $profile \`
-                   -ErrorAction Stop | Out-Null
+        # Splatted rather than a run of -Parameter arguments, so that a property
+        # the record does not have is an omitted property and not an empty one:
+        # $Person.Dept on a record without that key is $null, -Department $null
+        # binds to "", and the account is created with a blank department.
+        $params = @{
+            DisplayName       = "$($Person.First) $($Person.Last)"
+            GivenName         = $Person.First
+            Surname           = $Person.Last
+            UserPrincipalName = $upn
+            MailNickname      = $Person.Alias
+            UsageLocation     = $UsageLocation
+            AccountEnabled    = $true
+            PasswordProfile   = $PwdProfile
+            ErrorAction       = "Stop"   # no SilentlyContinue: see the note above
+        }
+        if ($Person.Dept) { $params.Department = $Person.Dept }
+
+        # Keep what Graph returns. Re-reading the account by UPN races directory
+        # replication, and a lost race hands the group loop an empty user id.
+        $user = New-MgUser @params
         Write-Host "created $upn" -ForegroundColor Green
     }
 
-    $user   = Get-MgUser -Filter "userPrincipalName eq '$upn'"
-    $groups = @($Person.Groups)
+    # @($null) is an array containing one null, not an empty array. Filtering
+    # first is what stops an account with no groups looking one up by no name.
+    $groups = @($Person.Groups | Where-Object { $_ })
     if ($Licensed) { $groups += "GRP-LIC-M365-E5" }
 
     foreach ($name in $groups) {
-        $group = Get-MgGroup -Filter "displayName eq '$name'" -ErrorAction Stop
-        if (-not $group) { throw "Group $name does not exist" }
+        $group = Resolve-LabGroup -Name $name
 
         $already = Get-MgGroupMember -GroupId $group.Id -All |
                    Where-Object Id -eq $user.Id
@@ -462,6 +486,19 @@ function New-LabUser {
             Write-Host "        + $name" -ForegroundColor DarkCyan
         }
     }
+}
+
+# Check every group this run will need before creating a single account. Twenty
+# identical "group does not exist" errors halfway through a run is a far worse
+# diagnostic than one line naming what is missing before anything has changed.
+$needed = @($Admins + $Personas | ForEach-Object { $_.Groups }) + "GRP-LIC-M365-E5"
+$missing = @(
+    $needed | Where-Object { $_ } | Sort-Object -Unique |
+        Where-Object { -not (Get-MgGroup -Filter "displayName eq '$_'" -ErrorAction SilentlyContinue) }
+)
+if ($missing) {
+    Write-Host "Missing groups: $($missing -join ', ')" -ForegroundColor Red
+    throw "Create the groups first: the group script above, and lab 1 for GRP-LIC-M365-E5."
 }
 
 foreach ($p in $Admins) {
@@ -474,9 +511,11 @@ foreach ($p in $Personas) {
     catch { $failures++; Write-Host "FAILED  $($p.Alias): $_" -ForegroundColor Red }
 }
 
+$total  = $Admins.Count + $Personas.Count
+$colour = if ($failures) { "Red" } else { "Green" }
+
 Write-Host ""
-Write-Host "$($Personas.Count) personas processed, $failures failures" \`
-    -ForegroundColor $(if ($failures) { "Red" } else { "Green" })
+Write-Host "$total accounts processed ($($Admins.Count) admins, $($Personas.Count) personas), $failures failures" -ForegroundColor $colour
 if ($failures) { exit 1 }`
     }
   ],
