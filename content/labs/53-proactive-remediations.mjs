@@ -90,7 +90,7 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Save both scripts from the **Scripts** section as `Detect-DeliveryOptimization.ps1` and `Remediate-DeliveryOptimization.ps1`.",
+              text: "Save both scripts from the [Scripts](#scripts) section as `Detect-DeliveryOptimization.ps1` and `Remediate-DeliveryOptimization.ps1`.",
               parts: [
                 {
                   kind: "callout",

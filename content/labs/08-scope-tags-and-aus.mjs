@@ -309,7 +309,7 @@ $tags | Select-Object Id, DisplayName, Description | Format-Table -AutoSize
 Write-Host ""
 Write-Host "Devices without a non-default scope tag:" -ForegroundColor Yellow
 Get-MgDeviceManagementManagedDevice -All -Property DeviceName,RoleScopeTagIds |
-    Where-Object { -not $_.RoleScopeTagIds -or $_.RoleScopeTagIds -eq @("0") } |
+    Where-Object { @($_.RoleScopeTagIds | Where-Object { $_ -ne "0" }).Count -eq 0 } |
     Select-Object DeviceName |
     Format-Table -AutoSize`
     }

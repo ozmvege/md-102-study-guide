@@ -156,7 +156,7 @@ export default {
               text: "Open **Windows PowerShell** as an administrator on the host."
             },
             {
-              text: "Read the script in the **Scripts** section at the end of this lab, change `$IsoPath` to your ISO, then run it."
+              text: "Read the script in the [Scripts](#scripts) section at the end of this lab, change `$IsoPath` to your ISO, then run it."
             },
             {
               text: "While it runs, understand what each setting buys you:",

@@ -302,7 +302,8 @@ export default {
 
 $roles = Get-MgDeviceManagementRoleDefinition -All
 
-foreach ($role in $roles) {
+# foreach is a statement, and a statement cannot be piped: collect first.
+$rows = foreach ($role in $roles) {
     $assignments = Get-MgDeviceManagementRoleDefinitionRoleAssignment -RoleDefinitionId $role.Id -All
     if (-not $assignments) { continue }
 
@@ -313,7 +314,9 @@ foreach ($role in $roles) {
             Assignment = $a.DisplayName
         }
     }
-} | Sort-Object Role | Format-Table -AutoSize`
+}
+
+$rows | Sort-Object Role | Format-Table -AutoSize`
     }
   ],
 

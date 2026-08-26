@@ -432,7 +432,7 @@ export default {
         "A blocking application never installed. The timeout is consumed waiting for it, and the failure names the page rather than the application.",
       diagnostic: {
         lang: "cmd",
-        code: "mdmdiagnosticstool.exe -area Autopilot;DeviceEnrollment -zip C:\\Temp\\esp.zip"
+        code: "mdmdiagnosticstool.exe -area \"Autopilot;DeviceEnrollment\" -zip C:\\Temp\\esp.zip"
       },
       resolution:
         "Reduce the blocking application list to the minimum, confirm each one installs correctly outside Autopilot first, and only then raise the timeout. Raising the timeout without fixing the app just fails more slowly.",

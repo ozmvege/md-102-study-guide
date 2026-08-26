@@ -13,9 +13,24 @@
   var Inline = root.MD102Inline;
   var S = root.AppState;
 
+  /**
+   * The lab currently being rendered, so that a "#scripts" cross-reference in an
+   * authored string can be resolved to the route for *this* lab. Rendering is
+   * synchronous and one lab at a time, so a module-level cursor is enough and
+   * saves threading the lab through every t() call site.
+   */
+  var currentLab = null;
+
+  function resolveHref(href) {
+    if (href.charAt(0) !== "#") return href;
+    var section = href.slice(1);
+    if (!currentLab || !AppRouter.isLabSection(section)) return href;
+    return "#" + AppRouter.sectionPath(currentLab.id, section);
+  }
+
   /** Authored inline markup -> safe HTML, with the tenant token substituted. */
   function t(text) {
-    return Inline.toHtml(S.tenant(text));
+    return Inline.toHtml(S.tenant(text), resolveHref);
   }
 
   /** Plain-text escape, for attributes and code. */
@@ -39,6 +54,19 @@
 
   function icon(name) {
     return '<svg class="icon" aria-hidden="true"><use href="#i-' + name + '"/></svg>';
+  }
+
+  /**
+   * The "#" button beside a heading. It carries both the element id (to scroll to)
+   * and the route that addresses it, because the two are not the same thing: ids
+   * are stable slugs, routes are 1-based positions, and the button has to copy a
+   * URL that survives being pasted into a fresh tab.
+   */
+  function anchorButton(id, path, label) {
+    return (
+      '<button class="anchor" type="button" data-anchor="' + esc(id) + '" data-link="' + esc(path) + '"' +
+      ' title="Copy link to this ' + label + '">#</button>'
+    );
   }
 
   /* --- Step parts --------------------------------------------------------- */
@@ -126,9 +154,10 @@
     return html + "</li>";
   }
 
-  function renderTask(lab, ex, task, index) {
+  function renderTask(lab, ex, exIndex, task, index) {
     var id = ex.id + "-" + task.id;
     var done = task.checkpoint && S.isDone(lab.id, ex.id, task.id);
+    var path = "/lab/" + lab.id + "/e/" + exIndex + "/t/" + index;
 
     var head =
       '<div class="task__head">' +
@@ -139,7 +168,7 @@
           ' aria-label="Mark this task complete">'
         : "") +
       '<h3 id="' + esc(id) + '">Task ' + index + ": " + t(task.title) +
-      '<button class="anchor" type="button" data-anchor="' + esc(id) + '" title="Copy link to this task">#</button>' +
+      anchorButton(id, path, "task") +
       "</h3></div>";
 
     var body =
@@ -166,10 +195,10 @@
     return (
       '<section class="exercise" data-ex-id="' + esc(ex.id) + '">' +
       '<h2 id="' + esc(ex.id) + '">Exercise ' + index + ": " + t(ex.title) +
-      '<button class="anchor" type="button" data-anchor="' + esc(ex.id) + '" title="Copy link to this exercise">#</button>' +
+      anchorButton(ex.id, "/lab/" + lab.id + "/e/" + index, "exercise") +
       "</h2>" +
       (ex.intro ? "<p>" + t(ex.intro) + "</p>" : "") +
-      ex.tasks.map(function (task, i) { return renderTask(lab, ex, task, i + 1); }).join("") +
+      ex.tasks.map(function (task, i) { return renderTask(lab, ex, index, task, i + 1); }).join("") +
       "</section>"
     );
   }
@@ -281,7 +310,7 @@
     if (!(lab.scripts || []).length) return "";
     return (
       '<section class="exercise"><h2 id="scripts">Scripts' +
-      '<button class="anchor" type="button" data-anchor="scripts">#</button></h2>' +
+      anchorButton("scripts", AppRouter.sectionPath(lab.id, "scripts"), "section") + "</h2>" +
       lab.scripts.map(function (s) {
         return (
           "<h3>" + t(s.title) + "</h3>" +
@@ -298,7 +327,7 @@
     if (!(lab.troubleshooting || []).length) return "";
     return (
       '<section class="exercise"><h2 id="troubleshooting">Troubleshooting' +
-      '<button class="anchor" type="button" data-anchor="troubleshooting">#</button></h2>' +
+      anchorButton("troubleshooting", AppRouter.sectionPath(lab.id, "troubleshooting"), "section") + "</h2>" +
       lab.troubleshooting.map(function (item) {
         return (
           '<div class="panel">' +
@@ -322,7 +351,7 @@
     if (!(lab.quiz || []).length) return "";
     return (
       '<section class="exercise"><h2 id="quiz">Knowledge check' +
-      '<button class="anchor" type="button" data-anchor="quiz">#</button></h2>' +
+      anchorButton("quiz", AppRouter.sectionPath(lab.id, "quiz"), "section") + "</h2>" +
       lab.quiz.map(function (q, i) {
         var chosen = S.quizAnswer(lab.id, q.id);
         var answered = chosen !== null;
@@ -378,6 +407,7 @@
   }
 
   function renderLab(lab, ctx) {
+    currentLab = lab;
     return (
       '<article class="doc">' +
       renderHead(lab, ctx) +
@@ -392,6 +422,7 @@
 
   /** The "on this page" rail: exercises and their tasks. */
   function renderRail(lab) {
+    currentLab = lab;
     var links = lab.exercises.map(function (ex, i) {
       var tasks = ex.tasks.map(function (task, j) {
         return (
@@ -404,10 +435,15 @@
       );
     }).join("");
 
+    // These must be full routes, not bare "#scripts". This is a hash router, so a
+    // bare fragment replaces the whole route and the reader lands on the overview.
     var extras = "";
-    if ((lab.scripts || []).length) extras += '<a class="rail__link" href="#scripts">Scripts</a>';
-    if ((lab.troubleshooting || []).length) extras += '<a class="rail__link" href="#troubleshooting">Troubleshooting</a>';
-    if ((lab.quiz || []).length) extras += '<a class="rail__link" href="#quiz">Knowledge check</a>';
+    function extra(section, label) {
+      return '<a class="rail__link" href="#' + AppRouter.sectionPath(lab.id, section) + '">' + label + "</a>";
+    }
+    if ((lab.scripts || []).length) extras += extra("scripts", "Scripts");
+    if ((lab.troubleshooting || []).length) extras += extra("troubleshooting", "Troubleshooting");
+    if ((lab.quiz || []).length) extras += extra("quiz", "Knowledge check");
 
     return '<div class="rail__title">On this page</div>' + links + extras;
   }

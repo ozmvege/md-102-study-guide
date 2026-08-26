@@ -132,6 +132,35 @@ function checkTask(errors, task, where) {
   }
 }
 
+/**
+ * An in-page link may only address one of the lab's own trailing sections, and
+ * only if the lab actually has it.
+ *
+ * A "see the Scripts section below" that points at a lab with no scripts is the
+ * failure mode this catches: it renders as a live link that scrolls nowhere, and
+ * nobody notices until a reader clicks it. Scanning the serialised lab rather
+ * than every field by hand means a link cannot be smuggled in through a part kind
+ * this function was never taught about.
+ */
+const SECTION_LINK = { "#scripts": "scripts", "#troubleshooting": "troubleshooting", "#quiz": "quiz" };
+const IN_PAGE_LINK = /\[[^\]\n]+\]\((#[^)\s]*)\)/g;
+
+function checkSectionLinks(errors, lab, raw, where) {
+  const re = new RegExp(IN_PAGE_LINK.source, "g");
+  let m;
+  while ((m = re.exec(raw)) !== null) {
+    const href = m[1];
+    const key = SECTION_LINK[href];
+    if (!key) {
+      errors.push(
+        where + ': in-page link "' + href + '" is not a lab section — use #scripts, #troubleshooting or #quiz'
+      );
+    } else if (!(lab[key] || []).length) {
+      errors.push(where + ": links to " + href + " but the lab has no " + key + " section");
+    }
+  }
+}
+
 function checkExercise(errors, ex, where) {
   req(errors, ID_RE.test(ex.id || ""), where + ': exercise id must be kebab-case, got "' + ex.id + '"');
   req(errors, typeof ex.title === "string" && ex.title.trim(), where + ": exercise needs a title");
@@ -272,8 +301,11 @@ export function validateLab(lab, ctx) {
     });
   });
 
-  // --- Migration debt --------------------------------------------------------
+  // --- Cross-references ------------------------------------------------------
   const raw = JSON.stringify(lab);
+  checkSectionLinks(errors, lab, raw, where);
+
+  // --- Migration debt --------------------------------------------------------
   if (raw.includes('"todo"')) {
     errors.push(where + ": contains an unresolved migration todo marker");
   }

@@ -62,7 +62,7 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Compare your host against the table below. Run the pre-flight script in the **Scripts** section at the end of this lab if you would rather read the answers than look them up.",
+              text: "Compare your host against the table below. Run the pre-flight script in the [Scripts](#scripts) section at the end of this lab if you would rather read the answers than look them up.",
               parts: [
                 {
                   kind: "table",
