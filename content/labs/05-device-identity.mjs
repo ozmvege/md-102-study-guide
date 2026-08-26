@@ -134,11 +134,18 @@ export default {
               ]
             },
             {
-              text: "Open **Settings**, select **Accounts**, then select **Email and accounts**.",
-              nav: ["Settings", "Accounts", "Email and accounts"]
+              text: "Open **Settings**, select **Accounts**, then select **Your accounts**.",
+              nav: ["Settings", "Accounts", "Your accounts"]
             },
             {
-              text: "Under **Accounts used by other apps**, select **Add a work or school account**."
+              text: "On the **Your accounts** page, select **Add a work or school account**.",
+              parts: [
+                {
+                  kind: "callout",
+                  variant: "note",
+                  text: "On older Windows 11 builds this page is called **Email and accounts**, and the button sits under **Accounts used by other apps**. Same action, older label."
+                }
+              ]
             },
             {
               text: "Sign in as `joni.sherman@<tenant>.onmicrosoft.com` and complete the prompts.",
@@ -154,7 +161,7 @@ export default {
           result: {
             text: "The device is registered to Microsoft Entra ID while remaining under local control.",
             verify: [
-              { text: "The work account appears under **Email and accounts**." }
+              { text: "The work account appears under **Your accounts**." }
             ]
           }
         },

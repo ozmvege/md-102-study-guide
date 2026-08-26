@@ -1852,10 +1852,13 @@ Registration is the bring-your-own-device path. The user keeps their local sign-
                  DomainJoined : NO
    ```
 
-3. Open **Settings**, select **Accounts**, then select **Email and accounts**.
-   *Path:* **Settings** > **Accounts** > **Email and accounts**
+3. Open **Settings**, select **Accounts**, then select **Your accounts**.
+   *Path:* **Settings** > **Accounts** > **Your accounts**
 
-4. Under **Accounts used by other apps**, select **Add a work or school account**.
+4. On the **Your accounts** page, select **Add a work or school account**.
+
+   > [!NOTE]
+   > On older Windows 11 builds this page is called **Email and accounts**, and the button sits under **Accounts used by other apps**. Same action, older label.
 
 5. Sign in as `joni.sherman@<tenant>.onmicrosoft.com` and complete the prompts.
 
@@ -1864,7 +1867,7 @@ Registration is the bring-your-own-device path. The user keeps their local sign-
 
 **Results:** The device is registered to Microsoft Entra ID while remaining under local control.
 
-- [ ] The work account appears under **Email and accounts**.
+- [ ] The work account appears under **Your accounts**.
 
 #### Task 2: Read the registered state
 
