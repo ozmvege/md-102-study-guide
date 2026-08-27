@@ -4,7 +4,7 @@ export default {
   title: "Every Windows enrollment path",
   access: "hands-on",
   difficulty: "intermediate",
-  estimatedMinutes: 50,
+  estimatedMinutes: 65,
 
   scenario:
     "There is more than one way to get a Windows device under management, and the exam expects you to pick the right one from a scenario rather than reciting the one you happen to use. You will join a device during the out-of-box experience, build a bulk provisioning package for devices that arrive pre-imaged, and understand where Group Policy enrollment fits for an existing domain estate.",
@@ -13,14 +13,16 @@ export default {
     "Join a device to Microsoft Entra ID during the out-of-box experience",
     "Create a bulk enrollment provisioning package with Windows Configuration Designer",
     "Describe Group Policy based automatic enrollment for hybrid joined devices",
-    "Choose the correct enrollment path for a given scenario"
+    "Choose the correct enrollment path for a given scenario",
+    "Complete the scoped administration proof deferred from lab 8"
   ],
 
   keyConcepts: ["Out-of-box experience", "Provisioning package", "Windows Configuration Designer", "Bulk enrollment", "Group Policy enrollment"],
 
   skills: [
     { id: "g1.t1.s2", depth: "primary" },
-    { id: "g1.t2.s2", depth: "primary" }
+    { id: "g1.t2.s2", depth: "primary" },
+    { id: "g1.t3.s2", depth: "partial" }
   ],
 
   requires: {
@@ -30,8 +32,8 @@ export default {
       { kind: "vm", id: "vm1-adele", os: "Windows 11 Pro" },
       { kind: "host", id: "Windows Configuration Designer" }
     ],
-    personas: ["adele.vance"],
-    labs: ["enrollment-restrictions"]
+    personas: ["adele.vance", "alex.wilber", "helpdesk.operator"],
+    labs: ["enrollment-restrictions", "scope-tags-and-aus"]
   },
 
   exercises: [
@@ -284,6 +286,97 @@ export default {
           result: {
             text: "You can describe how an existing domain estate is brought into Intune.",
             verify: [{ text: "You can name the Group Policy setting that triggers automatic enrollment." }]
+          }
+        }
+      ]
+    },
+
+    {
+      id: "e4",
+      title: "Finish the scoped administration proof from lab 8",
+      intro:
+        "Lab 8 built the scope tags and scoped the help desk role, but it could not apply a tag to a device or prove the restriction: nothing was enrolled into Intune yet. Both virtual machines now are — `MD102-VM2-Alex` since lab 10 and `MD102-VM1-Adele` as of this lab — so the deferred half can be completed here.",
+      estimatedMinutes: 15,
+      tasks: [
+        {
+          id: "t1",
+          title: "Tag a device and a policy",
+          checkpoint: true,
+          steps: [
+            {
+              text: "Select **Devices**, then **All devices**, then open `MD102-VM2-Alex`.",
+              nav: ["Devices", "All devices"],
+              parts: [
+                {
+                  kind: "verify",
+                  text: "Both `MD102-VM1-Adele` and `MD102-VM2-Alex` are listed. If only one appears, finish the enrollment exercises above before continuing."
+                }
+              ]
+            },
+            {
+              text: "Select **Properties**, then next to **Scope tags** select **Edit**. Add `TAG-FINANCE`, then select **Review + save**.",
+              parts: [
+                {
+                  kind: "callout",
+                  variant: "tip",
+                  text: "Leave **Default** applied as well. An object can carry several tags, and removing Default while you are still learning is how you make an object invisible to yourself."
+                }
+              ]
+            },
+            {
+              text: "Deliberately leave `MD102-VM1-Adele` untagged. The next task depends on one device carrying the tag and one not."
+            },
+            {
+              text: "Tag a policy the same way. Any configuration profile will do — if you have none yet, come back to this after lab 22.",
+              parts: [
+                {
+                  kind: "substeps",
+                  items: [
+                    { text: "Open the profile and select **Properties**." },
+                    { text: "Next to **Scope tags** select **Edit** and add `TAG-FINANCE`." },
+                    { text: "Select **Review + save**." }
+                  ]
+                }
+              ]
+            }
+          ],
+          result: {
+            text: "One enrolled device carries the Finance scope tag and one does not.",
+            verify: [
+              { text: "`MD102-VM2-Alex` shows `TAG-FINANCE` under **Properties** > **Scope tags**." },
+              { text: "`MD102-VM1-Adele` shows only **Default**." }
+            ]
+          }
+        },
+        {
+          id: "t2",
+          title: "Verify the restriction from the operator's session",
+          checkpoint: true,
+          steps: [
+            {
+              text: "In a private browser window, sign in to `https://intune.microsoft.com` as `helpdesk.operator@<tenant>.onmicrosoft.com`."
+            },
+            {
+              text: "Select **Devices**, then **All devices**.",
+              nav: ["Devices", "All devices"],
+              parts: [
+                {
+                  kind: "verify",
+                  text: "Only `MD102-VM2-Alex` is visible. `MD102-VM1-Adele` has disappeared, because it carries no `TAG-FINANCE`."
+                },
+                {
+                  kind: "callout",
+                  variant: "note",
+                  text: "Objects outside scope are not shown as denied — they simply do not appear. A scoped operator has no way to tell the difference between an object that does not exist and one they cannot see, which is exactly the intent. It is also why an empty list proves nothing on its own: the untagged device has to be there and hidden for this to mean anything."
+                }
+              ]
+            }
+          ],
+          result: {
+            text: "The scope tag restriction is proven from the restricted operator's own session rather than assumed.",
+            verify: [
+              { text: "The operator sees the tagged device and not the untagged one." }
+            ]
           }
         }
       ]

@@ -4,14 +4,14 @@ export default {
   title: "Scope tags, administrative units and scoped administration",
   access: "hands-on",
   difficulty: "intermediate",
-  estimatedMinutes: 45,
+  estimatedMinutes: 35,
 
   scenario:
-    "Contoso's regional IT teams must each manage only their own devices and policies. A role restricts *what actions* an administrator can take; a scope tag restricts *which objects* those actions can touch. You will tag a set of objects, scope an operator to that tag, and then prove from the operator's own session that everything untagged has become invisible — which is the behaviour people find surprising and the exam likes to test.",
+    "Contoso's regional IT teams must each manage only their own devices and policies. A role restricts *what actions* an administrator can take; a scope tag restricts *which objects* those actions can touch. You will create the tags, scope an operator to one of them, and build the administrative unit that does the equivalent job in Microsoft Entra ID. The proof — signing in as that operator and watching every untagged object disappear — needs enrolled devices, so it runs in lab 12 once they exist. That disappearing act is the behaviour people find surprising and the exam likes to test.",
 
   objectives: [
     "Explain the difference between a role, a scope group and a scope tag",
-    "Create scope tags and apply them to devices and policies",
+    "Create scope tags and know how any Intune object is tagged",
     "Scope a role assignment so an operator sees only tagged objects",
     "Create an administrative unit and scope a Microsoft Entra role to it",
     "Predict what a scoped administrator sees when an object carries no tag"
@@ -36,7 +36,9 @@ export default {
     {
       id: "e1",
       title: "Create and apply scope tags",
-      estimatedMinutes: 15,
+      intro:
+        "Everything in this lab that does not need a managed device happens here: the tags themselves, the scoped role assignment, and the administrative unit. Applying a tag to a *device* cannot happen yet — nothing is enrolled into Intune until lab 10 — so that half, and the proof that depends on it, run in lab 12 exercise 4.",
+      estimatedMinutes: 12,
       tasks: [
         {
           id: "t1",
@@ -70,7 +72,17 @@ export default {
               ]
             },
             {
-              text: "Select **Create**, then repeat to create a second tag named `TAG-IT` assigned to `GRP-USR-IT`."
+              text: "Select **Create**, then run the identical flow a second time for the IT tag:",
+              parts: [
+                {
+                  kind: "inputs",
+                  rows: [
+                    { label: "Name", value: "TAG-IT" },
+                    { label: "Description", value: "IT department devices, policies and applications" },
+                    { label: "Assignments", value: "GRP-USR-IT" }
+                  ]
+                }
+              ]
             },
             {
               text: "Note the tag that already exists:",
@@ -92,41 +104,41 @@ export default {
         },
         {
           id: "t2",
-          title: "Tag a device and a policy",
-          checkpoint: true,
+          title: "Know how an object gets tagged",
           steps: [
             {
-              text: "Select **Devices**, then **All devices**, then open `MD102-VM2-Alex`.",
-              nav: ["Devices", "All devices"]
-            },
-            {
-              text: "Select **Properties**, then next to **Scope tags** select **Edit**. Add `TAG-FINANCE`, then select **Review + save**.",
-              parts: [
-                {
-                  kind: "callout",
-                  variant: "tip",
-                  text: "Leave **Default** applied as well. An object can carry several tags, and removing Default while you are still learning is how you make an object invisible to yourself."
-                }
-              ]
-            },
-            {
-              text: "Now tag a policy. Any configuration profile will do — if you have none yet, come back to this after lab 22.",
+              text: "Tagging is the same three steps wherever you do it, and it is worth reading now even though there is nothing enrolled to practise on:",
               parts: [
                 {
                   kind: "substeps",
                   items: [
-                    { text: "Open the profile and select **Properties**." },
-                    { text: "Next to **Scope tags** select **Edit** and add `TAG-FINANCE`." },
+                    { text: "Open the object and select **Properties**." },
+                    { text: "Next to **Scope tags** select **Edit** and add the tag." },
                     { text: "Select **Review + save**." }
                   ]
+                },
+                {
+                  kind: "callout",
+                  variant: "tip",
+                  text: "Leave **Default** applied alongside the new tag. An object can carry several tags, and removing Default while you are still learning is how you make an object invisible to yourself."
+                }
+              ]
+            },
+            {
+              text: "Devices are the one thing you cannot practise on here. **Devices** > **All devices** in the Intune admin center lists only devices *enrolled into Intune*, and nothing is enrolled until lab 10. Lab 12 exercise 4 returns to this and applies `TAG-FINANCE` to a device once both virtual machines are enrolled.",
+              parts: [
+                {
+                  kind: "callout",
+                  variant: "important",
+                  text: "Microsoft Entra joined and Intune enrolled are not synonyms, and the exam tests the difference directly. Lab 5 joined these virtual machines to Microsoft Entra ID, so they appear in the *Entra* admin center under **Devices** — and remain entirely absent from Intune until something enrols them."
                 }
               ]
             }
           ],
           result: {
-            text: "At least one device carries the Finance scope tag.",
+            text: "You can tag any Intune object, and you know why the device list is still empty.",
             verify: [
-              { text: "`MD102-VM2-Alex` shows `TAG-FINANCE` under **Properties** > **Scope tags**." }
+              { text: "You can state the difference between a Microsoft Entra joined device and an Intune enrolled device." }
             ]
           }
         }
@@ -135,8 +147,8 @@ export default {
 
     {
       id: "e2",
-      title: "Scope an operator and prove the restriction",
-      estimatedMinutes: 20,
+      title: "Scope an operator and predict the restriction",
+      estimatedMinutes: 13,
       tasks: [
         {
           id: "t1",
@@ -182,43 +194,42 @@ export default {
         },
         {
           id: "t2",
-          title: "Verify from the operator's session",
-          checkpoint: true,
+          title: "Understand what a scoped operator actually sees",
           steps: [
             {
-              text: "In a private browser window, sign in to `https://intune.microsoft.com` as `helpdesk.operator@<tenant>.onmicrosoft.com`."
-            },
-            {
-              text: "Select **Devices**, then **All devices**.",
+              text: "The proof itself needs two enrolled devices — one tagged, one not — so it runs in lab 12 exercise 4. What matters now is being able to predict the outcome, because the behaviour surprises people and the exam asks about it.",
               parts: [
                 {
-                  kind: "verify",
-                  text: "Only `MD102-VM2-Alex` is visible. `MD102-VM1-Adele` has disappeared, because it carries no `TAG-FINANCE`."
+                  kind: "callout",
+                  variant: "important",
+                  text: "Objects outside scope are not shown as denied — they simply do not appear. A scoped operator has no way to tell the difference between an object that does not exist and one they cannot see, which is exactly the intent."
                 },
                 {
                   kind: "callout",
                   variant: "note",
-                  text: "Objects outside scope are not shown as denied — they simply do not appear. A scoped operator has no way to tell the difference between an object that does not exist and one they cannot see, which is exactly the intent."
+                  text: "Which is also why an empty list proves nothing on its own. A convincing demonstration needs a tagged object that stays visible *and* an untagged one that vanishes — the reason lab 12 tags `MD102-VM2-Alex` and deliberately leaves `MD102-VM1-Adele` alone."
                 }
               ]
             },
             {
-              text: "Select **Devices**, then **Configuration**.",
+              text: "Predict the operator's view for each object before you get there:",
               parts: [
                 {
-                  kind: "verify",
-                  text: "Only profiles tagged `TAG-FINANCE` appear. Untagged and Default-tagged profiles are hidden."
+                  kind: "table",
+                  headers: ["Object", "Tags it carries", "Visible to the scoped operator"],
+                  rows: [
+                    ["`MD102-VM2-Alex`", "Default, TAG-FINANCE", "Yes"],
+                    ["`MD102-VM1-Adele`", "Default", "No"],
+                    ["A configuration profile you never tagged", "Default", "No"],
+                    ["Anything carrying TAG-IT", "Default, TAG-IT", "No"]
+                  ]
                 }
               ]
-            },
-            {
-              text: "Sign back in as `admin-intune` and compare the same two blades. Everything is visible again."
             }
           ],
           result: {
-            text: "Scoped administration demonstrably restricts visibility, not just actions.",
+            text: "You can predict a scoped operator's view before proving it in lab 12.",
             verify: [
-              { text: "The operator sees one device; the administrator sees all of them." },
               { text: "You can explain why removing the **Default** tag from the assignment was necessary." }
             ]
           }

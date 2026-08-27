@@ -149,11 +149,57 @@ export default {
               ]
             },
             {
-              text: "For each of the two working accounts, select the role, select **Add assignments**, choose the account, and assign it as **Active**."
+              text: "Select **Roles and admins**, then select **Roles and admins** again, then select **Intune Administrator**. Search the list rather than scrolling it — Entra ships well over a hundred roles.",
+              nav: ["Roles and admins", "Roles and admins", "Intune Administrator"]
+            },
+            {
+              text: "Select **Add assignments**, choose `admin-intune@<tenant>.onmicrosoft.com`, then select **Next**.",
+              parts: [
+                {
+                  kind: "callout",
+                  variant: "note",
+                  text: "Leave **Scope type** at **Directory**. Scoping the assignment to an administrative unit restricts it to that unit's members, which lets the device blades open normally while tenant-wide work — creating a custom Intune role, for instance — is refused. That is a genuinely difficult failure to diagnose three labs later."
+                }
+              ]
+            },
+            {
+              text: "Configure the assignment:",
+              parts: [
+                {
+                  kind: "inputs",
+                  rows: [
+                    { label: "Assignment type", value: "Active" },
+                    { label: "Permanently assigned", value: "Selected" },
+                    { label: "Justification", value: "Day-to-day Intune administration" }
+                  ]
+                },
+                {
+                  kind: "callout",
+                  variant: "important",
+                  text: "**Active** is the setting to get right. Microsoft 365 E5 includes Entra ID P2, so this blade also offers **Eligible**, and it is easy to accept without reading. An eligible assignment grants nothing until it is activated through Privileged Identity Management: the account signs in, looks like an administrator, and is then refused on real work with a bare **401 — No access**. That reads as a broken tenant rather than an unactivated role."
+                }
+              ]
+            },
+            {
+              text: "Select **Assign**, then repeat the same flow for `admin-security@<tenant>.onmicrosoft.com` against the **Security Administrator** role."
+            },
+            {
+              text: "Confirm both assignments before moving on.",
+              parts: [
+                {
+                  kind: "verify",
+                  text: "**Intune Administrator** > **Assignments** lists `admin-intune` with an assignment type of **Active** and a scope of **Directory**. **Security Administrator** lists `admin-security` the same way."
+                }
+              ]
             },
             {
               text: "Sign out and sign back in as `admin-intune@<tenant>.onmicrosoft.com`, then open the **Microsoft Intune admin center**.",
               parts: [
+                {
+                  kind: "callout",
+                  variant: "warning",
+                  text: "Signing out matters. A role assignment is written into the access token at sign-in, so a session that was already open when you made the assignment carries a token that does not contain the role. Closing the tab is not enough — sign out properly, or open a fresh private window."
+                },
                 {
                   kind: "verify",
                   text: "You can open **Devices**, **Apps** and **Endpoint security**. Attempting to open **Billing** in the Microsoft 365 admin center is denied — which is the separation working."
@@ -169,6 +215,7 @@ export default {
           result: {
             text: "Day-to-day work happens under a role that cannot change identity or billing.",
             verify: [
+              { text: "**Intune Administrator** > **Assignments** shows `admin-intune` as **Active**, scoped to **Directory**." },
               { text: "`admin-intune` can manage Intune but cannot manage subscriptions." },
               { text: "`admin-security` can open **Endpoint security** and the Defender portal." }
             ]
@@ -265,6 +312,23 @@ $rows | Sort-Object Role, Principal | Format-Table -AutoSize`
       },
       resolution:
         "Sign in with the emergency account, set the policy to **Report-only**, then fix the assignment and exclude the emergency account before re-enabling. Every Conditional Access policy you create in lab 31 excludes this account for exactly this reason."
+    },
+    {
+      symptom:
+        "`admin-intune` signs in and can browse the Intune admin center, but an administrative action such as creating a custom role fails with **401 — No access**.",
+      rootCause:
+        "The Intune Administrator role is not in effect on that session. Either the assignment is **Eligible** rather than **Active** and has never been activated in Privileged Identity Management, or it is scoped to an administrative unit instead of the directory, or the browser session predates the assignment and holds a token issued without the role.",
+      diagnostic: {
+        lang: "text",
+        code: `Signed in as admin-intune:
+Intune admin center > Tenant administration > Roles > My permissions
+  A sparse or empty list means the directory role is not on this token.
+
+Entra admin center > Users > admin-intune > Assigned roles
+  Check: Intune Administrator, state Active (not Eligible), scope Directory (not an administrative unit).`
+      },
+      resolution:
+        "Re-assign as **Active** with scope **Directory**, or activate the eligible assignment through **Identity governance** > **Privileged Identity Management**. Then sign out fully and sign back in — an existing session keeps its original token and will keep failing until it is replaced."
     }
   ],
 
