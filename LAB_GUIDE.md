@@ -2395,18 +2395,28 @@ After completing this lab, you will be able to:
 
    **Verify:** **My permissions** lists Help Desk Operator and shows the granted actions. This blade is the fastest way to answer *why can this person not do X*.
 
-3. Now test the boundary. Open **Devices** and select a device.
+3. Now test the boundary. Open **Devices** > **All devices**. Nothing has enrolled yet — the first device arrives in lab 10 — so expect an empty list.
+   *Path:* **Devices** > **All devices**
 
-   **Verify:** Remote actions such as **Sync**, **Restart** and **Retire** are available.
+   **Verify:** The blade renders and lists no devices. That is read access with nothing to read, which is exactly what this role should give you.
 
-4. Attempt something the role should not permit: open **Devices** > **Configuration** and try to create a profile.
+   > [!IMPORTANT]
+   > Learn to tell *empty* from *denied* here, because it is the first fork in every *the help desk cannot see the device* call. **Empty** means the query ran and matched nothing: no enrolled devices, or a scope group that excludes them. **Denied** means the query never ran, and the blade says so instead of showing you a clean table. **My permissions** from the previous step settles which one you are looking at.
+
+4. Remote actions are the other half of this role and they need a device to act on, so this part waits. Lab 10 enrolls the first device and its closing step brings you back to finish the check. If you already have an enrolled device, select it now and confirm **Sync**, **Restart** and **Retire** are offered.
+
+   > [!TIP]
+   > Resist turning on automatic enrollment early just to populate this list. Lab 10 sets the MDM user scope deliberately and lab 11 corrects the ownership a first enrollment gets wrong, so a device enrolled out of order starts both labs in the wrong state.
+
+5. Attempt something the role should not permit: open **Devices** > **Configuration** and try to create a profile.
 
    **Verify:** The create action is unavailable or denied. Help Desk Operator can read configuration but not author it.
 
-**Results:** The role restricts what it should, proven from the operator's own session rather than assumed.
+**Results:** The role restricts what it should, proven from the operator's own session rather than assumed. The remote-action half of the proof resumes in lab 10, once there is a device to act on.
 
-- [ ] The operator can perform remote actions.
+- [ ] The operator reaches **Devices** > **All devices** and sees an empty list, not an access error.
 - [ ] The operator cannot create a configuration profile.
+- [ ] You can state the difference between a blade that is empty and a blade that is denied.
 
 ### Exercise 3: Build a custom role
 
@@ -2492,6 +2502,22 @@ $rows | Sort-Object Role | Format-Table -AutoSize
 ```
 
 ### Troubleshooting
+
+**Symptom:** The operator signs in successfully, but **Devices** > **All devices** is empty.
+
+- **Root cause:** Most likely nothing has enrolled yet. Lab 5 joined VM2 to Microsoft Entra ID, which is an identity, not management; automatic enrollment is configured in lab 10 and that is when the first device appears in Intune. Later in the course the same symptom means a scope group that excludes the device, or a role missing **Managed devices — Read**.
+- **Diagnostic:**
+
+  ```text
+  Signed in as the operator:
+  Tenant administration > Roles > My permissions        # is Managed devices - Read granted?
+
+  Signed in as admin-intune:
+  Devices > All devices                                 # does the tenant have any enrolled device at all?
+  Tenant administration > Roles > Help Desk Operator > Assignments > Scope Groups
+  ```
+
+- **Resolution:** If the administrator's own view of **All devices** is also empty, nothing is broken: continue the lab and return to the remote-action check after lab 10. If the administrator sees devices and the operator does not, widen the assignment's scope groups to include them.
 
 **Symptom:** An operator with a restricted Intune role can still do everything in the console.
 
@@ -3021,11 +3047,11 @@ After completing this lab, you will be able to:
 
 ### Prerequisites
 
-- Completed labs: `device-identity`
+- Completed labs: `device-identity`, `intune-rbac`
 - Licences: M365-E5, ENTRA-P2
 - Roles: Intune Administrator
 - Devices and portals: Microsoft Intune admin center, vm2-alex (Windows 11 Pro)
-- Personas: alex.wilber
+- Personas: alex.wilber, helpdesk.operator
 
 ### Exercise 1: Enable automatic enrollment
 
@@ -3148,10 +3174,19 @@ After completing this lab, you will be able to:
 
    **Verify:** `MD102-VM2-Alex` is listed with **Managed by** of **Intune** and an **Ownership** of **Personal** — ownership is corrected in lab 11.
 
+6. Lab 7 left one check unfinished for want of a device. Finish it now: open a private window, sign in as `helpdesk.operator@<tenant>.onmicrosoft.com`, then open **Devices** > **All devices** and select `MD102-VM2-Alex`.
+   *Path:* **Devices** > **All devices**
+
+   **Verify:** The operator sees the device, and remote actions such as **Sync**, **Restart** and **Retire** are offered. That completes the Help Desk Operator proof from lab 7: read widely, act where the role allows, author nothing.
+
+   > [!NOTE]
+   > The same blade that was legitimately empty in lab 7 now has a row in it, and not one permission changed in between. Worth remembering the next time an operator reports they cannot see a device: the role is only one of the two things that has to be true.
+
 **Results:** A Microsoft Entra joined device is now managed by Intune without any manual enrollment step.
 
 - [ ] The device appears in **All devices** managed by Intune.
 - [ ] `dsregcmd /status` shows an **MdmUrl**.
+- [ ] `helpdesk.operator` can run remote actions on the device, closing the lab 7 check.
 
 ### Troubleshooting
 
