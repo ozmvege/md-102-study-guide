@@ -250,19 +250,31 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "In the **Microsoft Entra admin center**, select **Roles and admins**, then **Administrative units**, then **Add**.",
-              nav: ["Roles and admins", "Administrative units", "Add"]
+              text: "In the **Microsoft Entra admin center**, select **Roles and admins**, then **Admin units**, then **Add**.",
+              nav: ["Roles and admins", "Admin units", "Add"],
+              parts: [
+                {
+                  kind: "callout",
+                  variant: "note",
+                  text: "The portal labels this blade **Admin units**. Microsoft Learn, the Graph resource (`administrativeUnit`) and the exam all still call the object an *administrative unit*, so read the two names as the same thing."
+                }
+              ]
             },
             {
-              text: "Configure:",
+              text: "On the *Properties* tab, configure:",
               parts: [
                 {
                   kind: "inputs",
                   rows: [
                     { label: "Name", value: "AU-FINANCE" },
                     { label: "Description", value: "Finance department users and devices" },
-                    { label: "Membership type", value: "Assigned", note: "Dynamic administrative units are also available with Entra ID P1 or P2." }
+                    { label: "Restricted management administrative unit", value: "No", note: "**Yes** stops tenant-level administrators, Global Administrator included, from managing these members: only an administrator scoped to the unit can. That is the setting for executive and service accounts, and the wrong one for a finance help desk your tenant admins still need to support." }
                   ]
+                },
+                {
+                  kind: "callout",
+                  variant: "note",
+                  text: "This tab has no **Membership type** setting. A new unit is always created with assigned membership, and dynamic membership is configured afterwards: open the unit, select **Properties**, set **Membership type** to **Dynamic User** or **Dynamic Device**, then select **Add dynamic query**. That path needs a Microsoft Entra ID P1 licence for every member as well as for the administrator, and one unit can be dynamic for users or for devices, never both."
                 }
               ]
             },
@@ -277,8 +289,8 @@ export default {
               ]
             },
             {
-              text: "Create the unit, then open it and add `alex.wilber` and `henrietta.mueller` as members.",
-              nav: ["Administrative units", "AU-FINANCE", "Users", "Add member"]
+              text: "Select **Review + create**, then **Create**. Open the new unit, select **Users**, then **Add member**, and add `alex.wilber` and `henrietta.mueller`.",
+              nav: ["Admin units", "AU-FINANCE", "Users", "Add member"]
             },
             {
               text: "Compare the two mechanisms:",
@@ -347,6 +359,18 @@ Get-MgDeviceManagementManagedDevice -All -Property DeviceName,RoleScopeTagIds |
       },
       resolution:
         "Add the operator's scope tag to the profiles they need. Tagging devices alone is a half-finished configuration and produces exactly this symptom."
+    },
+    {
+      symptom:
+        "The **Add administrative unit** page offers no **Membership type**, and the navigation reads **Admin units** rather than **Administrative units**.",
+      rootCause:
+        "Both are current portal behaviour rather than a licensing or permissions problem. The blade was renamed to **Admin units**, and membership type is no longer part of the creation wizard: every new unit is created with assigned membership.",
+      diagnostic: {
+        lang: "text",
+        code: "Roles and admins > Admin units > AU-FINANCE > Properties"
+      },
+      resolution:
+        "Create the unit with **Name**, **Description** and the **Restricted management administrative unit** toggle, then add members by hand. For a dynamic unit, open the created unit, select **Properties**, set **Membership type** to **Dynamic User** or **Dynamic Device**, and select **Add dynamic query**. Courseware and screenshots that show the choice during creation predate the change."
     }
   ],
 
