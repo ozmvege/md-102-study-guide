@@ -209,8 +209,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Sign back in as `admin-intune`. Select **Tenant administration**, **Roles**, **All roles**, then select **Create**.",
-              nav: ["Tenant administration", "Roles", "All roles", "Create"]
+              text: "Sign back in as `admin-intune`. Select **Tenant administration**, **Roles**, **All roles**, then select **Create**, **Intune role**. **Create** is a dropdown: **Windows 365 role** builds a Cloud PC role instead, and **Windows Autopatch role** is greyed out until Autopatch is set up.",
+              nav: ["Tenant administration", "Roles", "All roles", "Create", "Intune role"]
             },
             {
               text: "On **Basics**:",
@@ -225,17 +225,19 @@ export default {
               ]
             },
             {
-              text: "On **Permissions**, grant only the following. Leave every other category at **No**.",
+              text: "On **Permissions**, expand **Mobile apps**. It holds seven toggles, and all seven are listed below in the order the portal shows them — set every one deliberately rather than assuming a default. Then set the two reads beneath it. Leave every other category at **No**.",
               parts: [
                 {
                   kind: "inputs",
                   rows: [
-                    { label: "Mobile apps — Create", value: "Yes" },
+                    { label: "Mobile apps — View reports", value: "Yes", note: "App install status is how this operator confirms a deployment succeeded. Read exposes the app objects; the reporting blades are gated separately." },
                     { label: "Mobile apps — Read", value: "Yes" },
-                    { label: "Mobile apps — Update", value: "Yes" },
-                    { label: "Mobile apps — Assign", value: "Yes" },
                     { label: "Mobile apps — Delete", value: "No", note: "Deliberate. Publishing is recoverable; deleting an assigned app uninstalls it from every targeted device." },
-                    { label: "Managed devices — Read", value: "Yes", note: "Needed to see whether a deployment actually landed." },
+                    { label: "Mobile apps — Create", value: "Yes" },
+                    { label: "Mobile apps — Relate", value: "No", note: "Deliberate. Relate governs the dependency and supersedence relationships you build in lab 33. Superseding an app can uninstall the version it replaces, which is the same blast radius that keeps Delete at No." },
+                    { label: "Mobile apps — Assign", value: "Yes" },
+                    { label: "Mobile apps — Update", value: "Yes" },
+                    { label: "Managed devices — Read", value: "Yes", note: "The device-side half of the same question: which devices were targeted and what state they are in." },
                     { label: "Organization — Read", value: "Yes", note: "Required for the console to render at all." }
                   ]
                 },

@@ -95,11 +95,11 @@ Validation fails on an unknown skill id, a lab with no primary objective mapping
 | 6 | Device identity: registered, joined and hybrid joined | Identity foundation | Hands-on | 55 min |
 | 7 | Device groups and dynamic membership rules | Identity foundation | Hands-on | 45 min |
 | 8 | Intune role-based access control and custom roles | Identity foundation | Hands-on | 45 min |
-| 9 | Scope tags, administrative units and scoped administration | Identity foundation | Hands-on | 45 min |
+| 9 | Scope tags, administrative units and scoped administration | Identity foundation | Hands-on | 35 min |
 | 10 | Multi-admin approval and access policies | Identity foundation | Hands-on | 35 min |
 | 11 | Automatic enrollment, enrollment settings and Company Portal branding | Enrollment | Hands-on | 40 min |
 | 12 | Enrollment restrictions, device limits and corporate identifiers | Enrollment | Hands-on | 45 min |
-| 13 | Every Windows enrollment path | Enrollment | Hands-on | 50 min |
+| 13 | Every Windows enrollment path | Enrollment | Hands-on | 65 min |
 | 14 | Android Enterprise: work profile, fully managed and dedicated | Enrollment | Hands-on | 60 min |
 | 15 | Apple enrollment, Apple Business Manager and OEM zero-touch | Enrollment | Walkthrough (device) | 35 min |
 | 16 | Troubleshoot enrollment failures | Enrollment | Hands-on | 45 min |

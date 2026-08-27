@@ -1653,9 +1653,35 @@ The account already exists from lab 3. What matters now is the properties that m
    | `admin-security` | Security Administrator | Defender, security baselines and incident response without device configuration rights |
    | `admin-breakglass` | Global Administrator | The only account that needs everything, used only when something is broken |
 
-2. For each of the two working accounts, select the role, select **Add assignments**, choose the account, and assign it as **Active**.
+2. Select **Roles and admins**, then select **Roles and admins** again, then select **Intune Administrator**. Search the list rather than scrolling it — Entra ships well over a hundred roles.
+   *Path:* **Roles and admins** > **Roles and admins** > **Intune Administrator**
 
-3. Sign out and sign back in as `admin-intune@<tenant>.onmicrosoft.com`, then open the **Microsoft Intune admin center**.
+3. Select **Add assignments**, choose `admin-intune@<tenant>.onmicrosoft.com`, then select **Next**.
+
+   > [!NOTE]
+   > Leave **Scope type** at **Directory**. Scoping the assignment to an administrative unit restricts it to that unit's members, which lets the device blades open normally while tenant-wide work — creating a custom Intune role, for instance — is refused. That is a genuinely difficult failure to diagnose three labs later.
+
+4. Configure the assignment:
+
+   | Setting | Value |
+   | --- | --- |
+   | Assignment type | **Active** |
+   | Permanently assigned | **Selected** |
+   | Justification | **Day-to-day Intune administration** |
+
+   > [!IMPORTANT]
+   > **Active** is the setting to get right. Microsoft 365 E5 includes Entra ID P2, so this blade also offers **Eligible**, and it is easy to accept without reading. An eligible assignment grants nothing until it is activated through Privileged Identity Management: the account signs in, looks like an administrator, and is then refused on real work with a bare **401 — No access**. That reads as a broken tenant rather than an unactivated role.
+
+5. Select **Assign**, then repeat the same flow for `admin-security@<tenant>.onmicrosoft.com` against the **Security Administrator** role.
+
+6. Confirm both assignments before moving on.
+
+   **Verify:** **Intune Administrator** > **Assignments** lists `admin-intune` with an assignment type of **Active** and a scope of **Directory**. **Security Administrator** lists `admin-security` the same way.
+
+7. Sign out and sign back in as `admin-intune@<tenant>.onmicrosoft.com`, then open the **Microsoft Intune admin center**.
+
+   > [!WARNING]
+   > Signing out matters. A role assignment is written into the access token at sign-in, so a session that was already open when you made the assignment carries a token that does not contain the role. Closing the tab is not enough — sign out properly, or open a fresh private window.
 
    **Verify:** You can open **Devices**, **Apps** and **Endpoint security**. Attempting to open **Billing** in the Microsoft 365 admin center is denied — which is the separation working.
 
@@ -1664,6 +1690,7 @@ The account already exists from lab 3. What matters now is the properties that m
 
 **Results:** Day-to-day work happens under a role that cannot change identity or billing.
 
+- [ ] **Intune Administrator** > **Assignments** shows `admin-intune` as **Active**, scoped to **Directory**.
 - [ ] `admin-intune` can manage Intune but cannot manage subscriptions.
 - [ ] `admin-security` can open **Endpoint security** and the Defender portal.
 
@@ -1738,6 +1765,22 @@ $rows | Sort-Object Role, Principal | Format-Table -AutoSize
   ```
 
 - **Resolution:** Sign in with the emergency account, set the policy to **Report-only**, then fix the assignment and exclude the emergency account before re-enabling. Every Conditional Access policy you create in lab 31 excludes this account for exactly this reason.
+
+**Symptom:** `admin-intune` signs in and can browse the Intune admin center, but an administrative action such as creating a custom role fails with **401 — No access**.
+
+- **Root cause:** The Intune Administrator role is not in effect on that session. Either the assignment is **Eligible** rather than **Active** and has never been activated in Privileged Identity Management, or it is scoped to an administrative unit instead of the directory, or the browser session predates the assignment and holds a token issued without the role.
+- **Diagnostic:**
+
+  ```text
+  Signed in as admin-intune:
+  Intune admin center > Tenant administration > Roles > My permissions
+    A sparse or empty list means the directory role is not on this token.
+
+  Entra admin center > Users > admin-intune > Assigned roles
+    Check: Intune Administrator, state Active (not Eligible), scope Directory (not an administrative unit).
+  ```
+
+- **Resolution:** Re-assign as **Active** with scope **Directory**, or activate the eligible assignment through **Identity governance** > **Privileged Identity Management**. Then sign out fully and sign back in — an existing session keeps its original token and will keep failing until it is replaced.
 
 ### Knowledge check
 
@@ -2414,8 +2457,8 @@ Built-in roles rarely match a real team exactly. Custom roles let you compose ex
 
 #### Task 1: Create an application-only custom role
 
-1. Sign back in as `admin-intune`. Select **Tenant administration**, **Roles**, **All roles**, then select **Create**.
-   *Path:* **Tenant administration** > **Roles** > **All roles** > **Create**
+1. Sign back in as `admin-intune`. Select **Tenant administration**, **Roles**, **All roles**, then select **Create**, **Intune role**. **Create** is a dropdown: **Windows 365 role** builds a Cloud PC role instead, and **Windows Autopatch role** is greyed out until Autopatch is set up.
+   *Path:* **Tenant administration** > **Roles** > **All roles** > **Create** > **Intune role**
 
 2. On **Basics**:
 
@@ -2424,16 +2467,18 @@ Built-in roles rarely match a real team exactly. Custom roles let you compose ex
    | Name | **App Deployment Operator** |
    | Description | **May publish and assign applications and read device inventory. No configuration or security rights.** |
 
-3. On **Permissions**, grant only the following. Leave every other category at **No**.
+3. On **Permissions**, expand **Mobile apps**. It holds seven toggles, and all seven are listed below in the order the portal shows them — set every one deliberately rather than assuming a default. Then set the two reads beneath it. Leave every other category at **No**.
 
    | Setting | Value |
    | --- | --- |
-   | Mobile apps — Create | **Yes** |
+   | Mobile apps — View reports | **Yes** <br> App install status is how this operator confirms a deployment succeeded. Read exposes the app objects; the reporting blades are gated separately. |
    | Mobile apps — Read | **Yes** |
-   | Mobile apps — Update | **Yes** |
-   | Mobile apps — Assign | **Yes** |
    | Mobile apps — Delete | **No** <br> Deliberate. Publishing is recoverable; deleting an assigned app uninstalls it from every targeted device. |
-   | Managed devices — Read | **Yes** <br> Needed to see whether a deployment actually landed. |
+   | Mobile apps — Create | **Yes** |
+   | Mobile apps — Relate | **No** <br> Deliberate. Relate governs the dependency and supersedence relationships you build in lab 33. Superseding an app can uninstall the version it replaces, which is the same blast radius that keeps Delete at No. |
+   | Mobile apps — Assign | **Yes** |
+   | Mobile apps — Update | **Yes** |
+   | Managed devices — Read | **Yes** <br> The device-side half of the same question: which devices were targeted and what state they are in. |
    | Organization — Read | **Yes** <br> Required for the console to render at all. |
 
    > [!NOTE]
@@ -2553,18 +2598,18 @@ D. Which Microsoft Entra directory roles are inherited
 
 ## Lab 8: Scope tags, administrative units and scoped administration
 
-**Access:** Hands-on · **Estimated time:** 45 minutes · **Difficulty:** intermediate
+**Access:** Hands-on · **Estimated time:** 35 minutes · **Difficulty:** intermediate
 
 ### Lab scenario
 
-Contoso's regional IT teams must each manage only their own devices and policies. A role restricts *what actions* an administrator can take; a scope tag restricts *which objects* those actions can touch. You will tag a set of objects, scope an operator to that tag, and then prove from the operator's own session that everything untagged has become invisible — which is the behaviour people find surprising and the exam likes to test.
+Contoso's regional IT teams must each manage only their own devices and policies. A role restricts *what actions* an administrator can take; a scope tag restricts *which objects* those actions can touch. You will create the tags, scope an operator to one of them, and build the administrative unit that does the equivalent job in Microsoft Entra ID. The proof — signing in as that operator and watching every untagged object disappear — needs enrolled devices, so it runs in lab 12 once they exist. That disappearing act is the behaviour people find surprising and the exam likes to test.
 
 ### Objectives
 
 After completing this lab, you will be able to:
 
 - Explain the difference between a role, a scope group and a scope tag
-- Create scope tags and apply them to devices and policies
+- Create scope tags and know how any Intune object is tagged
 - Scope a role assignment so an operator sees only tagged objects
 - Create an administrative unit and scope a Microsoft Entra role to it
 - Predict what a scoped administrator sees when an object carries no tag
@@ -2583,6 +2628,8 @@ After completing this lab, you will be able to:
 
 ### Exercise 1: Create and apply scope tags
 
+Everything in this lab that does not need a managed device happens here: the tags themselves, the scoped role assignment, and the administrative unit. Applying a tag to a *device* cannot happen yet — nothing is enrolled into Intune until lab 10 — so that half, and the proof that depends on it, run in lab 12 exercise 4.
+
 #### Task 1: Create a scope tag for Finance
 
 1. In the **Microsoft Intune admin center**, select **Tenant administration**, then **Roles**, then **Scope (Tags)**.
@@ -2600,7 +2647,13 @@ After completing this lab, you will be able to:
    > [!NOTE]
    > Assigning a group here automatically applies the tag to devices belonging to those users as they enrol. You can also tag objects individually, which is what the next task does.
 
-4. Select **Create**, then repeat to create a second tag named `TAG-IT` assigned to `GRP-USR-IT`.
+4. Select **Create**, then run the identical flow a second time for the IT tag:
+
+   | Setting | Value |
+   | --- | --- |
+   | Name | **TAG-IT** |
+   | Description | **IT department devices, policies and applications** |
+   | Assignments | **GRP-USR-IT** |
 
 5. Note the tag that already exists:
 
@@ -2611,27 +2664,27 @@ After completing this lab, you will be able to:
 
 - [ ] **Scope (Tags)** lists `TAG-FINANCE`, `TAG-IT` and **Default**.
 
-#### Task 2: Tag a device and a policy
+#### Task 2: Know how an object gets tagged
 
-1. Select **Devices**, then **All devices**, then open `MD102-VM2-Alex`.
-   *Path:* **Devices** > **All devices**
+1. Tagging is the same three steps wherever you do it, and it is worth reading now even though there is nothing enrolled to practise on:
 
-2. Select **Properties**, then next to **Scope tags** select **Edit**. Add `TAG-FINANCE`, then select **Review + save**.
-
-   > [!TIP]
-   > Leave **Default** applied as well. An object can carry several tags, and removing Default while you are still learning is how you make an object invisible to yourself.
-
-3. Now tag a policy. Any configuration profile will do — if you have none yet, come back to this after lab 22.
-
-   a. Open the profile and select **Properties**.
-   b. Next to **Scope tags** select **Edit** and add `TAG-FINANCE`.
+   a. Open the object and select **Properties**.
+   b. Next to **Scope tags** select **Edit** and add the tag.
    c. Select **Review + save**.
 
-**Results:** At least one device carries the Finance scope tag.
+   > [!TIP]
+   > Leave **Default** applied alongside the new tag. An object can carry several tags, and removing Default while you are still learning is how you make an object invisible to yourself.
 
-- [ ] `MD102-VM2-Alex` shows `TAG-FINANCE` under **Properties** > **Scope tags**.
+2. Devices are the one thing you cannot practise on here. **Devices** > **All devices** in the Intune admin center lists only devices *enrolled into Intune*, and nothing is enrolled until lab 10. Lab 12 exercise 4 returns to this and applies `TAG-FINANCE` to a device once both virtual machines are enrolled.
 
-### Exercise 2: Scope an operator and prove the restriction
+   > [!IMPORTANT]
+   > Microsoft Entra joined and Intune enrolled are not synonyms, and the exam tests the difference directly. Lab 5 joined these virtual machines to Microsoft Entra ID, so they appear in the *Entra* admin center under **Devices** — and remain entirely absent from Intune until something enrols them.
+
+**Results:** You can tag any Intune object, and you know why the device list is still empty.
+
+- [ ] You can state the difference between a Microsoft Entra joined device and an Intune enrolled device.
+
+### Exercise 2: Scope an operator and predict the restriction
 
 #### Task 1: Create a scoped role assignment
 
@@ -2658,26 +2711,27 @@ After completing this lab, you will be able to:
 
 - [ ] The assignment lists `TAG-FINANCE` and does **not** list **Default**.
 
-#### Task 2: Verify from the operator's session
+#### Task 2: Understand what a scoped operator actually sees
 
-1. In a private browser window, sign in to `https://intune.microsoft.com` as `helpdesk.operator@<tenant>.onmicrosoft.com`.
+1. The proof itself needs two enrolled devices — one tagged, one not — so it runs in lab 12 exercise 4. What matters now is being able to predict the outcome, because the behaviour surprises people and the exam asks about it.
 
-2. Select **Devices**, then **All devices**.
-
-   **Verify:** Only `MD102-VM2-Alex` is visible. `MD102-VM1-Adele` has disappeared, because it carries no `TAG-FINANCE`.
-
-   > [!NOTE]
+   > [!IMPORTANT]
    > Objects outside scope are not shown as denied — they simply do not appear. A scoped operator has no way to tell the difference between an object that does not exist and one they cannot see, which is exactly the intent.
 
-3. Select **Devices**, then **Configuration**.
+   > [!NOTE]
+   > Which is also why an empty list proves nothing on its own. A convincing demonstration needs a tagged object that stays visible *and* an untagged one that vanishes — the reason lab 12 tags `MD102-VM2-Alex` and deliberately leaves `MD102-VM1-Adele` alone.
 
-   **Verify:** Only profiles tagged `TAG-FINANCE` appear. Untagged and Default-tagged profiles are hidden.
+2. Predict the operator's view for each object before you get there:
 
-4. Sign back in as `admin-intune` and compare the same two blades. Everything is visible again.
+   | Object | Tags it carries | Visible to the scoped operator |
+   | --- | --- | --- |
+   | `MD102-VM2-Alex` | Default, TAG-FINANCE | Yes |
+   | `MD102-VM1-Adele` | Default | No |
+   | A configuration profile you never tagged | Default | No |
+   | Anything carrying TAG-IT | Default, TAG-IT | No |
 
-**Results:** Scoped administration demonstrably restricts visibility, not just actions.
+**Results:** You can predict a scoped operator's view before proving it in lab 12.
 
-- [ ] The operator sees one device; the administrator sees all of them.
 - [ ] You can explain why removing the **Default** tag from the assignment was necessary.
 
 ### Exercise 3: Administrative units
@@ -3417,7 +3471,7 @@ D. The devices must be added to a dynamic group before ownership updates
 
 ## Lab 12: Every Windows enrollment path
 
-**Access:** Hands-on · **Estimated time:** 50 minutes · **Difficulty:** intermediate
+**Access:** Hands-on · **Estimated time:** 65 minutes · **Difficulty:** intermediate
 
 ### Lab scenario
 
@@ -3431,6 +3485,7 @@ After completing this lab, you will be able to:
 - Create a bulk enrollment provisioning package with Windows Configuration Designer
 - Describe Group Policy based automatic enrollment for hybrid joined devices
 - Choose the correct enrollment path for a given scenario
+- Complete the scoped administration proof deferred from lab 8
 
 ### Exam objectives covered
 
@@ -3439,11 +3494,11 @@ After completing this lab, you will be able to:
 
 ### Prerequisites
 
-- Completed labs: `enrollment-restrictions`
+- Completed labs: `enrollment-restrictions`, `scope-tags-and-aus`
 - Licences: M365-E5
 - Roles: Intune Administrator
 - Devices and portals: vm1-adele (Windows 11 Pro), Windows Configuration Designer
-- Personas: adele.vance
+- Personas: adele.vance, alex.wilber, helpdesk.operator
 
 ### Exercise 1: Choose the path
 
@@ -3580,6 +3635,51 @@ After completing this lab, you will be able to:
 **Results:** You can describe how an existing domain estate is brought into Intune.
 
 - [ ] You can name the Group Policy setting that triggers automatic enrollment.
+
+### Exercise 4: Finish the scoped administration proof from lab 8
+
+Lab 8 built the scope tags and scoped the help desk role, but it could not apply a tag to a device or prove the restriction: nothing was enrolled into Intune yet. Both virtual machines now are — `MD102-VM2-Alex` since lab 10 and `MD102-VM1-Adele` as of this lab — so the deferred half can be completed here.
+
+#### Task 1: Tag a device and a policy
+
+1. Select **Devices**, then **All devices**, then open `MD102-VM2-Alex`.
+   *Path:* **Devices** > **All devices**
+
+   **Verify:** Both `MD102-VM1-Adele` and `MD102-VM2-Alex` are listed. If only one appears, finish the enrollment exercises above before continuing.
+
+2. Select **Properties**, then next to **Scope tags** select **Edit**. Add `TAG-FINANCE`, then select **Review + save**.
+
+   > [!TIP]
+   > Leave **Default** applied as well. An object can carry several tags, and removing Default while you are still learning is how you make an object invisible to yourself.
+
+3. Deliberately leave `MD102-VM1-Adele` untagged. The next task depends on one device carrying the tag and one not.
+
+4. Tag a policy the same way. Any configuration profile will do — if you have none yet, come back to this after lab 22.
+
+   a. Open the profile and select **Properties**.
+   b. Next to **Scope tags** select **Edit** and add `TAG-FINANCE`.
+   c. Select **Review + save**.
+
+**Results:** One enrolled device carries the Finance scope tag and one does not.
+
+- [ ] `MD102-VM2-Alex` shows `TAG-FINANCE` under **Properties** > **Scope tags**.
+- [ ] `MD102-VM1-Adele` shows only **Default**.
+
+#### Task 2: Verify the restriction from the operator's session
+
+1. In a private browser window, sign in to `https://intune.microsoft.com` as `helpdesk.operator@<tenant>.onmicrosoft.com`.
+
+2. Select **Devices**, then **All devices**.
+   *Path:* **Devices** > **All devices**
+
+   **Verify:** Only `MD102-VM2-Alex` is visible. `MD102-VM1-Adele` has disappeared, because it carries no `TAG-FINANCE`.
+
+   > [!NOTE]
+   > Objects outside scope are not shown as denied — they simply do not appear. A scoped operator has no way to tell the difference between an object that does not exist and one they cannot see, which is exactly the intent. It is also why an empty list proves nothing on its own: the untagged device has to be there and hidden for this to mean anything.
+
+**Results:** The scope tag restriction is proven from the restricted operator's own session rather than assumed.
+
+- [ ] The operator sees the tagged device and not the untagged one.
 
 ### Troubleshooting
 
