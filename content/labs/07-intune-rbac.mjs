@@ -167,11 +167,27 @@ export default {
               ]
             },
             {
-              text: "Now test the boundary. Open **Devices** and select a device.",
+              text: "Now test the boundary. Open **Devices** > **All devices**. Nothing has enrolled yet — the first device arrives in lab 10 — so expect an empty list.",
+              nav: ["Devices", "All devices"],
               parts: [
                 {
                   kind: "verify",
-                  text: "Remote actions such as **Sync**, **Restart** and **Retire** are available."
+                  text: "The blade renders and lists no devices. That is read access with nothing to read, which is exactly what this role should give you."
+                },
+                {
+                  kind: "callout",
+                  variant: "important",
+                  text: "Learn to tell *empty* from *denied* here, because it is the first fork in every *the help desk cannot see the device* call. **Empty** means the query ran and matched nothing: no enrolled devices, or a scope group that excludes them. **Denied** means the query never ran, and the blade says so instead of showing you a clean table. **My permissions** from the previous step settles which one you are looking at."
+                }
+              ]
+            },
+            {
+              text: "Remote actions are the other half of this role and they need a device to act on, so this part waits. Lab 10 enrolls the first device and its closing step brings you back to finish the check. If you already have an enrolled device, select it now and confirm **Sync**, **Restart** and **Retire** are offered.",
+              parts: [
+                {
+                  kind: "callout",
+                  variant: "tip",
+                  text: "Resist turning on automatic enrollment early just to populate this list. Lab 10 sets the MDM user scope deliberately and lab 11 corrects the ownership a first enrollment gets wrong, so a device enrolled out of order starts both labs in the wrong state."
                 }
               ]
             },
@@ -186,10 +202,11 @@ export default {
             }
           ],
           result: {
-            text: "The role restricts what it should, proven from the operator's own session rather than assumed.",
+            text: "The role restricts what it should, proven from the operator's own session rather than assumed. The remote-action half of the proof resumes in lab 10, once there is a device to act on.",
             verify: [
-              { text: "The operator can perform remote actions." },
-              { text: "The operator cannot create a configuration profile." }
+              { text: "The operator reaches **Devices** > **All devices** and sees an empty list, not an access error." },
+              { text: "The operator cannot create a configuration profile." },
+              { text: "You can state the difference between a blade that is empty and a blade that is denied." }
             ]
           }
         }
@@ -323,6 +340,17 @@ $rows | Sort-Object Role | Format-Table -AutoSize`
   ],
 
   troubleshooting: [
+    {
+      symptom: "The operator signs in successfully, but **Devices** > **All devices** is empty.",
+      rootCause:
+        "Most likely nothing has enrolled yet. Lab 5 joined VM2 to Microsoft Entra ID, which is an identity, not management; automatic enrollment is configured in lab 10 and that is when the first device appears in Intune. Later in the course the same symptom means a scope group that excludes the device, or a role missing **Managed devices — Read**.",
+      diagnostic: {
+        lang: "text",
+        code: "Signed in as the operator:\nTenant administration > Roles > My permissions        # is Managed devices - Read granted?\n\nSigned in as admin-intune:\nDevices > All devices                                 # does the tenant have any enrolled device at all?\nTenant administration > Roles > Help Desk Operator > Assignments > Scope Groups"
+      },
+      resolution:
+        "If the administrator's own view of **All devices** is also empty, nothing is broken: continue the lab and return to the remote-action check after lab 10. If the administrator sees devices and the operator does not, widen the assignment's scope groups to include them."
+    },
     {
       symptom: "An operator with a restricted Intune role can still do everything in the console.",
       rootCause:

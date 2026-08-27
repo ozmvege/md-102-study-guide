@@ -30,8 +30,8 @@ export default {
       { kind: "portal", id: "Microsoft Intune admin center" },
       { kind: "vm", id: "vm2-alex", os: "Windows 11 Pro" }
     ],
-    personas: ["alex.wilber"],
-    labs: ["device-identity"]
+    personas: ["alex.wilber", "helpdesk.operator"],
+    labs: ["device-identity", "intune-rbac"]
   },
 
   exercises: [
@@ -245,13 +245,29 @@ export default {
                   text: "`MD102-VM2-Alex` is listed with **Managed by** of **Intune** and an **Ownership** of **Personal** — ownership is corrected in lab 11."
                 }
               ]
+            },
+            {
+              text: "Lab 7 left one check unfinished for want of a device. Finish it now: open a private window, sign in as `helpdesk.operator@<tenant>.onmicrosoft.com`, then open **Devices** > **All devices** and select `MD102-VM2-Alex`.",
+              nav: ["Devices", "All devices"],
+              parts: [
+                {
+                  kind: "verify",
+                  text: "The operator sees the device, and remote actions such as **Sync**, **Restart** and **Retire** are offered. That completes the Help Desk Operator proof from lab 7: read widely, act where the role allows, author nothing."
+                },
+                {
+                  kind: "callout",
+                  variant: "note",
+                  text: "The same blade that was legitimately empty in lab 7 now has a row in it, and not one permission changed in between. Worth remembering the next time an operator reports they cannot see a device: the role is only one of the two things that has to be true."
+                }
+              ]
             }
           ],
           result: {
             text: "A Microsoft Entra joined device is now managed by Intune without any manual enrollment step.",
             verify: [
               { text: "The device appears in **All devices** managed by Intune." },
-              { text: "`dsregcmd /status` shows an **MdmUrl**." }
+              { text: "`dsregcmd /status` shows an **MdmUrl**." },
+              { text: "`helpdesk.operator` can run remote actions on the device, closing the lab 7 check." }
             ]
           }
         }
