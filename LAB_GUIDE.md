@@ -2766,24 +2766,30 @@ Scope tags restrict Intune. Administrative units restrict Microsoft Entra ID. Th
 
 #### Task 1: Create an administrative unit and scope a directory role to it
 
-1. In the **Microsoft Entra admin center**, select **Roles and admins**, then **Administrative units**, then **Add**.
-   *Path:* **Roles and admins** > **Administrative units** > **Add**
+1. In the **Microsoft Entra admin center**, select **Roles and admins**, then **Admin units**, then **Add**.
+   *Path:* **Roles and admins** > **Admin units** > **Add**
 
-2. Configure:
+   > [!NOTE]
+   > The portal labels this blade **Admin units**. Microsoft Learn, the Graph resource (`administrativeUnit`) and the exam all still call the object an *administrative unit*, so read the two names as the same thing.
+
+2. On the *Properties* tab, configure:
 
    | Setting | Value |
    | --- | --- |
    | Name | **AU-FINANCE** |
    | Description | **Finance department users and devices** |
-   | Membership type | **Assigned** <br> Dynamic administrative units are also available with Entra ID P1 or P2. |
+   | Restricted management administrative unit | **No** <br> **Yes** stops tenant-level administrators, Global Administrator included, from managing these members: only an administrator scoped to the unit can. That is the setting for executive and service accounts, and the wrong one for a finance help desk your tenant admins still need to support. |
+
+   > [!NOTE]
+   > This tab has no **Membership type** setting. A new unit is always created with assigned membership, and dynamic membership is configured afterwards: open the unit, select **Properties**, set **Membership type** to **Dynamic User** or **Dynamic Device**, then select **Add dynamic query**. That path needs a Microsoft Entra ID P1 licence for every member as well as for the administrator, and one unit can be dynamic for users or for devices, never both.
 
 3. Select **Next: Assign roles**, then add `helpdesk.operator` to the **Password Administrator** role.
 
    > [!TIP]
    > This is the classic administrative unit scenario: a regional help desk that may reset passwords, but only for users in its own region. The same directory role assigned tenant-wide would let them reset anyone's password, including an administrator's.
 
-4. Create the unit, then open it and add `alex.wilber` and `henrietta.mueller` as members.
-   *Path:* **Administrative units** > **AU-FINANCE** > **Users** > **Add member**
+4. Select **Review + create**, then **Create**. Open the new unit, select **Users**, then **Add member**, and add `alex.wilber` and `henrietta.mueller`.
+   *Path:* **Admin units** > **AU-FINANCE** > **Users** > **Add member**
 
 5. Compare the two mechanisms:
 
@@ -2841,6 +2847,17 @@ Get-MgDeviceManagementManagedDevice -All -Property DeviceName,RoleScopeTagIds |
   ```
 
 - **Resolution:** Add the operator's scope tag to the profiles they need. Tagging devices alone is a half-finished configuration and produces exactly this symptom.
+
+**Symptom:** The **Add administrative unit** page offers no **Membership type**, and the navigation reads **Admin units** rather than **Administrative units**.
+
+- **Root cause:** Both are current portal behaviour rather than a licensing or permissions problem. The blade was renamed to **Admin units**, and membership type is no longer part of the creation wizard: every new unit is created with assigned membership.
+- **Diagnostic:**
+
+  ```text
+  Roles and admins > Admin units > AU-FINANCE > Properties
+  ```
+
+- **Resolution:** Create the unit with **Name**, **Description** and the **Restricted management administrative unit** toggle, then add members by hand. For a dynamic unit, open the created unit, select **Properties**, set **Membership type** to **Dynamic User** or **Dynamic Device**, and select **Add dynamic query**. Courseware and screenshots that show the choice during creation predate the change.
 
 ### Knowledge check
 
