@@ -2895,21 +2895,22 @@ D. A dynamic security group with a Conditional Access policy
 
 ## Lab 9: Multi-admin approval and access policies
 
-**Access:** Hands-on · **Estimated time:** 35 minutes · **Difficulty:** intermediate
+**Access:** Hands-on · **Estimated time:** 45 minutes · **Difficulty:** intermediate
 
 ### Lab scenario
 
-A single administrator can deploy a script to every device in the organisation. That is a great deal of trust to place in one person and one afternoon. Multi-admin approval requires a second administrator to approve certain changes before they take effect, which turns an accidental or malicious tenant-wide deployment into a request somebody has to agree with. You will enable it, feel the friction from both sides, and understand the one configuration that can lock your whole tenant out of making changes.
+A single administrator can deploy a script to every device in the organisation. That is a great deal of trust to place in one person and one afternoon. Multi-admin approval requires a second administrator to approve certain changes before they take effect, which turns an accidental or malicious tenant-wide deployment into a request somebody has to agree with. The first thing it protects is itself: creating the access policy is a change somebody else has to approve, so you cannot enable it alone. You will build the approver, bootstrap the first policy through its own approval, feel the friction from both sides, and understand the configurations that can lock your whole tenant out of making changes.
 
 ### Objectives
 
 After completing this lab, you will be able to:
 
-- Create an access policy requiring approval for a protected resource
+- Explain which resources multi-admin approval can protect, and which one is protected automatically
+- Give an approver group the role assignments and permissions approval actually requires
+- Create an access policy and bootstrap it through its own approval
 - Submit a change as a requester and see it held pending approval
-- Approve and reject requests as a second administrator
-- Explain which resources multi-admin approval can protect
-- Avoid the self-lockout that a badly scoped approver group creates
+- Approve, complete and reject requests as a second administrator
+- Avoid the self-lockout that a badly scoped approver group or a Role policy creates
 
 ### Exam objectives covered
 
@@ -2921,63 +2922,154 @@ After completing this lab, you will be able to:
 - Licences: M365-E5
 - Roles: Intune Administrator
 - Devices and portals: Microsoft Intune admin center
-- Personas: admin-intune, helpdesk.operator, patti.fernandez
+- Personas: admin-intune, admin-breakglass, patti.fernandez
 
 ### Exercise 1: Understand what can be protected
 
 #### Task 1: Review the protected resources and plan the approver group
 
-1. Multi-admin approval covers a deliberately small set of high-blast-radius operations.
+1. Multi-admin approval covers a deliberately small set of high-blast-radius operations. Each of these is a *profile type* you select when you create an access policy, and each needs its own policy — protection does not cascade.
 
-   | Protected resource | What requires approval |
+   | Profile type | What requires approval |
    | --- | --- |
-   | Apps | Creating, editing or deleting an application, and changing its assignments |
-   | Scripts | Creating, editing or deleting PowerShell scripts and remediation scripts |
-   | Device remote actions | Wipe, retire and delete on managed devices |
-   | Compliance policies | Creating, editing or deleting compliance policy |
-   | Configuration profiles | Creating, editing or deleting device configuration |
+   | Apps | App deployments — create, edit, delete and assign. App protection policies are **not** covered. |
+   | Compliance policies | Creating and managing compliance policies |
+   | Configuration policies | Creating and managing settings catalog policies |
+   | Device actions | Wipe, retire and delete on managed devices |
+   | Role-based access control | Changes to roles, including role permissions, admin groups and member group assignments |
+   | Scripts | Deploying PowerShell scripts to Windows devices |
+   | Tenant Configuration | Creating, editing and deleting device categories |
+
+   > [!IMPORTANT]
+   > There is an eighth protected resource you will not find in that list: **access policies themselves**. Intune protects them automatically, which is exactly why **Access policy** is missing from the *Profile type* dropdown — you cannot create a policy to protect it, and you cannot turn it off. Every access policy you create, edit or delete is a request a second administrator has to approve. Exercise 2 is where you meet this, and it surprises almost everybody the first time.
 
    > [!NOTE]
-   > The list of protected resources has grown over time. Check the current list in the portal rather than assuming — a resource that was unprotected when you last looked may now be covered.
+   > The list of protected resources has grown over time. Check the *Profile type* dropdown in the portal rather than assuming — a resource that was unprotected when you last looked may now be covered.
 
-2. Plan the approver group before enabling anything.
+2. An approver is not simply a person you trust. Intune imposes five separate requirements, and missing any one of them produces silence rather than an error.
+
+   | Requirement | What happens when you miss it |
+   | --- | --- |
+   | The approver group is a **security group** | Microsoft 365 groups, distribution lists and mail-enabled security groups silently fail to resolve. No error — just no approvers. |
+   | The group is directly assigned to an Intune role as a *member group* | If the group is not on a role assignment, Intune periodically strips its members and approvals stop working. Permissions the members hold individually or through other groups do not count. |
+   | Members are direct members of that group | Nested group membership behaves unreliably. |
+   | The approver holds *Read* on the resource being approved | An approver who cannot read scripts cannot approve a script request. Approving a device delete needs `ManagedDevices/Read`. |
+   | The approver is not the requester | An administrator can never approve their own request. |
 
    > [!CAUTION]
-   > The approver group must contain at least one account that is **not** the account making requests, and that account must be able to sign in. If you name a group whose only member is you, every change you make waits for your own approval — which works, but is theatre. If you name a group with no usable members at all, nobody can approve anything and the protected resource becomes read-only for the entire tenant until an administrator edits the access policy.
+   > The self-approval rule has no exceptions. A Global Administrator cannot approve their own request, and neither can an Intune Administrator, even when they are a member of the approver group. If the only member of your approver group is the account you make changes with, every request you submit sits at **Needs approval** until it expires after three days, and the protected resource is effectively read-only for the whole tenant. Name at least two approvers, and make sure one of them is not you.
 
-**Results:** You know which operations approval covers and who will approve.
+   > [!NOTE]
+   > Administrators taking part in the approval workflow need an Intune licence unless the tenant has **Allow access to unlicensed admins** turned on. Tenants created after July 2021 have unlicensed admin access on by default, which is what the unlicensed admin personas in this lab depend on. If you have to enable that setting by hand, note that it is **irreversible**.
 
-- [ ] You can name the failure that an empty approver group causes.
+**Results:** You know which operations approval covers, that access policies protect themselves, and what an approver actually needs.
 
-### Exercise 2: Create an access policy
+- [ ] You can name the resource that is protected without appearing in the *Profile type* list.
+- [ ] You can name the failure that a Microsoft 365 group used as an approver group causes.
 
-#### Task 1: Require approval for script changes
+### Exercise 2: Build the approver, then create the access policy
 
-1. Prepare an approver group first. In the **Microsoft Entra admin center**, create a security group named `GRP-ADM-APPROVERS` and add `patti.fernandez`.
+#### Task 1: Give the approver group the permissions approval requires
 
-   > [!TIP]
-   > Patti holds no Intune role yet. Assign her the **Read Only Operator** Intune role as well, using the flow from lab 7 — an approver needs to be able to open the console to see what they are approving.
+1. Do this **before** you create any access policy. Once the first policy is submitted you need a working approver to release it, and building one afterwards is harder than building one now.
 
-2. In the **Microsoft Intune admin center**, select **Tenant administration**, then **Multi Admin Approval**, then **Access policies**.
-   *Path:* **Tenant administration** > **Multi Admin Approval** > **Access policies**
+   > [!WARNING]
+   > This is the ordering mistake that strands the lab. Create the policy first and you have a pending request nobody in your tenant is permitted to approve.
 
-3. Select **Create**, then configure:
+2. In the **Microsoft Entra admin center**, create a **security group** named `GRP-ADM-APPROVERS` and add `patti.fernandez` as a direct member.
+
+3. In the **Microsoft Intune admin center**, assign the built-in **Read Only Operator** role to the group, using the flow from lab 7. Assign it to `GRP-ADM-APPROVERS` as the *member group* — not to Patti directly.
+   *Path:* **Tenant administration** > **Roles** > **All roles**
+
+   > [!NOTE]
+   > This assignment does two jobs. It gives Patti the *Read* permissions she needs to see what she is approving, and it satisfies the rule that the approver group must itself be on a role assignment or Intune will strip its members.
+
+4. **Read Only Operator** cannot approve an access policy, so create a custom role for that. Select **Tenant administration**, then **Roles**, then **All roles**, then **Create**.
+   *Path:* **Tenant administration** > **Roles** > **All roles** > **Create**
 
    | Setting | Value |
    | --- | --- |
-   | Profile name | **Approval required — Scripts** |
+   | Name | **MAA Approver** |
+   | Description | **Approve or reject multi-admin approval requests** |
+
+5. On *Permissions*, find the **Multi Admin Approval** category and enable exactly these two:
+
+   | Permission | Why |
+   | --- | --- |
+   | Approval for Multi Admin Approval | Approve or reject approval requests for multi-admin approval configuration. This is the permission that releases an access policy request. |
+   | Read access policy | See the access policy the request is asking to create |
+
+   > [!NOTE]
+   > The other three permissions in this category — *Create access policy*, *Update access policy* and *Delete access policy* — belong to whoever manages policies, not to whoever approves them. Leave them off.
+
+6. Finish the wizard, then assign **MAA Approver** to `GRP-ADM-APPROVERS` as the member group, exactly as you did for **Read Only Operator**.
+
+   **Verify:** `GRP-ADM-APPROVERS` appears as a member group on two role assignments: **Read Only Operator** and **MAA Approver**.
+
+**Results:** The approver group can read what it approves and is permitted to approve access policies.
+
+- [ ] `GRP-ADM-APPROVERS` is a security group with `patti.fernandez` as a direct member.
+- [ ] The custom role grants *Approval for Multi Admin Approval*.
+- [ ] Both roles are assigned to the group, not to the user.
+
+#### Task 2: Create the access policy and bootstrap it through its own approval
+
+1. Signed in as `admin-intune`, select **Tenant administration**, then **Multi Admin Approval**, then **Access policies**, then **Create**.
+   *Path:* **Tenant administration** > **Multi Admin Approval** > **Access policies** > **Create**
+
+2. On *Basics*, configure:
+
+   | Setting | Value |
+   | --- | --- |
+   | Name | **Approval required — Scripts** |
    | Description | **A second administrator must approve any script change** |
    | Profile type | **Scripts** |
-   | Approvers | **GRP-ADM-APPROVERS** |
 
-4. Select **Create**, then confirm the policy is listed and enabled.
+   > [!NOTE]
+   > Each policy carries a single profile type. Protecting a second resource means a second policy.
 
-   **Verify:** **Access policies** lists **Approval required — Scripts** with the approver group shown.
+3. On *Approvers*, select **Add groups** and choose `GRP-ADM-APPROVERS`.
 
-**Results:** Script changes now require a second administrator's approval.
+   > [!NOTE]
+   > One group, included. Configurations that exclude groups are not supported here.
 
-- [ ] The access policy exists for the **Scripts** resource.
-- [ ] `GRP-ADM-APPROVERS` has at least one member who can sign in to Intune.
+4. On *Exclusions*, add nothing and continue.
+
+   > [!WARNING]
+   > This page excludes enterprise applications from enforcement, and every entry is a hole in the control. Exclusions apply only to app-auth calls made through Microsoft Graph — delegated calls are always enforced — and they are capped at 50 applications per policy. If a service principal you excluded is compromised, it can change the protected resource with no approval at all.
+
+5. On *Review + submit for approval*, enter a justification and select **Submit for approval**. Note that the button does not say *Create*.
+
+   | Setting | Value |
+   | --- | --- |
+   | Business justification | **Setup — requiring a second administrator for script changes** |
+
+   **Verify:** **Access policies** does **not** list a new policy. Instead a request appears under **My requests** showing *Name* **Approval required — Scripts - Create**, *Resource type* **Access policy**, and a status of **Needs approval** (some views label this **Needs review**).
+
+6. Read that result carefully, because it looks like a failure and is not one.
+
+   > [!IMPORTANT]
+   > Nothing is wrong. Creating an access policy is itself a protected change, so what you produced is a pending request rather than a live policy — and until it is approved and completed, **script changes are not yet protected**. This is the automatic protection from exercise 1 doing its job on the very first policy.
+
+7. In a private browser window, sign in as `patti.fernandez@<tenant>.onmicrosoft.com`, select **Tenant administration**, then **Multi Admin Approval**, then **Received requests**, open the request through its *Business justification* link, enter **Approver notes** and select **Approve request**.
+   *Path:* **Tenant administration** > **Multi Admin Approval** > **Received requests**
+
+   > [!NOTE]
+   > Patti can do this only because of the custom role in task 1. Without *Approval for Multi Admin Approval* she can see the request and not act on it. The same requests are also reachable from **All requests** and from **Tenant administration** > **Admin tasks**.
+
+8. Sign back in as `admin-intune`, open the request under **My requests**, and select **Complete**.
+   *Path:* **Tenant administration** > **Multi Admin Approval** > **My requests**
+
+   > [!IMPORTANT]
+   > Approval is not application. The request sits at **Approved** until the original requester returns and selects **Complete**, which is what actually applies the change. Approve a request, walk away, and nothing happens.
+
+   **Verify:** The request status reaches **Completed**, and **Access policies** now lists **Approval required — Scripts** with `GRP-ADM-APPROVERS` shown as the approver group.
+
+**Results:** Script changes now require a second administrator's approval — and you have already used the approval workflow once to get here.
+
+- [ ] The access policy exists for the **Scripts** profile type.
+- [ ] The bootstrap request shows **Completed** in **My requests**.
+- [ ] `GRP-ADM-APPROVERS` has a member who can sign in to Intune and approve.
 
 ### Exercise 3: Request, approve and reject
 
@@ -2999,7 +3091,7 @@ After completing this lab, you will be able to:
    Write-Output "Multi-admin approval test. This script does nothing."
    ```
 
-3. Assign it to `GRP-USR-PILOT` and complete the wizard.
+3. Assign it to `GRP-USR-PILOT` and continue to the end of the wizard.
 
 4. At the final step you are asked for a business justification rather than being allowed to save.
 
@@ -3012,79 +3104,155 @@ After completing this lab, you will be able to:
 5. Check the request status under **Tenant administration** > **Multi Admin Approval** > **My requests**.
    *Path:* **Tenant administration** > **Multi Admin Approval** > **My requests**
 
-   **Verify:** The request is listed as **Pending approval** with your justification.
+   **Verify:** The request is listed as **Needs approval** with your justification, the operation **Create**, and the time you submitted it.
+
+   > [!NOTE]
+   > Intune notifies nobody. If a request matters, tell an approver out of band — and remember it **expires after three days** and has to be resubmitted. You can withdraw it yourself with **Cancel request** while it is still pending, and while it is pending you cannot submit another request against the same object.
 
 **Results:** A protected change is queued rather than applied.
 
-- [ ] **My requests** shows the request as pending.
+- [ ] **My requests** shows the request as **Needs approval**.
 - [ ] The script is absent from **Platform scripts**.
 
-#### Task 2: Approve as the second administrator, then reject one
+#### Task 2: Approve and complete, then reject one
 
 1. In a private browser window, sign in as `patti.fernandez@<tenant>.onmicrosoft.com`.
 
 2. Select **Tenant administration**, **Multi Admin Approval**, then **Received requests**.
    *Path:* **Tenant administration** > **Multi Admin Approval** > **Received requests**
 
-3. Open the pending request and review what it will change.
+3. Select the *Business justification* link to open the request and review what it will change.
 
    > [!IMPORTANT]
    > The approver sees the full payload of the change, not just its name. This is the point of the feature — approval is meaningless if the approver cannot see what they are agreeing to.
 
-4. Select **Approve**, enter a note, and confirm.
+4. Enter **Approver notes** and select **Approve request**.
 
-5. Sign back in as `admin-intune` and confirm the script now exists under **Platform scripts**.
+5. Sign back in as `admin-intune`, open the request under **My requests**, select **Complete**, and confirm the script now exists under **Platform scripts**.
 
-   **Verify:** **MAA test script** is listed and assigned to `GRP-USR-PILOT`.
+   **Verify:** The request reads **Completed**, and **MAA test script** is listed and assigned to `GRP-USR-PILOT`.
 
-6. Now exercise the rejection path: delete the script, supply a justification, and this time have Patti **Reject** the request.
+   > [!NOTE]
+   > If the script is still missing after **Complete**, check the portal notifications. Intune reports there whether applying the approved change succeeded or failed.
 
-   **Verify:** The script remains in place and **My requests** shows the request as rejected with the approver's note. A rejected request makes no change at all.
+6. Now exercise the rejection path: delete the script, supply a justification, and this time have Patti **Reject request** with a note explaining why.
+
+   **Verify:** The script remains in place and **My requests** shows the request as **Rejected** with the approver's note. A rejected request makes no change at all, and there is nothing to complete.
 
 **Results:** You have driven the approval workflow from both sides and seen both outcomes.
 
-- [ ] An approved request applied its change.
+- [ ] An approved request applied its change only after **Complete**.
 - [ ] A rejected request left the tenant unchanged and recorded the reason.
 
 ### Troubleshooting
 
+**Symptom:** You created an access policy but **Access policies** is empty, and a request with resource type **Access policy** is sitting at **Needs approval**.
+
+- **Root cause:** Working as intended. Access policies are protected automatically, so creating one is itself a change a second administrator has to approve. Nothing is enforced until that request is approved and the requester selects **Complete**.
+- **Diagnostic:**
+
+  ```text
+  Tenant administration > Multi Admin Approval > My requests
+  Look for Name '[policy name] - Create', Resource type 'Access policy', Status 'Needs approval'.
+  ```
+
+- **Resolution:** Have a different administrator who holds the *Approval for Multi Admin Approval* permission approve it from **Received requests**, then sign back in as the requester and select **Complete**. A Global Administrator can do this without extra setup; a **Read Only Operator** cannot, because that role does not include the permission. If nobody suitable exists yet, select **Cancel request**, grant the permission through a custom role, and resubmit — the request expires after three days regardless.
+
 **Symptom:** Nobody can change a protected resource, and every request sits pending forever.
 
-- **Root cause:** The approver group has no members who can sign in to Intune, or its only member is the same account submitting requests and has since been disabled.
+- **Root cause:** The approver group has no usable members. Common causes: it is a Microsoft 365 group or distribution list rather than a security group, it is not assigned to any Intune role so Intune stripped its members, its members are nested rather than direct, or its only member is the same account submitting the requests — and no administrator can approve their own request.
 - **Diagnostic:**
 
   ```text
   Tenant administration > Multi Admin Approval > Access policies
-  Open the policy and check the approver group membership in Entra ID.
+  Open the policy, note the approver group, then check in Entra ID:
+    - group type is Security
+    - members are direct, not nested
+  Tenant administration > Roles > All roles
+    - the group appears as a member group on a role assignment
   ```
 
-- **Resolution:** An Intune Administrator can edit or delete the access policy itself — that operation is not protected by the policy. Add a usable approver, then resubmit. Always name a group with at least two members.
+- **Resolution:** Fix the group, then resubmit. Editing or deleting the access policy is itself a protected change needing approval, so repair the group rather than reaching for the policy. Always name a security group with at least two direct members, and assign it to an Intune role.
+
+**Symptom:** After creating an access policy for **Role-based access control**, no RBAC change can be made — including the role assignments multi-admin approval itself depends on.
+
+- **Root cause:** The Role profile type protects every role-related change: role permissions, admin groups and member group assignments. If the approver group's role assignment is not already correct, you cannot fix it, because fixing it needs an approval the broken configuration cannot produce.
+- **Diagnostic:**
+
+  ```text
+  Tenant administration > Multi Admin Approval > Access policies
+  Look for a policy whose profile type is Role-based access control.
+  ```
+
+- **Resolution:** Delete the access policy configured for the Role profile type, wait 3-5 minutes for the change to propagate, then complete the RBAC assignments under **Tenant administration** > **Roles** and add the approver group to a role assignment. Re-create the Role policy afterwards if you want it. Avoid the deadlock entirely by configuring every other access policy and verifying RBAC assignments before you enable a Role policy.
 
 **Symptom:** An administrator says approval is not being requested for configuration profile changes.
 
-- **Root cause:** An access policy exists for one resource type only. Each protected resource needs its own access policy.
+- **Root cause:** An access policy exists for one profile type only. Each protected resource needs its own access policy.
 - **Diagnostic:**
 
   ```text
   Tenant administration > Multi Admin Approval > Access policies
   ```
 
-- **Resolution:** Create an additional access policy with the profile type set to the resource you want to protect. Policies do not cascade across resource types.
+- **Resolution:** Create an additional access policy with the profile type set to the resource you want to protect. Policies do not cascade across resource types. Remember that creating that policy is itself a change requiring approval.
+
+**Symptom:** A Graph script or third-party tool that used to work now fails against a protected resource.
+
+- **Root cause:** Multi-admin approval is enforced on application-authenticated Graph calls as well as interactive admin actions, so automation that writes to a protected resource is intercepted the same way a portal click is.
+- **Diagnostic:**
+
+  ```text
+  Tenant administration > Multi Admin Approval > My requests
+  Check whether the automation's calls are appearing as pending requests.
+  ```
+
+- **Resolution:** Update the automation to submit a business justification and handle the approval workflow. Excluding the application on the policy's *Exclusions* page is possible but removes the protection for that app, and works only for app-auth calls — delegated calls are always enforced.
 
 ### Knowledge check
 
 **Q1.** You enable multi-admin approval for Apps and name an approver group containing only your own administrator account. What happens when you submit an app change?
 
-A. The request is created and you can approve it yourself
-B. The request is rejected automatically because a requester cannot approve their own change
+A. The request sits at Needs approval until it expires, because nobody may approve their own request
+B. The request is created and you can approve it yourself
 C. The change applies immediately because you are in the approver group
 D. The access policy fails to save
 
 <details><summary>Answer</summary>
 
-**A** — Multi-admin approval does not prevent self-approval. The request is created and the same account can approve it, which satisfies the mechanism while defeating its purpose — which is why the approver group should always contain other people.
+**A** — An administrator can never approve their own request, whatever role they hold and whether or not they are in the approver group. The request is created, appears on **All requests** where you can see but not action it, and expires after three days — leaving Apps effectively read-only for the tenant. The approver group has to contain somebody else.
 
-*Exam tip:* Know that the control is procedural rather than technical: it enforces a second look, not a second person. Name at least two approvers in any real deployment.
+*Exam tip:* The control is technical, not merely procedural: Intune enforces the second person rather than just recommending one. Name at least two approvers, and never make the requesting account the only approver.
+
+</details>
+
+**Q2.** You are the first administrator to configure multi-admin approval in a tenant. You create an access policy for Scripts and select Submit for approval. What is the immediate result?
+
+A. A pending request with resource type Access policy — the policy is not active and scripts are not yet protected
+B. The policy is created and active, because the first policy has nothing to be approved by
+C. The policy is created but disabled until you enable it
+D. An error, because no access policy protects access policies yet
+
+<details><summary>Answer</summary>
+
+**A** — Access policies are protected automatically, which is why **Access policy** is not offered as a profile type. That protection applies to the very first policy too: creating it produces a request a different administrator holding *Approval for Multi Admin Approval* must approve, after which the requester selects **Complete** to apply it. Until then nothing is enforced.
+
+*Exam tip:* Remember the three-step shape of every protected change: submit with a justification, somebody else approves, the requester completes. Approval alone does not apply the change.
+
+</details>
+
+**Q3.** Patti is a direct member of the approver group named on your Scripts access policy, and the group is assigned the Read Only Operator role. She can see a pending access policy request but cannot approve it. Why?
+
+A. Approving an access policy request needs the Approval for Multi Admin Approval permission, which Read Only Operator does not include
+B. Read Only Operator cannot be used as an approver role for any request type
+C. Her membership is nested rather than direct
+D. Access policy requests can only be approved by a Global Administrator
+
+<details><summary>Answer</summary>
+
+**A** — Approving a change to a protected resource needs *Read* on that resource, but approving a change to an access policy needs the separate *Approval for Multi Admin Approval* permission in the **Multi Admin Approval** category. Read Only Operator grants the reads and not that permission, so Patti can approve script requests but not access policy requests until a custom role supplies it.
+
+*Exam tip:* Distinguish the three MAA roles: the access policy manager creates policies, the approver approves requests, and the requestor submits and completes changes. They need different permissions.
 
 </details>
 
