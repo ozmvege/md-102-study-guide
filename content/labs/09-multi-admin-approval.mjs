@@ -4,7 +4,7 @@ export default {
   title: "Multi-admin approval and access policies",
   access: "hands-on",
   difficulty: "intermediate",
-  estimatedMinutes: 45,
+  estimatedMinutes: 48,
 
   scenario:
     "A single administrator can deploy a script to every device in the organisation. That is a great deal of trust to place in one person and one afternoon. Multi-admin approval requires a second administrator to approve certain changes before they take effect, which turns an accidental or malicious tenant-wide deployment into a request somebody has to agree with. The first thing it protects is itself: creating the access policy is a change somebody else has to approve, so you cannot enable it alone. You will build the approver, bootstrap the first policy through its own approval, feel the friction from both sides, and understand the configurations that can lock your whole tenant out of making changes.",
@@ -312,7 +312,7 @@ export default {
     {
       id: "e3",
       title: "Request, approve and reject",
-      estimatedMinutes: 17,
+      estimatedMinutes: 20,
       tasks: [
         {
           id: "t1",
@@ -320,33 +320,60 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Signed in as `admin-intune`, select **Devices**, then **Scripts and remediations**, then **Platform scripts**, then **Add** > **Windows 10 and later**.",
-              nav: ["Devices", "Scripts and remediations", "Platform scripts", "Add"]
+              text: "Signed in as `admin-intune`, select **Devices**, then **Scripts and remediations**, then **Platform scripts**, then **Add** > **Windows 10 and later**. The blade that opens is titled **Add PowerShell script**.",
+              nav: ["Devices", "Scripts and remediations", "Platform scripts", "Add"],
+              parts: [
+                {
+                  kind: "callout",
+                  variant: "important",
+                  text: "Read the wizard's step list before you type anything: **Basics**, **Script settings**, **Scope tags**, **Review + submit for approval**. Four steps, and no **Assignments** page. In a tenant with no access policy this same wizard has five steps, carries an *Assignments* page and finishes at *Review + add*. Under multi-admin approval the create *is* the request, so the wizard stops where a justification is needed and assignment becomes a separate protected operation you perform after the script exists."
+                }
+              ]
             },
             {
-              text: "Create a trivial script so the approval flow is the only thing under test:",
+              text: "On *Basics*, name the script so that the approval flow is the only thing under test:",
               parts: [
                 {
                   kind: "inputs",
                   rows: [
                     { label: "Name", value: "MAA test script" },
-                    { label: "Script file", value: "A .ps1 file containing a single Write-Output line" },
-                    { label: "Run this script using the logged on credentials", value: "No" }
+                    { label: "Description", value: "Trivial script used to exercise the approval workflow" }
                   ]
                 },
                 {
                   kind: "code",
                   lang: "powershell",
-                  caption: "Save this as maa-test.ps1 and upload it",
+                  caption: "Save this as maa-test.ps1 before you start the wizard",
                   code: "Write-Output \"Multi-admin approval test. This script does nothing.\""
                 }
               ]
             },
             {
-              text: "Assign it to `GRP-USR-PILOT` and continue to the end of the wizard."
+              text: "On *Script settings*, browse to the file and set the three toggles:",
+              parts: [
+                {
+                  kind: "inputs",
+                  rows: [
+                    { label: "Script location", value: "maa-test.ps1", note: "A file picker, not a path you type. The script must be under 200 KB." },
+                    { label: "Run this script using the logged on credentials", value: "No", note: "System context. The portal default is Yes." },
+                    { label: "Enforce script signature check", value: "No", note: "The portal default is Yes and maa-test.ps1 is unsigned. Leave it at Yes and the request still submits and approves cleanly — the script then fails on every device it reaches, long after the approval you were testing succeeded." },
+                    { label: "Run script in 64 bit PowerShell Host", value: "No", note: "The portal default. Nothing in this script depends on the host architecture." }
+                  ]
+                }
+              ]
             },
             {
-              text: "At the final step you are asked for a business justification rather than being allowed to save.",
+              text: "On *Scope tags*, leave the default and select **Next**.",
+              parts: [
+                {
+                  kind: "callout",
+                  variant: "note",
+                  text: "Scope tags and multi-admin approval are independent controls that are easy to confuse. A scope tag decides which administrators can see the script; the access policy decides who has to agree before it exists at all."
+                }
+              ]
+            },
+            {
+              text: "*Review + submit for approval* is where the wizard stops being the one you know. The summary is read-only, the final button reads **Submit for approval** rather than **Add**, and a justification is mandatory before it will submit.",
               parts: [
                 {
                   kind: "inputs",
@@ -356,7 +383,7 @@ export default {
                 },
                 {
                   kind: "verify",
-                  text: "The request is submitted and the script does **not** appear in the platform scripts list. It is held until approved."
+                  text: "You are returned to **Platform scripts** and **MAA test script** is **not** in the list. It is held as a request until somebody approves it."
                 }
               ]
             },
@@ -414,12 +441,42 @@ export default {
               parts: [
                 {
                   kind: "verify",
-                  text: "The request reads **Completed**, and **MAA test script** is listed and assigned to `GRP-USR-PILOT`."
+                  text: "The request reads **Completed**, and **MAA test script** is listed — with no assignments, because the wizard never offered you any."
                 },
                 {
                   kind: "callout",
                   variant: "note",
                   text: "If the script is still missing after **Complete**, check the portal notifications. Intune reports there whether applying the approved change succeeded or failed."
+                }
+              ]
+            },
+            {
+              text: "Now give the script an audience. Open **MAA test script**, select **Edit** beside *Assignments*, add `GRP-USR-PILOT`, and save.",
+              parts: [
+                {
+                  kind: "inputs",
+                  rows: [
+                    { label: "Business justification", value: "Assigning the test script to the pilot group" }
+                  ]
+                },
+                {
+                  kind: "verify",
+                  text: "A second request appears under **My requests** for the same script, this time with the operation **Assign** rather than **Create**. The script stays unassigned until that request is approved and completed too."
+                },
+                {
+                  kind: "callout",
+                  variant: "important",
+                  text: "Every action on a protected resource is protected — create, edit, assign and delete each raise their own request. That is the real cost of the control, and it is why the wizard dropped its *Assignments* page: putting a script in front of a group is a decision somebody has to agree with separately from writing the script."
+                }
+              ]
+            },
+            {
+              text: "Select that pending **Assign** request under **My requests** and select **Cancel request**.",
+              parts: [
+                {
+                  kind: "callout",
+                  variant: "note",
+                  text: "Withdraw it rather than approving it, for a reason worth remembering: while a request is pending against an object, no further request can be submitted for that object. Leave the assignment pending and the deletion in the next step is refused."
                 }
               ]
             },
@@ -437,6 +494,7 @@ export default {
             text: "You have driven the approval workflow from both sides and seen both outcomes.",
             verify: [
               { text: "An approved request applied its change only after **Complete**." },
+              { text: "Assigning the approved script raised a second request, with the operation **Assign**." },
               { text: "A rejected request left the tenant unchanged and recorded the reason." }
             ]
           }
@@ -446,6 +504,18 @@ export default {
   ],
 
   troubleshooting: [
+    {
+      symptom:
+        "The **Add PowerShell script** wizard has no **Assignments** page, so there is no way to target the script at a group while creating it.",
+      rootCause:
+        "An access policy protects the **Scripts** profile type. The create becomes a request, the wizard ends at *Review + submit for approval* rather than *Review + add*, and assignment is a separate protected operation rather than a page in the wizard.",
+      diagnostic: {
+        lang: "text",
+        code: "Tenant administration > Multi Admin Approval > Access policies\nLook for a policy whose profile type is Scripts."
+      },
+      resolution:
+        "Submit the script, have it approved, select **Complete**, then assign it — that assignment raises its own request with the operation **Assign**, which needs approving and completing in turn. Nothing is broken and nothing needs changing."
+    },
     {
       symptom:
         "You created an access policy but **Access policies** is empty, and a request with resource type **Access policy** is sitting at **Needs approval**.",
