@@ -2895,7 +2895,7 @@ D. A dynamic security group with a Conditional Access policy
 
 ## Lab 9: Multi-admin approval and access policies
 
-**Access:** Hands-on · **Estimated time:** 45 minutes · **Difficulty:** intermediate
+**Access:** Hands-on · **Estimated time:** 48 minutes · **Difficulty:** intermediate
 
 ### Lab scenario
 
@@ -3075,33 +3075,47 @@ After completing this lab, you will be able to:
 
 #### Task 1: Submit a change as the requester
 
-1. Signed in as `admin-intune`, select **Devices**, then **Scripts and remediations**, then **Platform scripts**, then **Add** > **Windows 10 and later**.
+1. Signed in as `admin-intune`, select **Devices**, then **Scripts and remediations**, then **Platform scripts**, then **Add** > **Windows 10 and later**. The blade that opens is titled **Add PowerShell script**.
    *Path:* **Devices** > **Scripts and remediations** > **Platform scripts** > **Add**
 
-2. Create a trivial script so the approval flow is the only thing under test:
+   > [!IMPORTANT]
+   > Read the wizard's step list before you type anything: **Basics**, **Script settings**, **Scope tags**, **Review + submit for approval**. Four steps, and no **Assignments** page. In a tenant with no access policy this same wizard has five steps, carries an *Assignments* page and finishes at *Review + add*. Under multi-admin approval the create *is* the request, so the wizard stops where a justification is needed and assignment becomes a separate protected operation you perform after the script exists.
+
+2. On *Basics*, name the script so that the approval flow is the only thing under test:
 
    | Setting | Value |
    | --- | --- |
    | Name | **MAA test script** |
-   | Script file | **A .ps1 file containing a single Write-Output line** |
-   | Run this script using the logged on credentials | **No** |
+   | Description | **Trivial script used to exercise the approval workflow** |
 
-   *Save this as maa-test.ps1 and upload it*
+   *Save this as maa-test.ps1 before you start the wizard*
    ```powershell
    Write-Output "Multi-admin approval test. This script does nothing."
    ```
 
-3. Assign it to `GRP-USR-PILOT` and continue to the end of the wizard.
+3. On *Script settings*, browse to the file and set the three toggles:
 
-4. At the final step you are asked for a business justification rather than being allowed to save.
+   | Setting | Value |
+   | --- | --- |
+   | Script location | **maa-test.ps1** <br> A file picker, not a path you type. The script must be under 200 KB. |
+   | Run this script using the logged on credentials | **No** <br> System context. The portal default is Yes. |
+   | Enforce script signature check | **No** <br> The portal default is Yes and maa-test.ps1 is unsigned. Leave it at Yes and the request still submits and approves cleanly — the script then fails on every device it reaches, long after the approval you were testing succeeded. |
+   | Run script in 64 bit PowerShell Host | **No** <br> The portal default. Nothing in this script depends on the host architecture. |
+
+4. On *Scope tags*, leave the default and select **Next**.
+
+   > [!NOTE]
+   > Scope tags and multi-admin approval are independent controls that are easy to confuse. A scope tag decides which administrators can see the script; the access policy decides who has to agree before it exists at all.
+
+5. *Review + submit for approval* is where the wizard stops being the one you know. The summary is read-only, the final button reads **Submit for approval** rather than **Add**, and a justification is mandatory before it will submit.
 
    | Setting | Value |
    | --- | --- |
    | Business justification | **Testing the multi-admin approval workflow** |
 
-   **Verify:** The request is submitted and the script does **not** appear in the platform scripts list. It is held until approved.
+   **Verify:** You are returned to **Platform scripts** and **MAA test script** is **not** in the list. It is held as a request until somebody approves it.
 
-5. Check the request status under **Tenant administration** > **Multi Admin Approval** > **My requests**.
+6. Check the request status under **Tenant administration** > **Multi Admin Approval** > **My requests**.
    *Path:* **Tenant administration** > **Multi Admin Approval** > **My requests**
 
    **Verify:** The request is listed as **Needs approval** with your justification, the operation **Create**, and the time you submitted it.
@@ -3130,21 +3144,50 @@ After completing this lab, you will be able to:
 
 5. Sign back in as `admin-intune`, open the request under **My requests**, select **Complete**, and confirm the script now exists under **Platform scripts**.
 
-   **Verify:** The request reads **Completed**, and **MAA test script** is listed and assigned to `GRP-USR-PILOT`.
+   **Verify:** The request reads **Completed**, and **MAA test script** is listed — with no assignments, because the wizard never offered you any.
 
    > [!NOTE]
    > If the script is still missing after **Complete**, check the portal notifications. Intune reports there whether applying the approved change succeeded or failed.
 
-6. Now exercise the rejection path: delete the script, supply a justification, and this time have Patti **Reject request** with a note explaining why.
+6. Now give the script an audience. Open **MAA test script**, select **Edit** beside *Assignments*, add `GRP-USR-PILOT`, and save.
+
+   | Setting | Value |
+   | --- | --- |
+   | Business justification | **Assigning the test script to the pilot group** |
+
+   **Verify:** A second request appears under **My requests** for the same script, this time with the operation **Assign** rather than **Create**. The script stays unassigned until that request is approved and completed too.
+
+   > [!IMPORTANT]
+   > Every action on a protected resource is protected — create, edit, assign and delete each raise their own request. That is the real cost of the control, and it is why the wizard dropped its *Assignments* page: putting a script in front of a group is a decision somebody has to agree with separately from writing the script.
+
+7. Select that pending **Assign** request under **My requests** and select **Cancel request**.
+
+   > [!NOTE]
+   > Withdraw it rather than approving it, for a reason worth remembering: while a request is pending against an object, no further request can be submitted for that object. Leave the assignment pending and the deletion in the next step is refused.
+
+8. Now exercise the rejection path: delete the script, supply a justification, and this time have Patti **Reject request** with a note explaining why.
 
    **Verify:** The script remains in place and **My requests** shows the request as **Rejected** with the approver's note. A rejected request makes no change at all, and there is nothing to complete.
 
 **Results:** You have driven the approval workflow from both sides and seen both outcomes.
 
 - [ ] An approved request applied its change only after **Complete**.
+- [ ] Assigning the approved script raised a second request, with the operation **Assign**.
 - [ ] A rejected request left the tenant unchanged and recorded the reason.
 
 ### Troubleshooting
+
+**Symptom:** The **Add PowerShell script** wizard has no **Assignments** page, so there is no way to target the script at a group while creating it.
+
+- **Root cause:** An access policy protects the **Scripts** profile type. The create becomes a request, the wizard ends at *Review + submit for approval* rather than *Review + add*, and assignment is a separate protected operation rather than a page in the wizard.
+- **Diagnostic:**
+
+  ```text
+  Tenant administration > Multi Admin Approval > Access policies
+  Look for a policy whose profile type is Scripts.
+  ```
+
+- **Resolution:** Submit the script, have it approved, select **Complete**, then assign it — that assignment raises its own request with the operation **Assign**, which needs approving and completing in turn. Nothing is broken and nothing needs changing.
 
 **Symptom:** You created an access policy but **Access policies** is empty, and a request with resource type **Access policy** is sitting at **Needs approval**.
 
