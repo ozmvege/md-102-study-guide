@@ -114,7 +114,7 @@ export default {
               ]
             },
             {
-              text: "Break the setting deliberately, then confirm detection notices:",
+              text: "In the elevated Administrator PowerShell session on **MD102-VM1-Adele**, break the setting deliberately, then confirm detection notices:",
               parts: [
                 {
                   kind: "code",

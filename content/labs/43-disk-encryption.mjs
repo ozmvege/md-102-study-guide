@@ -109,7 +109,7 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "On **MD102-VM2-Alex**, sync policy and check status:",
+              text: "On **MD102-VM2-Alex**, sync policy, open Windows PowerShell as an administrator, and check status:",
               parts: [
                 {
                   kind: "code",
@@ -124,7 +124,7 @@ export default {
               ]
             },
             {
-              text: "Confirm both key protectors exist:",
+              text: "In the elevated Administrator PowerShell session on **MD102-VM2-Alex**, confirm both key protectors exist:",
               parts: [
                 {
                   kind: "code",

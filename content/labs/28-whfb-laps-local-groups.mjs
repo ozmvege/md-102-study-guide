@@ -96,7 +96,7 @@ export default {
               ]
             },
             {
-              text: "Confirm the credential is protected by hardware:",
+              text: "On **MD102-VM2-Alex**, open PowerShell and confirm the credential is protected by hardware:",
               parts: [
                 {
                   kind: "code",
@@ -277,15 +277,25 @@ export default {
               nav: ["Devices", "Configuration", "Create", "New Policy"]
             },
             {
-              text: "Search the settings picker for `Local Users and Groups` and add the setting from the **Local Policies Security Options** or **Accounts** category. Configure the membership action:",
+              text: "Search the settings picker for `Local Users and Groups`, add the setting from the **Local Policies Security Options** or **Accounts** category, and work through the wizard tabs:",
               parts: [
                 {
                   kind: "inputs",
                   rows: [
                     { label: "Group configuration action", value: "Update", note: "Update adds or removes named members. Replace overwrites the entire membership — powerful, and easy to use to lock everyone out." },
-                    { label: "Target group", value: "Administrators", note: "Identified by its well-known SID `S-1-5-32-544` rather than its name, so it works on localised Windows." },
+                    { label: "Target group", value: "Administrators", note: "Identified by its well-known SID S-1-5-32-544 rather than its name, so it works on localised Windows." },
                     { label: "Members to add", value: "The SID of GRP-ADM-HELPDESK" },
                     { label: "Members to remove", value: "The Entra role or account you want to strip" }
+                  ]
+                },
+                {
+                  kind: "substeps",
+                  items: [
+                    { text: "On the **Basics** tab, enter Name `WIN-LocalGroups`, then select **Next**." },
+                    { text: "On the **Configuration settings** tab, select **Add settings**, configure the local group action and SID mappings above, then select **Next**." },
+                    { text: "On the **Scope tags** tab, leave **Default**, then select **Next**." },
+                    { text: "On the **Assignments** tab, assign to `GRP-DEV-WIN-CORP`, then select **Next**." },
+                    { text: "On the **Review + create** tab, select **Create**." }
                   ]
                 },
                 {
@@ -296,10 +306,7 @@ export default {
               ]
             },
             {
-              text: "Assign to `GRP-DEV-WIN-CORP` and create the profile."
-            },
-            {
-              text: "After the device syncs, check the group again:",
+              text: "After the device syncs, check the group again in PowerShell on **MD102-VM2-Alex**:",
               parts: [
                 {
                   kind: "code",

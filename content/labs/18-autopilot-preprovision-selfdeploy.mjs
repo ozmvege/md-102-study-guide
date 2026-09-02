@@ -132,7 +132,7 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Create another profile under **Deployment Profiles**:",
+              text: "Create another profile under **Deployment Profiles** and work through the wizard tabs:",
               parts: [
                 {
                   kind: "inputs",
@@ -143,6 +143,15 @@ export default {
                     { label: "Language, region, keyboard", value: "Set explicitly — there is no user to choose", note: "Leaving these as User select stalls a device with no user." },
                     { label: "Automatically configure keyboard", value: "Yes" },
                     { label: "Apply device name template", value: "Yes, KIOSK-%RAND:6%" }
+                  ]
+                },
+                {
+                  kind: "substeps",
+                  items: [
+                    { text: "On the **Basics** tab, enter Name `AP-SelfDeploying-Kiosk`, then select **Next**." },
+                    { text: "On the **Out-of-box experience (OOBE)** tab, configure the fields listed above, then select **Next**." },
+                    { text: "On the **Assignments** tab, assign the profile to `GRP-DEV-AUTOPILOT-KIOSK`, then select **Next**." },
+                    { text: "On the **Review + create** tab, select **Create**." }
                   ]
                 }
               ]

@@ -171,7 +171,7 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Run `dsregcmd /status` again and compare it with the baseline.",
+              text: "On **MD102-VM1-Adele**, run `dsregcmd /status` in PowerShell again and compare it with the baseline.",
               parts: [
                 {
                   kind: "code",
@@ -276,7 +276,7 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Run `dsregcmd /status` and read all three sections this time.",
+              text: "On **MD102-VM2-Alex**, run `dsregcmd /status` in PowerShell and read all three sections this time.",
               parts: [
                 {
                   kind: "code",
@@ -318,13 +318,13 @@ export default {
               ]
             },
             {
-              text: "Note the diagnostic you will need later:",
+              text: "Note the diagnostic command to run in PowerShell on a Windows client when troubleshooting join or SSO failures:",
               parts: [
                 {
                   kind: "code",
                   lang: "powershell",
                   code: "# Full join and SSO diagnostics, including reason codes for a failed join\ndsregcmd /status /debug",
-                  caption: "When a join or a PRT fails, this is the first command to run"
+                  caption: "When a join or a PRT fails on a Windows client, run this command in PowerShell"
                 }
               ]
             },

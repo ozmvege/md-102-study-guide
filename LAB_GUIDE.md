@@ -880,7 +880,12 @@ The script below is idempotent: it removes any existing lab virtual machine of t
 
 2. Work through Windows Setup, choosing **Windows 11 Pro** if asked which edition to install.
 
-3. At the out-of-box experience, choose **Set up for personal use**, then create a **local account** rather than signing in with a Microsoft account.
+3. At the out-of-box experience, complete the setup wizard to create a local administrator account without signing into a Microsoft account:
+
+   a. Select your country and keyboard layout, then select **Yes**.
+   b. When prompted, choose **Set up for personal use**, then select **Next**.
+   c. On the Microsoft account sign-in prompt, select **Sign-in options** > **Offline account** (or if hidden, enter a bypassed email like `no@thankyou.com` with a dummy password).
+   d. Enter the local username `labadmin` and your chosen password, complete the recovery questions, and select **Next** through privacy settings to reach the desktop.
 
    | Setting | Value |
    | --- | --- |
@@ -1914,7 +1919,7 @@ Registration is the bring-your-own-device path. The user keeps their local sign-
 
 #### Task 2: Read the registered state
 
-1. Run `dsregcmd /status` again and compare it with the baseline.
+1. On **MD102-VM1-Adele**, run `dsregcmd /status` in PowerShell again and compare it with the baseline.
 
    ```powershell
    dsregcmd /status
@@ -1969,7 +1974,7 @@ Registration is the bring-your-own-device path. The user keeps their local sign-
 
 #### Task 2: Dissect the joined state and the Primary Refresh Token
 
-1. Run `dsregcmd /status` and read all three sections this time.
+1. On **MD102-VM2-Alex**, run `dsregcmd /status` in PowerShell and read all three sections this time.
 
    ```powershell
    dsregcmd /status
@@ -1995,9 +2000,9 @@ Registration is the bring-your-own-device path. The user keeps their local sign-
    > [!IMPORTANT]
    > The Primary Refresh Token is what gives the signed-in user silent single sign-on to Microsoft 365 and, crucially, what proves device identity to Conditional Access. If `AzureAdPrt : NO`, the user will be prompted to authenticate repeatedly and any Conditional Access policy requiring a compliant or joined device will fail — even though the device really is joined and really is compliant.
 
-4. Note the diagnostic you will need later:
+4. Note the diagnostic command to run in PowerShell on a Windows client when troubleshooting join or SSO failures:
 
-   *When a join or a PRT fails, this is the first command to run*
+   *When a join or a PRT fails on a Windows client, run this command in PowerShell*
    ```powershell
    # Full join and SSO diagnostics, including reason codes for a failed join
    dsregcmd /status /debug
@@ -3422,28 +3427,27 @@ After completing this lab, you will be able to:
 1. Still under **Devices** > **Enrollment**, open **Enrollment notifications** and note that you can send a branded message when a device enrolls.
    *Path:* **Devices** > **Enrollment** > **Enrollment notifications**
 
-2. Leave the enrollment blade for the last part of this task. In the **Devices** menu, expand **Manage devices**, select **Device categories**, then select **Create**.
+2. In the left navigation menu under **Devices**, expand **Manage devices**, select **Device categories**, then select **Create**:
    *Path:* **Devices** > **Manage devices** > **Device categories** > **Create**
-
-   > [!IMPORTANT]
-   > Device categories are not inside **Devices** > **Enrollment**, so no amount of looking around **Enrollment notifications** or the platform tabs will turn them up. They used to live under *Device enrollment*, which is where older documentation and a good deal of exam material still puts them, and the portal has since moved them into **Manage devices** with the other device-wide lists. Only the location changed.
-
-3. Fill in *Basics*, then select **Next**, leave the scope tags at **Default**, select **Next** again and select **Create**:
 
    | Setting | Value |
    | --- | --- |
    | Name | **Shared workstation** |
    | Description | **Multi-user devices in retail locations** |
 
+   a. On the **Basics** tab, enter the **Name** and **Description** from above, then select **Next**.
+   b. On the **Scope tags** tab, leave **Default** assigned, then select **Next**.
+   c. On the **Review + create** tab, select **Create**.
+
+   > [!IMPORTANT]
+   > Device categories do **not** prompt Windows users during enrollment. The interactive Company Portal selection prompt is exclusive to iOS/iPadOS, macOS, and Android during Company Portal enrollment. On Windows, categories must be manually assigned by an administrator in Intune under **Devices** > **All devices** > select device > **Properties**, or self-selected by the user via the Company Portal web portal at `portal.manage.microsoft.com` under **Devices** > **Category**. Do not expect `MD102-VM2-Alex` to prompt for a category when enrolled in Exercise 3.
+
    > [!TIP]
-   > The name is the value the rest of the tenant keys off, so it is worth settling now. A dynamic group rule of `device.deviceCategory -eq "Shared workstation"` and an assignment filter on the same property both match the literal string, and renaming the category later silently breaks every rule that quoted the old name.
+   > When device categories exist, mobile users are prompted to pick one during enrollment, and the choice can drive dynamic group membership through `device.deviceCategory`. It is an effective way to let users self-classify hardware you cannot pre-register.
 
-   > [!NOTE]
-   > Where the user is asked for a category depends on the platform, and Windows is the awkward one. On iOS/iPadOS, macOS and Android the prompt appears in the Company Portal app; Windows users are never prompted during enrollment and choose at `portal.manage.microsoft.com` under **My devices**. Do not expect `MD102-VM2-Alex` to ask for one when it enrolls in exercise 3 — an administrator sets the category on **Devices** > **All devices** > the device > **Properties** instead. The **Customization** profile from the next exercise is also where that prompt can be suppressed entirely.
+**Results:** You know where device categories and enrollment notifications live, and how categories behave across different operating systems.
 
-**Results:** You know what else lives in the enrollment blade beyond the automatic enrollment toggle, and where one setting people go looking for there actually lives.
-
-- [ ] **Devices** > **Manage devices** > **Device categories** lists **Shared workstation**.
+- [ ] The **Shared workstation** category appears under **Devices** > **Manage devices** > **Device categories**.
 
 ### Exercise 2: Brand the experience
 
@@ -3490,7 +3494,7 @@ After completing this lab, you will be able to:
    b. If a **Connect** or **Enroll only in device management** option appears, use it.
    c. Otherwise sign out and back in — automatic enrollment is evaluated at sign-in.
 
-3. Confirm enrollment from the client:
+3. Confirm enrollment from the client (run in PowerShell on **MD102-VM2-Alex**):
 
    ```powershell
    dsregcmd /status
@@ -3498,7 +3502,7 @@ After completing this lab, you will be able to:
 
    **Verify:** Under **Device State**, `AzureAdJoined : YES`. Under **Tenant Details**, an **MdmUrl** is present. An empty MdmUrl means the device is joined but unmanaged.
 
-4. Check the management registry keys, which is where enrollment actually records itself:
+4. Check the management registry keys where enrollment records itself (run in an elevated Administrator PowerShell session on **MD102-VM2-Alex**):
 
    ```powershell
    Get-ChildItem "HKLM:\SOFTWARE\Microsoft\Enrollments" |
@@ -3610,7 +3614,7 @@ After completing this lab, you will be able to:
    > [!IMPORTANT]
    > **All Users** is a built-in restriction at the lowest priority that allows every platform. You cannot delete it and you cannot change its priority. Any restriction you create sits above it and wins for the users it targets — which means a restriction that appears to do nothing is usually one that was never assigned to a group.
 
-3. Select **Create restriction** > **Windows restriction**, then configure:
+3. Select **Create restriction** > **Windows restriction**, then configure through the wizard tabs:
 
    | Setting | Value |
    | --- | --- |
@@ -3620,9 +3624,13 @@ After completing this lab, you will be able to:
    | Minimum OS version | **10.0.22000** <br> Windows 11 baseline. Below this, enrollment is refused. |
    | Maximum OS version | **Leave blank** |
 
-4. On **Assignments**, assign it to `GRP-USR-FINANCE` and `GRP-USR-IT`, then create it.
+   a. On the **Basics** tab, enter Name `WIN-Corporate-Only`, then select **Next**.
+   b. On the **Platform settings** tab, set **Windows (MDM)** to **Allow**, **Personally owned** to **Block**, and set **Min OS** to `10.0.22000`, then select **Next**.
+   c. On the **Scope tags** tab, leave **Default**, then select **Next**.
+   d. On the **Assignments** tab, select **Add groups**, choose `GRP-USR-FINANCE` and `GRP-USR-IT`, then select **Next**.
+   e. On the **Review + create** tab, select **Create**.
 
-5. Create a second restriction for the BYOD population:
+4. Create a second restriction for the BYOD population using the **Create restriction** > **Windows restriction** wizard:
 
    | Setting | Value |
    | --- | --- |
@@ -3630,10 +3638,16 @@ After completing this lab, you will be able to:
    | Windows (MDM) | **Block** <br> These users get app protection policies instead of device enrollment. |
    | Assignment | **GRP-USR-BYOD** |
 
+   a. On the **Basics** tab, enter Name `WIN-BYOD-AppProtectionOnly`, then select **Next**.
+   b. On the **Platform settings** tab, set **Windows (MDM)** to **Block**, then select **Next**.
+   c. On the **Scope tags** tab, leave **Default**, then select **Next**.
+   d. On the **Assignments** tab, assign to `GRP-USR-BYOD`, then select **Next**.
+   e. On the **Review + create** tab, select **Create**.
+
    > [!NOTE]
    > Blocking MDM enrollment does not cut these users off. Lab 36 gives them app protection policies, which secure corporate data inside apps on an unmanaged device — the intended answer for personally owned hardware.
 
-6. Check the priority order in the list. Drag `WIN-Corporate-Only` above `WIN-BYOD-AppProtectionOnly` if it is not already.
+5. Check the priority order in the list. Drag `WIN-Corporate-Only` above `WIN-BYOD-AppProtectionOnly` if it is not already.
 
    > [!WARNING]
    > A user who is in both groups gets the restriction with the **lowest priority number**, and only that one. Restrictions do not merge. Joni is in `GRP-USR-BYOD` and `GRP-USR-SALES`; if you later assign a corporate restriction to Sales, priority decides which applies.
@@ -3648,13 +3662,19 @@ After completing this lab, you will be able to:
 1. Select **Devices**, then **Enrollment**, then **Device limit restrictions**.
    *Path:* **Devices** > **Enrollment** > **Device limit restrictions**
 
-2. Select **Create restriction** and configure:
+2. Select **Create restriction** and configure through the wizard tabs:
 
    | Setting | Value |
    | --- | --- |
    | Name | **LIMIT-Standard-3** |
    | Device limit | **3** |
    | Assignment | **GRP-USR-FINANCE** |
+
+   a. On the **Basics** tab, enter Name `LIMIT-Standard-3`, then select **Next**.
+   b. On the **Device limit** tab, select `3`, then select **Next**.
+   c. On the **Scope tags** tab, leave **Default**, then select **Next**.
+   d. On the **Assignments** tab, select **Add groups**, select `GRP-USR-FINANCE`, then select **Next**.
+   e. On the **Review + create** tab, select **Create**.
 
    > [!IMPORTANT]
    > This limit is enforced by Intune and returns `0x80180026` when exceeded. Microsoft Entra ID has a *separate* per-user device quota under **Devices** > **Device settings**, which returns `0x801c03f2`. Raising one does not raise the other, and confusing them costs a lot of time because both present as a device that will not enroll.
@@ -3678,9 +3698,9 @@ A device enrolled by hand through Settings is marked **Personal** by default. Co
    > [!NOTE]
    > Hyper-V generates a serial number for each virtual machine, so this works in the lab exactly as it would on physical hardware. Record the value.
 
-2. Create a CSV file with no header row, containing the identifier and an optional description:
+2. On your host workstation, create a CSV file named `corporate-identifiers.csv` with no header row, containing the identifier and an optional description:
 
-   *corporate-identifiers.csv — no header row*
+   *corporate-identifiers.csv — save on host or management workstation with no header row*
    ```text
    1234-5678-9012-3456-7890-1234-56,Finance laptop - Alex Wilber
    ```
@@ -3878,7 +3898,7 @@ After completing this lab, you will be able to:
    > [!NOTE]
    > Choosing **Set up for work or school** and signing in with a work account performs a Microsoft Entra *join*, not a registration. This is the same code path Autopilot drives — Autopilot simply pre-answers these screens for you.
 
-5. Once at the desktop, confirm both the join and the enrollment:
+5. Once at the desktop on **MD102-VM1-Adele**, open PowerShell and confirm both the join and the enrollment:
 
    ```powershell
    dsregcmd /status | Select-String "AzureAdJoined|MdmUrl|AzureAdPrt"
@@ -4132,7 +4152,7 @@ After completing this lab, you will be able to:
 1. Select **Devices**, **Enrollment**, **Android**, then **Corporate-owned dedicated devices**.
    *Path:* **Devices** > **Enrollment** > **Android** > **Corporate-owned dedicated devices**
 
-2. Select **Create profile** and configure:
+2. Select **Create profile** and configure through the wizard tabs:
 
    | Setting | Value |
    | --- | --- |
@@ -4141,7 +4161,12 @@ After completing this lab, you will be able to:
    | Token expiration date | **A date within 90 days** |
    | Wi-Fi | **Not configured** |
 
-3. Create it, then open the profile and select **Token** to view the enrollment token, QR code and enrollment URL.
+   a. On the **Basics** tab, enter Name `AND-Dedicated-Kiosk` and an optional description, then select **Next**.
+   b. On the **Settings** tab, configure the **Token type**, **Token expiration date**, and set Wi-Fi to **Not configured**, then select **Next**.
+   c. On the **Scope tags** tab, leave **Default**, then select **Next**.
+   d. On the **Review + create** tab, select **Create**.
+
+3. Once created, open the profile and select **Token** to view the enrollment token, QR code and enrollment URL:
 
    > [!NOTE]
    > A dedicated device is enrolled by factory-resetting it and tapping the welcome screen six times to open the QR reader, then scanning this code. There is no user sign-in, which is why these devices normally have no user affinity and can only receive device-targeted policy.
@@ -4521,7 +4546,7 @@ Meeting these failures under controlled conditions is far cheaper than meeting t
 1. In the **Microsoft Entra admin center**, open `GRP-LIC-M365-E5` and remove `staging.user01` from the group.
    *Path:* **Groups** > **GRP-LIC-M365-E5** > **Members**
 
-2. Wait a few minutes for the licence to be revoked, then confirm:
+2. Wait a few minutes for the licence to be revoked, then confirm in PowerShell on your management workstation:
 
    ```powershell
    Get-MgUser -UserId "staging.user01@<tenant>.onmicrosoft.com" -Property DisplayName,AssignedLicenses |
@@ -4588,7 +4613,7 @@ Meeting these failures under controlled conditions is far cheaper than meeting t
    | Managed Policies | Every configuration setting Intune has applied and its current value |
    | Managed Apps | Applications delivered through MDM and their install state |
 
-4. Also inspect the registry directly, which is faster when you only need enrollment state:
+4. On **MD102-VM1-Adele**, inspect the registry directly in an elevated Administrator PowerShell session (which is faster when you only need enrollment state):
 
    ```powershell
    Get-ChildItem "HKLM:\SOFTWARE\Microsoft\Enrollments" |
@@ -4608,7 +4633,7 @@ Meeting these failures under controlled conditions is far cheaper than meeting t
 1. Open **Event Viewer** and navigate to the MDM provider log.
    *Path:* **Applications and Services Logs** > **Microsoft** > **Windows** > **DeviceManagement-Enterprise-Diagnostics-Provider** > **Admin**
 
-2. Or query it from PowerShell, which is faster:
+2. Or query it from PowerShell on **MD102-VM1-Adele**, which is faster:
 
    ```powershell
    Get-WinEvent -LogName "Microsoft-Windows-DeviceManagement-Enterprise-Diagnostics-Provider/Admin" -MaxEvents 40 |
@@ -4939,9 +4964,9 @@ After completing this lab, you will be able to:
    > [!NOTE]
    > `Install-Script` needs internet access, which the Default Switch provides. If prompted to trust the PSGallery repository, accept. The script reads the device serial number, the Windows product ID and the hardware identifier, and writes them as one CSV row.
 
-4. Get the file off the machine. The simplest route with no shared folder is to upload it directly:
+4. From the PowerShell prompt inside **MD102-VM3-Megan**, upload the hardware hash directly to Intune:
 
-   *Uploads straight into Intune, skipping the CSV entirely*
+   *Uploads straight into Intune from MD102-VM3-Megan, skipping the CSV entirely*
    ```powershell
    Install-Script -Name Get-WindowsAutopilotInfo -Force
    Get-WindowsAutopilotInfo -Online
@@ -5090,7 +5115,7 @@ After completing this lab, you will be able to:
    > [!TIP]
    > If it stalls, select **Show details** on the status page to see which item is blocking. This is the fastest diagnosis available and most people never notice the link.
 
-5. When the desktop appears, verify the result:
+5. When the desktop appears on **MD102-VM3-Megan**, verify the result in PowerShell:
 
    ```powershell
    hostname
@@ -5100,7 +5125,7 @@ After completing this lab, you will be able to:
 
    **Verify:** The hostname matches your `CTS-FIN-` template, `AzureAdJoined : YES`, an **MdmUrl** is present, and the signed-in user is Megan.
 
-6. Confirm the user is a standard user, not a local administrator:
+6. On **MD102-VM3-Megan**, confirm the user is a standard user, not a local administrator:
 
    ```powershell
    net localgroup Administrators
@@ -5282,7 +5307,7 @@ After completing this lab, you will be able to:
 
 #### Task 1: Create a self-deploying profile
 
-1. Create another profile under **Deployment Profiles**:
+1. Create another profile under **Deployment Profiles** and work through the wizard tabs:
 
    | Setting | Value |
    | --- | --- |
@@ -5292,6 +5317,11 @@ After completing this lab, you will be able to:
    | Language, region, keyboard | **Set explicitly — there is no user to choose** <br> Leaving these as User select stalls a device with no user. |
    | Automatically configure keyboard | **Yes** |
    | Apply device name template | **Yes, KIOSK-%RAND:6%** |
+
+   a. On the **Basics** tab, enter Name `AP-SelfDeploying-Kiosk`, then select **Next**.
+   b. On the **Out-of-box experience (OOBE)** tab, configure the fields listed above, then select **Next**.
+   c. On the **Assignments** tab, assign the profile to `GRP-DEV-AUTOPILOT-KIOSK`, then select **Next**.
+   d. On the **Review + create** tab, select **Create**.
 
 2. Note what self-deploying produces and, more importantly, what it does not:
 
@@ -5494,7 +5524,7 @@ This exercise is entirely about one setting. Skip it and the deployment fails la
 
    **Verify:** A provisioning screen appears listing security setup, device preparation and application installation as separate tracked items.
 
-5. When the desktop appears, verify:
+5. When the desktop appears on **MD102-VM3-Megan**, open PowerShell and verify:
 
    ```powershell
    hostname
@@ -5607,7 +5637,7 @@ After completing this lab, you will be able to:
 
    **Verify:** **WindowsEditionId** reads `Professional`.
 
-2. Inspect the licensing state:
+2. On **MD102-VM1-Adele**, inspect the licensing state in Command Prompt:
 
    ```cmd
    slmgr /dli
@@ -5640,7 +5670,7 @@ After completing this lab, you will be able to:
    > [!TIP]
    > Locking and unlocking is not enough. The entitlement is evaluated at interactive sign-in, which is also why a device that has been powered off for months upgrades the first time someone actually signs in.
 
-2. Give it a few minutes, then check the edition again:
+2. Give it a few minutes, then check the edition again in PowerShell on **MD102-VM1-Adele**:
 
    ```powershell
    Get-ComputerInfo -Property WindowsProductName, WindowsEditionId
@@ -5648,7 +5678,7 @@ After completing this lab, you will be able to:
 
    **Verify:** **WindowsEditionId** now reads `Enterprise`. The device did not restart and no key was entered.
 
-3. If nothing changed, check the service that performs the upgrade:
+3. If nothing changed, check the service that performs the upgrade in PowerShell on **MD102-VM1-Adele**:
 
    ```powershell
    Get-Service ClipSVC | Select-Object Name, Status, StartType
@@ -5679,7 +5709,7 @@ After completing this lab, you will be able to:
    | Profile type | **Settings catalog** |
    | Name | **WIN-Backup-Corporate** |
 
-3. In the settings picker, search for `Windows Backup` and add the settings from the **Windows Backup** category. Configure:
+3. In the settings picker, search for `Windows Backup`, add the settings from the **Windows Backup** category, and work through the wizard tabs:
 
    | Setting | Value |
    | --- | --- |
@@ -5688,10 +5718,14 @@ After completing this lab, you will be able to:
    | Back up installed apps list | **Enabled** <br> The list, not the applications themselves. |
    | Back up credentials | **Enabled** <br> Saved Wi-Fi networks and stored passwords. |
 
+   a. On the **Basics** tab, enter Name `WIN-Backup-Corporate`, then select **Next**.
+   b. On the **Configuration settings** tab, select **Add settings**, find the four settings above and enable each, then select **Next**.
+   c. On the **Scope tags** tab, leave **Default**, then select **Next**.
+   d. On the **Assignments** tab, assign the profile to `GRP-DEV-WIN-CORP`, then select **Next**.
+   e. On the **Review + create** tab, select **Create**.
+
    > [!IMPORTANT]
    > Windows Backup restores *settings and a list of apps*, not files and not the applications themselves. User files are OneDrive's job through Known Folder Move, and applications are redeployed by Intune. Confusing these is a common exam trap: a question asking how a user's documents survive a rebuild is asking about OneDrive, not Windows Backup.
-
-4. Assign the profile to `GRP-DEV-WIN-CORP` and create it.
 
 **Results:** Corporate Windows devices back up settings, credentials and their application list.
 
@@ -6020,7 +6054,7 @@ After completing this lab, you will be able to:
    | Profile type | **Settings catalog** |
    | Name | **WIN-OneDrive-KFM** |
 
-3. Select **Add settings**, search for `Known Folder`, and open the **OneDrive** category. Add and configure these:
+3. Select **Add settings**, search for `Known Folder`, open the **OneDrive** category, and work through the wizard tabs:
 
    | Setting | Value |
    | --- | --- |
@@ -6031,10 +6065,14 @@ After completing this lab, you will be able to:
    | Prevent users from redirecting their Windows known folders back to their PC | **Enabled** |
    | Use OneDrive Files On-Demand | **Enabled** |
 
+   a. On the **Basics** tab, enter Name `WIN-OneDrive-KFM`, then select **Next**.
+   b. On the **Configuration settings** tab, select **Add settings**, add and configure the six settings above, then select **Next**.
+   c. On the **Scope tags** tab, leave **Default**, then select **Next**.
+   d. On the **Assignments** tab, assign the profile to `GRP-DEV-WIN-CORP`, then select **Next**.
+   e. On the **Review + create** tab, select **Create**.
+
    > [!IMPORTANT]
    > The tenant ID is a GUID, not your tenant name. This is the most common reason Known Folder Move appears to deploy successfully and never actually redirects anything — the profile reports Succeeded because the setting was written, and the setting does nothing because it points at a tenant that is not yours.
-
-4. On **Assignments**, include `GRP-DEV-WIN-CORP`, then create the profile.
 
    > [!NOTE]
    > OneDrive settings can be targeted at users or devices. Targeting the device group means every user of a corporate machine gets the behaviour, which is usually what an organisation wants.
@@ -6052,7 +6090,7 @@ After completing this lab, you will be able to:
    > [!TIP]
    > Configuration changes reach a device on its own schedule — roughly every eight hours, sooner after enrollment. **Sync** requests an immediate check-in and is the single most useful button on a managed Windows device.
 
-2. Confirm the setting arrived in the registry:
+2. On **MD102-VM1-Adele**, confirm the setting arrived in the registry (run in an elevated Administrator PowerShell session):
 
    ```powershell
    Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\OneDrive" -ErrorAction SilentlyContinue |
@@ -6088,7 +6126,7 @@ After completing this lab, you will be able to:
    > [!IMPORTANT]
    > Intune does not pick a winner. When two profiles set the same configuration service provider node to different values, the setting is reported as **Conflict** and **neither value is applied** — the device keeps whatever it had. This is different from compliance policy, where the most restrictive setting wins, and different from enrollment restrictions, where priority decides.
 
-5. Confirm on the device that the setting did not change:
+5. On **MD102-VM1-Adele**, confirm on the device that the setting did not change (run in an elevated Administrator PowerShell session):
 
    ```powershell
    Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\OneDrive" |
@@ -6106,7 +6144,7 @@ After completing this lab, you will be able to:
 
 1. Open `WIN-OneDrive-KFM` and select **Properties**, then edit **Assignments**.
 
-2. Add an exclusion:
+2. In the **Assignments** section, select **Add groups** under **Excluded groups** to add an exclusion, then select **Review + save**:
 
    | Setting | Value |
    | --- | --- |
@@ -6116,7 +6154,7 @@ After completing this lab, you will be able to:
    > [!IMPORTANT]
    > Exclusion always beats inclusion. A device in both groups receives nothing. This makes exclusion an effective emergency brake — adding a device to an excluded group is the fastest way to stop a bad profile reaching it without deleting the profile for everyone.
 
-3. Save, then note the one rule that catches people out:
+3. Select **Review + save**, then **Save**, and note the one rule that catches people out:
 
    > [!WARNING]
    > You cannot mix user groups and device groups between include and exclude on the same profile. Including a user group and excluding a device group is rejected, because Intune cannot evaluate the two against each other. Keep an assignment entirely user-based or entirely device-based.
@@ -6770,7 +6808,7 @@ After completing this lab, you will be able to:
 1. Select **Devices**, **Configuration**, then **Create** > **New Policy**, with platform **macOS** and profile type **Settings catalog**.
    *Path:* **Devices** > **Configuration** > **Create** > **New Policy**
 
-2. Name it `MAC-Baseline` and add settings from these categories:
+2. Name it `MAC-Baseline`, add settings from the categories below, and work through the wizard tabs:
 
    | Setting | Value |
    | --- | --- |
@@ -6779,12 +6817,16 @@ After completing this lab, you will be able to:
    | Restrictions > Allow AirDrop | **Disabled** |
    | Software Update > Automatically install macOS updates | **Enabled** |
 
+   a. On the **Basics** tab, enter Name `MAC-Baseline`, then select **Next**.
+   b. On the **Configuration settings** tab, select **Add settings**, find and configure the four macOS settings above, then select **Next**.
+   c. On the **Scope tags** tab, leave **Default**, then select **Next**.
+   d. On the **Assignments** tab, assign to `GRP-USR-APPLE`, then select **Next**.
+   e. On the **Review + create** tab, select **Create**.
+
    > [!NOTE]
    > The macOS settings catalog is built from Apple's declarative device management payloads. It has grown to cover most of what used to require a hand-written property list, and it is now the preferred way to configure Apple devices.
 
-3. Assign to `GRP-USR-APPLE` and create the profile.
-
-4. Note the escape hatch for anything the catalog does not cover:
+3. Note the escape hatch for anything the catalog does not cover:
 
    | Profile type | Use when |
    | --- | --- |
@@ -6971,7 +7013,7 @@ After completing this lab, you will be able to:
 1. In the **Microsoft Intune admin center**, select **Tenant administration**, then **Cloud PKI**, then **Create**.
    *Path:* **Tenant administration** > **Cloud PKI** > **Create**
 
-2. Create the **root** certification authority first:
+2. Create the **root** certification authority first through the wizard tabs:
 
    | Setting | Value |
    | --- | --- |
@@ -6983,10 +7025,15 @@ After completing this lab, you will be able to:
    | Key size and algorithm | **RSA-4096, SHA-384** |
    | Subject attributes — Common name | **Contoso Root CA** |
 
+   a. On the **Basics** tab, enter Name `Contoso Root CA` and the description, then select **Next**.
+   b. On the **Configuration settings** tab, select **Root CA**, set Validity to `10`, Key size `RSA-4096`, SHA-384, and CN `Contoso Root CA`, then select **Next**.
+   c. On the **Scope tags** tab, leave **Default**, then select **Next**.
+   d. On the **Review + create** tab, select **Create**.
+
    > [!NOTE]
    > A root CA signs nothing except its own issuing CAs, which is why its validity is long and its key is large. Cloud PKI also supports **bring your own root** — an issuing CA anchored under an existing on-premises root — which is how an organisation adopts Cloud PKI without reissuing every trust relationship it already has.
 
-3. Create the **issuing** certification authority under it:
+3. Create the **issuing** certification authority under it through the wizard tabs:
 
    | Setting | Value |
    | --- | --- |
@@ -6996,6 +7043,11 @@ After completing this lab, you will be able to:
    | Validity period (years) | **5** |
    | Key size and algorithm | **RSA-2048, SHA-256** |
    | Subject attributes — Common name | **Contoso Issuing CA** |
+
+   a. On the **Basics** tab, enter Name `Contoso Issuing CA`, then select **Next**.
+   b. On the **Configuration settings** tab, select **Issuing CA**, select `Contoso Root CA` as root, set Validity to `5`, Key size `RSA-2048`, SHA-256, and CN `Contoso Issuing CA`, then select **Next**.
+   c. On the **Scope tags** tab, leave **Default**, then select **Next**.
+   d. On the **Review + create** tab, select **Create**.
 
    > [!IMPORTANT]
    > Every certificate you issue comes from the **issuing** CA, never the root. That separation is why the root's private key can stay effectively untouched while the issuing CA does the daily work — and why compromising an issuing CA is recoverable by revoking it, whereas compromising a root is not.
@@ -7015,7 +7067,7 @@ After completing this lab, you will be able to:
 1. Create the trusted root profile: **Devices** > **Configuration** > **Create** > **New Policy**, platform **Windows 10 and later**, profile type **Templates** > **Trusted certificate**.
    *Path:* **Devices** > **Configuration** > **Create** > **New Policy**
 
-2. Configure it:
+2. Configure it through the wizard tabs:
 
    | Setting | Value |
    | --- | --- |
@@ -7023,15 +7075,19 @@ After completing this lab, you will be able to:
    | Certificate file | **The Contoso Root CA .cer you downloaded** |
    | Destination store | **Computer certificate store - Root** |
 
+   a. On the **Basics** tab, enter Name `WIN-Cert-TrustedRoot`, then select **Next**.
+   b. On the **Configuration settings** tab, browse and upload the downloaded Contoso Root CA certificate file, and set Destination store to `Computer certificate store - Root`, then select **Next**.
+   c. On the **Scope tags** tab, leave **Default**, then select **Next**.
+   d. On the **Assignments** tab, assign the profile to `GRP-DEV-WIN-CORP`, then select **Next**.
+   e. On the **Review + create** tab, select **Create**.
+
    > [!NOTE]
    > The destination store matters. A root certificate belongs in **Root**; an intermediate belongs in **Intermediate**. Putting an intermediate in the root store works but is wrong, and putting a root in the intermediate store breaks chain validation.
 
-3. Assign to `GRP-DEV-WIN-CORP` and create the profile.
-
-4. Now create the SCEP profile that actually issues certificates. Create another profile, platform **Windows 10 and later**, profile type **Templates** > **SCEP certificate**.
+3. Now create the SCEP profile that actually issues certificates. Create another profile, platform **Windows 10 and later**, profile type **Templates** > **SCEP certificate**.
    *Path:* **Devices** > **Configuration** > **Create** > **New Policy**
 
-5. Configure it:
+4. Configure it through the wizard tabs:
 
    | Setting | Value |
    | --- | --- |
@@ -7048,15 +7104,19 @@ After completing this lab, you will be able to:
    | Extended key usage | **Client Authentication** |
    | SCEP Server URLs | **Select the Contoso Issuing CA** <br> Cloud PKI populates this for you — there is no NDES URL to type because there is no NDES server. |
 
+   a. On the **Basics** tab, enter Name `WIN-Cert-SCEP-Device`, then select **Next**.
+   b. On the **Configuration settings** tab, configure the certificate settings and select the SCEP server URL from Contoso Issuing CA, then select **Next**.
+   c. On the **Scope tags** tab, leave **Default**, then select **Next**.
+   d. On the **Assignments** tab, assign the profile to `GRP-DEV-WIN-CORP`, then select **Next**.
+   e. On the **Review + create** tab, select **Create**.
+
    > [!IMPORTANT]
    > Compare this with what the same profile needed before Cloud PKI: an NDES server published to the internet, the Intune Certificate Connector installed and registered, a SCEP challenge password mechanism, and a certificate template configured on an on-premises CA. The profile fields are identical; three servers have disappeared from behind them.
-
-6. Assign to `GRP-DEV-WIN-CORP` and create the profile.
 
    > [!WARNING]
    > Assign the trusted root profile **before** the SCEP profile, or accept that the first sync fails. A certificate request whose issuing chain is not yet trusted is rejected, and Intune does not retry aggressively. This ordering rule is the single most common cause of a Cloud PKI deployment that appears broken on day one and fixes itself on day two.
 
-7. On **MD102-VM1-Adele**, sync policy, wait, then confirm the certificate arrived:
+5. On **MD102-VM1-Adele**, sync policy, wait, then confirm the certificate arrived (run in an elevated Administrator PowerShell session):
 
    ```powershell
    Get-ChildItem Cert:\LocalMachine\Root | Where-Object Subject -like "*Contoso Root CA*" |
@@ -7070,7 +7130,7 @@ After completing this lab, you will be able to:
 
    **Verify:** The Contoso root is in the machine Root store, and a client certificate issued by Contoso Issuing CA is in the machine Personal store with a private key. This is a real certificate, issued on demand, with no PKI infrastructure of your own.
 
-8. Check certificate health in the portal — the third part of the exam objective.
+6. Check certificate health in the portal — the third part of the exam objective.
    *Path:* **Tenant administration** > **Cloud PKI** > **Contoso Issuing CA**
 
    | View | Shows |
@@ -7130,7 +7190,7 @@ After completing this lab, you will be able to:
 
 #### Task 2: Understand the VPN profile equivalent
 
-1. VPN profiles follow the same pattern. Create one with profile type **Templates** > **VPN** to see the fields.
+1. VPN profiles follow the same pattern. Create one with profile type **Templates** > **VPN** to inspect the fields (review the settings on the **Configuration settings** tab, then cancel without saving):
 
    | Setting | Value |
    | --- | --- |
@@ -7263,7 +7323,7 @@ After completing this lab, you will be able to:
 
    **Verify:** Windows prompts to set up a PIN, accepts a six-digit numeric value, and the next sign-in offers PIN rather than password.
 
-5. Confirm the credential is protected by hardware:
+5. On **MD102-VM2-Alex**, open PowerShell and confirm the credential is protected by hardware:
 
    ```powershell
    certutil -scinfo -silent 2>$null
@@ -7365,21 +7425,25 @@ After completing this lab, you will be able to:
 2. In the **Microsoft Intune admin center**, create a settings catalog profile: **Devices** > **Configuration** > **Create** > **New Policy**, platform **Windows 10 and later**, type **Settings catalog**, named `WIN-LocalGroups`.
    *Path:* **Devices** > **Configuration** > **Create** > **New Policy**
 
-3. Search the settings picker for `Local Users and Groups` and add the setting from the **Local Policies Security Options** or **Accounts** category. Configure the membership action:
+3. Search the settings picker for `Local Users and Groups`, add the setting from the **Local Policies Security Options** or **Accounts** category, and work through the wizard tabs:
 
    | Setting | Value |
    | --- | --- |
    | Group configuration action | **Update** <br> Update adds or removes named members. Replace overwrites the entire membership — powerful, and easy to use to lock everyone out. |
-   | Target group | **Administrators** <br> Identified by its well-known SID `S-1-5-32-544` rather than its name, so it works on localised Windows. |
+   | Target group | **Administrators** <br> Identified by its well-known SID S-1-5-32-544 rather than its name, so it works on localised Windows. |
    | Members to add | **The SID of GRP-ADM-HELPDESK** |
    | Members to remove | **The Entra role or account you want to strip** |
+
+   a. On the **Basics** tab, enter Name `WIN-LocalGroups`, then select **Next**.
+   b. On the **Configuration settings** tab, select **Add settings**, configure the local group action and SID mappings above, then select **Next**.
+   c. On the **Scope tags** tab, leave **Default**, then select **Next**.
+   d. On the **Assignments** tab, assign to `GRP-DEV-WIN-CORP`, then select **Next**.
+   e. On the **Review + create** tab, select **Create**.
 
    > [!CAUTION]
    > Use **Update**, not **Replace**, until you are certain. **Replace** sets the group to exactly the members you list — omit the local administrator account or the LAPS-managed account and you have a device nobody can administer locally, including you. Combine that with a Conditional Access mistake and the device is unrecoverable without a rebuild.
 
-4. Assign to `GRP-DEV-WIN-CORP` and create the profile.
-
-5. After the device syncs, check the group again:
+4. After the device syncs, check the group again in PowerShell on **MD102-VM2-Alex**:
 
    ```powershell
    net localgroup Administrators
@@ -8434,7 +8498,7 @@ After completing this lab, you will be able to:
 
 1. Download the **Microsoft Win32 Content Prep Tool** from [the GitHub repository](https://github.com/microsoft/Microsoft-Win32-Content-Prep-Tool) and extract `IntuneWinAppUtil.exe`.
 
-2. Create a clean source folder containing only what the installer needs:
+2. On your admin workstation or host, open Windows PowerShell as an administrator and create a clean source folder containing only what the installer needs:
 
    ```powershell
    New-Item -ItemType Directory -Path C:\Packaging\7zip\Source -Force
@@ -8444,7 +8508,7 @@ After completing this lab, you will be able to:
    > [!IMPORTANT]
    > The tool packages the **entire** source folder recursively. Point it at a folder containing your downloads directory and you will produce a two-gigabyte package that takes an hour to upload. Keep the source folder minimal and deliberate.
 
-3. Run the tool:
+3. On your admin workstation, run the packaging tool from Command Prompt:
 
    ```cmd
    IntuneWinAppUtil.exe -c C:\Packaging\7zip\Source -s 7z-installer.msi -o C:\Packaging\7zip\Output -q
@@ -8522,7 +8586,7 @@ After completing this lab, you will be able to:
    | Registry | A key or value exists, optionally compared | Installers that write a version to the registry |
    | Script | A PowerShell script decides | Anything the other three cannot express |
 
-2. Add a **File** rule as a worked example:
+2. In the **Detection rules** step, select **Add** to configure a **File** rule, and work through the wizard tabs:
 
    | Setting | Value |
    | --- | --- |
@@ -8532,6 +8596,11 @@ After completing this lab, you will be able to:
    | Detection method | **File or folder exists** |
    | Associated with a 32-bit app on 64-bit clients | **No** |
 
+   a. In the detection rule pane, enter the fields above and select **OK**.
+   b. Select **Next** through **Dependencies** and **Supersedence** (leave empty).
+   c. On the **Assignments** tab, under **Required**, select **Add group** and choose `GRP-USR-PILOT`, then select **Next**.
+   d. On the **Review + create** tab, select **Create**.
+
    > [!WARNING]
    > The **Associated with a 32-bit app on 64-bit clients** toggle silently redirects your path. Set to **Yes**, a path of `C:\Program Files` is redirected to `C:\Program Files (x86)`, and a registry path under `HKLM\SOFTWARE` is redirected to `WOW6432Node`. Getting this backwards is a very common cause of `0x87D1041C` on an application that installed perfectly.
 
@@ -8540,7 +8609,7 @@ After completing this lab, you will be able to:
    > [!IMPORTANT]
    > A detection script must do **both** things to signal detected: write something to standard output **and** exit with code 0. Exiting 0 with no output means not detected. Writing output but exiting non-zero means not detected. This two-part contract catches almost everyone the first time.
 
-   *A correct script detection rule*
+   *A correct script detection rule (evaluated by Intune Management Extension on client)*
    ```powershell
    if (Test-Path "C:\Program Files\7-Zip\7z.exe") {
        Write-Output "Detected"   # output is required
@@ -8548,8 +8617,6 @@ After completing this lab, you will be able to:
    }
    exit 1
    ```
-
-4. On **Assignments**, assign as **Required** to `GRP-USR-PILOT`, then create the app.
 
 **Results:** The app has a detection rule that matches what the installer actually produces.
 
@@ -8590,7 +8657,7 @@ After completing this lab, you will be able to:
 
 1. On **MD102-VM1-Adele**, sync policy and wait for the app to install.
 
-2. Whatever the outcome, read the log. This is the single most valuable file for Win32 troubleshooting:
+2. On **MD102-VM1-Adele**, open PowerShell as an administrator and read the IME log (the single most valuable file for Win32 troubleshooting):
 
    ```powershell
    $log = "C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\IntuneManagementExtension.log"
@@ -8752,7 +8819,7 @@ After completing this lab, you will be able to:
 
 4. Assign as **Required** to `GRP-DEV-WIN-CORP` and create the app.
 
-5. Sync **MD102-VM1-Adele** and confirm installation:
+5. Sync **MD102-VM1-Adele** and confirm installation in an elevated Administrator PowerShell session:
 
    ```powershell
    Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Office\ClickToRun\Configuration" -ErrorAction SilentlyContinue |
@@ -9380,7 +9447,7 @@ After completing this lab, you will be able to:
    | Name | **CFG-Edge-ManagedApps** |
    | Public apps | **Microsoft Edge (Android and iOS)** |
 
-3. On **Settings**, add key and value pairs. Managed apps policies use raw configuration keys rather than a designer:
+3. On **Settings**, add key and value pairs, then work through the wizard tabs:
 
    | Setting | Value |
    | --- | --- |
@@ -9388,6 +9455,12 @@ After completing this lab, you will be able to:
    | com.microsoft.intune.mam.managedbrowser.AllowListURLs | **contoso.com|sharepoint.com|office.com** |
    | com.microsoft.intune.mam.managedbrowser.defaultHTTPS | **true** |
    | com.microsoft.intune.mam.managedbrowser.disableShare | **true** |
+
+   a. On the **Basics** tab, enter Name `CFG-Edge-ManagedApps` and select Microsoft Edge, then select **Next**.
+   b. On the **Settings** tab, enter the four configuration keys and values above, then select **Next**.
+   c. On the **Scope tags** tab, leave **Default**, then select **Next**.
+   d. On the **Assignments** tab, assign to `GRP-USR-BYOD`, then select **Next**.
+   e. On the **Review + create** tab, select **Create**.
 
    > [!NOTE]
    > These keys are published by the application vendor. There is no picker and no validation — a mistyped key is accepted and silently ignored. Copy them from the vendor's documentation rather than typing from memory, and test the result on a device.
@@ -9525,7 +9598,7 @@ After completing this lab, you will be able to:
    | `AgentExecutor.log` | What did a PowerShell script or remediation actually output? |
    | `ClientHealth.log` | Is the Intune Management Extension itself healthy? |
 
-2. Trace one application end to end:
+2. On **MD102-VM1-Adele**, trace one application end to end in PowerShell:
 
    ```powershell
    $logs = "C:\ProgramData\Microsoft\IntuneManagementExtension\Logs"
@@ -9536,7 +9609,7 @@ After completing this lab, you will be able to:
    > [!TIP]
    > Install **CMTrace**, or use **Support Center** from the Microsoft Endpoint Manager tools. These logs are written in the Configuration Manager log format and are close to unreadable in Notepad — CMTrace colour-codes errors and follows the file live.
 
-3. Check the staging cache, which explains a class of failure that looks like a bad installer:
+3. On **MD102-VM1-Adele**, check the staging cache in PowerShell (which explains failures that look like a bad installer):
 
    ```powershell
    Get-ChildItem "C:\Windows\IMECache" -Recurse -ErrorAction SilentlyContinue |
@@ -9893,7 +9966,7 @@ After completing this lab, you will be able to:
 
    **Verify:** **AMRunningMode** reads `Normal`, and the protection flags are all `True`. A running mode of `Passive` or `EDR Block Mode` means another antivirus product is the active engine.
 
-2. Confirm the policy values arrived:
+2. On **MD102-VM2-Alex**, open PowerShell and confirm the policy values arrived:
 
    ```powershell
    Get-MpPreference |
@@ -9925,7 +9998,7 @@ After completing this lab, you will be able to:
    > [!IMPORTANT]
    > Tamper protection blocks changes to Defender settings from **any** source that is not Intune or the Defender portal — including local administrators, registry edits, PowerShell and Group Policy. That is the point: an attacker who gains local administrator rights still cannot disable real-time protection. It also means that once enabled, your own `Set-MpPreference` commands stop working, which surprises administrators mid-troubleshooting.
 
-3. Assign to `GRP-DEV-WIN-CORP`, create the policy, then verify after a sync:
+3. Assign to `GRP-DEV-WIN-CORP`, create the policy, then on **MD102-VM2-Alex** verify in PowerShell after a sync:
 
    ```powershell
    Get-MpComputerStatus | Select-Object IsTamperProtected, RealTimeProtectionEnabled
@@ -9942,7 +10015,7 @@ After completing this lab, you will be able to:
 
 1. Create a third policy with profile **Microsoft Defender Antivirus exclusions**, named `AV-Exclusions-LineOfBusiness`.
 
-2. Add only what a documented application vendor requires:
+2. Add only what a documented application vendor requires through the wizard tabs:
 
    | Setting | Value |
    | --- | --- |
@@ -9950,10 +10023,14 @@ After completing this lab, you will be able to:
    | Excluded Extensions | **Leave empty unless specifically required** |
    | Excluded Processes | **Leave empty unless specifically required** |
 
+   a. On the **Basics** tab, enter Name `AV-Exclusions-LineOfBusiness`, then select **Next**.
+   b. On the **Configuration settings** tab, enter the excluded path `C:\Program Files\ContosoERP\Data` under Path Exclusions, then select **Next**.
+   c. On the **Scope tags** tab, leave **Default**, then select **Next**.
+   d. On the **Assignments** tab, assign to `GRP-DEV-WIN-CORP` (or the specific app group), then select **Next**.
+   e. On the **Review + create** tab, select **Create**.
+
    > [!CAUTION]
    > An exclusion is a hole in your antivirus, and attackers look for them. Exclude the narrowest possible path, never a whole drive or a broad extension like `.exe`, and record which vendor document required it. Separating exclusions into their own policy — as here — means you can see every hole in one place rather than hunting through a large antivirus profile.
-
-3. Assign to a narrow group — only the devices running that application — and create the policy.
 
 **Results:** Exclusions are minimal, documented and separately visible.
 
@@ -10063,7 +10140,7 @@ After completing this lab, you will be able to:
    > [!NOTE]
    > Configure all three profiles even if you think only one applies. Windows chooses the network profile itself based on how it classifies the connection, and a laptop on hotel Wi-Fi is on **Public** whether you planned for it or not. Leaving a profile unconfigured leaves it at whatever the device had.
 
-3. Configure rule merging, which decides whether locally created rules survive:
+3. Configure rule merging through the wizard tabs (which decides whether locally created rules survive):
 
    | Setting | Value |
    | --- | --- |
@@ -10071,10 +10148,14 @@ After completing this lab, you will be able to:
    | Local policy rules not merged | **True** <br> Rules created on the device by a local administrator are ignored. |
    | Global port rules from group policy not merged | **True** |
 
+   a. On the **Basics** tab, enter Name `FW-Windows-Corporate`, then select **Next**.
+   b. On the **Configuration settings** tab, configure the network profile settings and rule merging settings above, then select **Next**.
+   c. On the **Scope tags** tab, leave **Default**, then select **Next**.
+   d. On the **Assignments** tab, assign to `GRP-DEV-WIN-CORP`, then select **Next**.
+   e. On the **Review + create** tab, select **Create**.
+
    > [!IMPORTANT]
    > Disabling local rule merging means only rules you deploy apply. Without it, a local administrator or an application installer can add a rule that punches a hole in your configuration, and nothing in the portal will tell you. Turning merging off is the difference between a firewall policy and a firewall suggestion.
-
-4. Assign to `GRP-DEV-WIN-CORP` and create the policy.
 
 **Results:** The firewall is enforced on all three network profiles with inbound blocked by default.
 
@@ -10112,7 +10193,7 @@ After completing this lab, you will be able to:
 1. Create a second policy: **Endpoint security** > **Firewall** > **Create Policy**, platform **Windows**, profile **Microsoft Defender Firewall Rules**.
    *Path:* **Endpoint security** > **Firewall** > **Create Policy**
 
-2. Name it `FW-Rules-LineOfBusiness`, then add a rule:
+2. Name it `FW-Rules-LineOfBusiness`, add a rule, and work through the wizard tabs:
 
    | Setting | Value |
    | --- | --- |
@@ -10124,15 +10205,19 @@ After completing this lab, you will be able to:
    | Local port ranges | **8443** |
    | File path | **C:\Program Files\ContosoERP\erp.exe** <br> Scoping to the executable means only that program can use the port. |
 
+   a. On the **Basics** tab, enter Name `FW-Rules-LineOfBusiness`, then select **Next**.
+   b. On the **Configuration settings** tab, select **Add**, configure the inbound rule fields above, select **Save**, then select **Next**.
+   c. On the **Scope tags** tab, leave **Default**, then select **Next**.
+   d. On the **Assignments** tab, assign to `GRP-DEV-WIN-CORP`, then select **Next**.
+   e. On the **Review + create** tab, select **Create**.
+
    > [!TIP]
    > Scope every rule as tightly as it will go: a specific program, a specific port, and only the network profiles where it makes sense. A rule that allows a port on all profiles for any program is a hole with a name.
-
-3. Assign to a narrow group and create the policy.
 
    > [!NOTE]
    > Each rules policy can hold up to 150 rules. A large ruleset should be split by purpose across several policies — it is easier to review, easier to assign to different populations, and easier to remove when an application is retired.
 
-4. After a sync, confirm on the client:
+3. After a sync, on **MD102-VM1-Adele** open PowerShell and confirm the rule:
 
    ```powershell
    Get-NetFirewallRule -DisplayName "*ContosoERP*" |
@@ -10263,7 +10348,7 @@ After completing this lab, you will be able to:
 
    **Verify:** Eight rule identifiers are listed, all reporting **Audit**.
 
-2. Learn the two event IDs that matter:
+2. Learn the two event IDs that matter and check the Defender operational log:
 
    | Event ID | Meaning |
    | --- | --- |
@@ -10272,7 +10357,7 @@ After completing this lab, you will be able to:
    | 1125 | A rule audited an operation in warn mode |
    | 1126 | A user dismissed a warn-mode prompt |
 
-   *Read ASR events from the Defender operational log*
+   *Run on MD102-VM2-Alex in PowerShell to read ASR events*
    ```powershell
    Get-WinEvent -LogName "Microsoft-Windows-Windows Defender/Operational" -MaxEvents 200 -ErrorAction SilentlyContinue |
        Where-Object Id -in 1121,1122,1125,1126 |
@@ -10281,7 +10366,7 @@ After completing this lab, you will be able to:
        Format-Table -Wrap
    ```
 
-3. Generate an audit event so you can see one. Open a document and run a macro, or simply run:
+3. Generate an audit event so you can see one. On **MD102-VM2-Alex**, open PowerShell and run:
 
    ```powershell
    # A deliberately obfuscated-looking command to trip the script rule
@@ -10480,7 +10565,7 @@ After completing this lab, you will be able to:
 
 #### Task 2: Watch encryption happen
 
-1. On **MD102-VM2-Alex**, sync policy and check status:
+1. On **MD102-VM2-Alex**, sync policy, open Windows PowerShell as an administrator, and check status:
 
    ```powershell
    manage-bde -status C:
@@ -10497,7 +10582,7 @@ After completing this lab, you will be able to:
        Numerical Password
    ```
 
-2. Confirm both key protectors exist:
+2. In the elevated Administrator PowerShell session on **MD102-VM2-Alex**, confirm both key protectors exist:
 
    ```powershell
    Get-BitLockerVolume -MountPoint C: |
@@ -10711,7 +10796,7 @@ After completing this lab, you will be able to:
 
 3. Assign to `GRP-DEV-WIN-CORP` and create the policy.
 
-4. On **MD102-VM2-Alex**, sync and verify the sensor:
+4. On **MD102-VM2-Alex**, sync policy, open Windows PowerShell as an administrator, and verify the sensor:
 
    ```powershell
    Get-Service Sense | Select-Object Name, Status, StartType
@@ -10781,7 +10866,7 @@ After completing this lab, you will be able to:
    > [!NOTE]
    > EICAR is a published test string that every antivirus product agrees to detect. It contains no malicious code whatsoever — its only purpose is exactly this: proving detection works without using real malware. Defender will quarantine it within seconds.
 
-2. Confirm the local detection:
+2. On **MD102-VM2-Alex**, open PowerShell and confirm the local detection:
 
    ```powershell
    Get-MpThreatDetection | Select-Object -Last 3 |
@@ -10970,7 +11055,7 @@ After completing this lab, you will be able to:
 
 #### Task 2: Read code integrity events and plan enforcement
 
-1. Audit events land in the code integrity log:
+1. On **MD102-VM2-Alex**, open PowerShell and check the code integrity log for audit events:
 
    ```powershell
    Get-WinEvent -LogName "Microsoft-Windows-CodeIntegrity/Operational" -MaxEvents 100 -ErrorAction SilentlyContinue |
@@ -11119,7 +11204,7 @@ After completing this lab, you will be able to:
 1. Select **Devices**, **Windows updates**, then **Update rings**, then **Create profile**.
    *Path:* **Devices** > **Windows updates** > **Update rings** > **Create profile**
 
-2. Create the pilot ring:
+2. On the **Basics** tab, enter Name `RING-1-Pilot`, then on the **Update ring settings** tab configure the update settings:
 
    | Setting | Value |
    | --- | --- |
@@ -11132,7 +11217,7 @@ After completing this lab, you will be able to:
    | Set feature update uninstall period (2-60 days) | **20** |
    | Enable pre-release builds | **Not configured** |
 
-3. Configure the user experience, which decides how much the update is allowed to interrupt:
+3. Configure the user experience through the wizard tabs (which decides how much the update is allowed to interrupt):
 
    | Setting | Value |
    | --- | --- |
@@ -11147,12 +11232,16 @@ After completing this lab, you will be able to:
    | Grace period (days) | **2** |
    | Auto reboot before deadline | **Yes** |
 
+   a. On the **Basics** tab, enter Name `RING-1-Pilot`, then select **Next**.
+   b. On the **Update ring settings** tab, configure the update settings and user experience fields above, then select **Next**.
+   c. On the **Scope tags** tab, leave **Default**, then select **Next**.
+   d. On the **Assignments** tab, assign to `GRP-USR-PILOT`, then select **Next**.
+   e. On the **Review + create** tab, select **Create**.
+
    > [!IMPORTANT]
    > **Deadline** and **grace period** work together and are frequently confused. The deadline is how long a device may defer restarting after an update is ready. The grace period is a minimum guaranteed window after installation, regardless of the deadline — so a laptop that has been switched off for a fortnight is not forced to restart the instant it powers on. Both are needed for a humane policy.
 
-4. Assign to `GRP-USR-PILOT` and create the profile.
-
-5. Create the broad ring the same way, named `RING-2-Broad`, with quality deferral **7**, feature deferral **30**, and assign it to `GRP-USR-BROAD`.
+4. Create the broad ring the same way, named `RING-2-Broad`, with quality deferral **7**, feature deferral **30**, and assign it to `GRP-USR-BROAD`.
 
    > [!WARNING]
    > A device can only be in one update ring. If two rings target the same device, Intune picks one and reports a conflict, and the outcome is not predictable. Keep ring membership mutually exclusive — this is a good reason to use assigned groups for rings rather than overlapping dynamic ones.
@@ -11182,7 +11271,7 @@ After completing this lab, you will be able to:
    > [!TIP]
    > Delivery Optimization is the answer to *how do we stop 200 devices each downloading the same 3 GB feature update*. One device downloads from Microsoft and the rest pull from it over the local network. On a branch office with a thin connection this is the difference between an update landing overnight and saturating the link for a day.
 
-3. Assign to `GRP-DEV-WIN-CORP` and create the profile, then verify on a device:
+3. Assign to `GRP-DEV-WIN-CORP` and create the profile, then on **MD102-VM1-Adele** open PowerShell and verify Delivery Optimization:
 
    ```powershell
    Get-DeliveryOptimizationStatus | Select-Object -First 5 FileId, FileSize, BytesFromPeers, BytesFromHttp
@@ -11858,7 +11947,7 @@ After completing this lab, you will be able to:
    > [!TIP]
    > **Update Windows Defender security intelligence** is the remote action people forget exists. When a new threat is circulating and you need every device on current definitions now, this is faster than waiting for the scheduled signature interval from lab 40.
 
-3. Confirm the sync from the device:
+3. On **MD102-VM1-Adele**, open PowerShell as an administrator and confirm the sync from the device:
 
    ```powershell
    Get-WinEvent -LogName "Microsoft-Windows-DeviceManagement-Enterprise-Diagnostics-Provider/Admin" -MaxEvents 20 |
@@ -12337,7 +12426,7 @@ After completing this lab, you will be able to:
    > [!TIP]
    > `Invoke-MgGraphRequest` reuses your existing authenticated session and can call any endpoint, including ones with no dedicated cmdlet. Combined with the developer tools technique, it means anything you can do in the portal you can automate — which is the practical answer to almost every *can Intune do X from PowerShell* question.
 
-3. Export your configuration as a backup:
+3. On your admin workstation or host, open PowerShell as an administrator and export your Intune configuration as a backup:
 
    ```powershell
    $out = "C:\Temp\IntuneBackup"
@@ -12561,7 +12650,7 @@ After completing this lab, you will be able to:
 
    **Verify:** The script prints a status line and exits `0` or `1`. Anything else is a bug — fix it before uploading, because the portal gives no useful diagnostics for a script that errors.
 
-3. Break the setting deliberately, then confirm detection notices:
+3. In the elevated Administrator PowerShell session on **MD102-VM1-Adele**, break the setting deliberately, then confirm detection notices:
 
    ```powershell
    New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" -Force | Out-Null
@@ -13561,15 +13650,14 @@ After completing this lab, you will be able to:
    > [!TIP]
    > Record the SHA-256 hash. A rule can match on file name alone, but a hash or a publisher certificate is what stops someone dropping their own `regedit.exe` into a writable folder and having your rule elevate it for them.
 
-2. Back in the portal, create a second policy under **Endpoint Privilege Management** > **Policies** > **Create Policy**:
+2. Back in the portal under **Endpoint Privilege Management** > **Policies**, open the policy dialog and choose the profile:
 
    | Setting | Value |
    | --- | --- |
    | Platform | **Windows** |
    | Profile | **Elevation rules policy** |
-   | Name | **EPM-Rules-Engineering** |
 
-3. Add a rule and configure it:
+3. Add a rule and work through the wizard tabs:
 
    | Setting | Value |
    | --- | --- |
@@ -13583,10 +13671,14 @@ After completing this lab, you will be able to:
    | File hash | **The SHA-256 you collected above** |
    | Child process behavior | **Deny all** <br> See the warning below — this is the setting that matters most. |
 
+   a. On the **Basics** tab, enter Name `EPM-Rules-Engineering`, then select **Next**.
+   b. On the **Execution rules** tab, select **Add rule**, configure the elevation rule fields above, select **Save**, then select **Next**.
+   c. On the **Scope tags** tab, leave **Default**, then select **Next**.
+   d. On the **Assignments** tab, assign to `GRP-USR-ENGINEERING`, then select **Next**.
+   e. On the **Review + create** tab, select **Create**.
+
    > [!CAUTION]
    > **Child process behaviour** is the setting attackers care about. An application permitted to elevate can spawn other processes, and if those inherit elevation the user has an elevated shell — full local administrator by another route. Set it to **Deny all**, or **Require rule** where the application genuinely must launch something else. Allowing all child processes converts a narrow, audited grant into a general one.
-
-4. On **Assignments**, assign to `GRP-USR-ENGINEERING`, then create the policy.
 
    > [!NOTE]
    > Note the asymmetry: the settings policy targets **devices**, because it enables a client component. The rules policy targets **users**, because elevation is a permission granted to a person. Getting these the wrong way round produces a policy that deploys and does nothing.

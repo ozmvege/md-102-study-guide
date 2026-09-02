@@ -203,20 +203,19 @@ export default {
               ]
             },
             {
-              text: "Back in the portal, create a second policy under **Endpoint Privilege Management** > **Policies** > **Create Policy**:",
+              text: "Back in the portal under **Endpoint Privilege Management** > **Policies**, open the policy dialog and choose the profile:",
               parts: [
                 {
                   kind: "inputs",
                   rows: [
                     { label: "Platform", value: "Windows" },
-                    { label: "Profile", value: "Elevation rules policy" },
-                    { label: "Name", value: "EPM-Rules-Engineering" }
+                    { label: "Profile", value: "Elevation rules policy" }
                   ]
                 }
               ]
             },
             {
-              text: "Add a rule and configure it:",
+              text: "Add a rule and work through the wizard tabs:",
               parts: [
                 {
                   kind: "inputs",
@@ -233,15 +232,20 @@ export default {
                   ]
                 },
                 {
+                  kind: "substeps",
+                  items: [
+                    { text: "On the **Basics** tab, enter Name `EPM-Rules-Engineering`, then select **Next**." },
+                    { text: "On the **Execution rules** tab, select **Add rule**, configure the elevation rule fields above, select **Save**, then select **Next**." },
+                    { text: "On the **Scope tags** tab, leave **Default**, then select **Next**." },
+                    { text: "On the **Assignments** tab, assign to `GRP-USR-ENGINEERING`, then select **Next**." },
+                    { text: "On the **Review + create** tab, select **Create**." }
+                  ]
+                },
+                {
                   kind: "callout",
                   variant: "caution",
                   text: "**Child process behaviour** is the setting attackers care about. An application permitted to elevate can spawn other processes, and if those inherit elevation the user has an elevated shell — full local administrator by another route. Set it to **Deny all**, or **Require rule** where the application genuinely must launch something else. Allowing all child processes converts a narrow, audited grant into a general one."
-                }
-              ]
-            },
-            {
-              text: "On **Assignments**, assign to `GRP-USR-ENGINEERING`, then create the policy.",
-              parts: [
+                },
                 {
                   kind: "callout",
                   variant: "note",

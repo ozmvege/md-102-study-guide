@@ -84,12 +84,12 @@ export default {
               ]
             },
             {
-              text: "Get the file off the machine. The simplest route with no shared folder is to upload it directly:",
+              text: "From the PowerShell prompt inside **MD102-VM3-Megan**, upload the hardware hash directly to Intune:",
               parts: [
                 {
                   kind: "code",
                   lang: "powershell",
-                  caption: "Uploads straight into Intune, skipping the CSV entirely",
+                  caption: "Uploads straight into Intune from MD102-VM3-Megan, skipping the CSV entirely",
                   code: "Install-Script -Name Get-WindowsAutopilotInfo -Force\nGet-WindowsAutopilotInfo -Online"
                 },
                 {
@@ -336,7 +336,7 @@ export default {
               ]
             },
             {
-              text: "When the desktop appears, verify the result:",
+              text: "When the desktop appears on **MD102-VM3-Megan**, verify the result in PowerShell:",
               parts: [
                 {
                   kind: "code",
@@ -350,7 +350,7 @@ export default {
               ]
             },
             {
-              text: "Confirm the user is a standard user, not a local administrator:",
+              text: "On **MD102-VM3-Megan**, confirm the user is a standard user, not a local administrator:",
               parts: [
                 {
                   kind: "code",

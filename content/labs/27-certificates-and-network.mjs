@@ -102,7 +102,7 @@ export default {
               nav: ["Tenant administration", "Cloud PKI", "Create"]
             },
             {
-              text: "Create the **root** certification authority first:",
+              text: "Create the **root** certification authority first through the wizard tabs:",
               parts: [
                 {
                   kind: "inputs",
@@ -117,6 +117,15 @@ export default {
                   ]
                 },
                 {
+                  kind: "substeps",
+                  items: [
+                    { text: "On the **Basics** tab, enter Name `Contoso Root CA` and the description, then select **Next**." },
+                    { text: "On the **Configuration settings** tab, select **Root CA**, set Validity to `10`, Key size `RSA-4096`, SHA-384, and CN `Contoso Root CA`, then select **Next**." },
+                    { text: "On the **Scope tags** tab, leave **Default**, then select **Next**." },
+                    { text: "On the **Review + create** tab, select **Create**." }
+                  ]
+                },
+                {
                   kind: "callout",
                   variant: "note",
                   text: "A root CA signs nothing except its own issuing CAs, which is why its validity is long and its key is large. Cloud PKI also supports **bring your own root** — an issuing CA anchored under an existing on-premises root — which is how an organisation adopts Cloud PKI without reissuing every trust relationship it already has."
@@ -124,7 +133,7 @@ export default {
               ]
             },
             {
-              text: "Create the **issuing** certification authority under it:",
+              text: "Create the **issuing** certification authority under it through the wizard tabs:",
               parts: [
                 {
                   kind: "inputs",
@@ -135,6 +144,15 @@ export default {
                     { label: "Validity period (years)", value: "5" },
                     { label: "Key size and algorithm", value: "RSA-2048, SHA-256" },
                     { label: "Subject attributes — Common name", value: "Contoso Issuing CA" }
+                  ]
+                },
+                {
+                  kind: "substeps",
+                  items: [
+                    { text: "On the **Basics** tab, enter Name `Contoso Issuing CA`, then select **Next**." },
+                    { text: "On the **Configuration settings** tab, select **Issuing CA**, select `Contoso Root CA` as root, set Validity to `5`, Key size `RSA-2048`, SHA-256, and CN `Contoso Issuing CA`, then select **Next**." },
+                    { text: "On the **Scope tags** tab, leave **Default**, then select **Next**." },
+                    { text: "On the **Review + create** tab, select **Create**." }
                   ]
                 },
                 {
@@ -173,7 +191,7 @@ export default {
               nav: ["Devices", "Configuration", "Create", "New Policy"]
             },
             {
-              text: "Configure it:",
+              text: "Configure it through the wizard tabs:",
               parts: [
                 {
                   kind: "inputs",
@@ -184,6 +202,16 @@ export default {
                   ]
                 },
                 {
+                  kind: "substeps",
+                  items: [
+                    { text: "On the **Basics** tab, enter Name `WIN-Cert-TrustedRoot`, then select **Next**." },
+                    { text: "On the **Configuration settings** tab, browse and upload the downloaded Contoso Root CA certificate file, and set Destination store to `Computer certificate store - Root`, then select **Next**." },
+                    { text: "On the **Scope tags** tab, leave **Default**, then select **Next**." },
+                    { text: "On the **Assignments** tab, assign the profile to `GRP-DEV-WIN-CORP`, then select **Next**." },
+                    { text: "On the **Review + create** tab, select **Create**." }
+                  ]
+                },
+                {
                   kind: "callout",
                   variant: "note",
                   text: "The destination store matters. A root certificate belongs in **Root**; an intermediate belongs in **Intermediate**. Putting an intermediate in the root store works but is wrong, and putting a root in the intermediate store breaks chain validation."
@@ -191,14 +219,11 @@ export default {
               ]
             },
             {
-              text: "Assign to `GRP-DEV-WIN-CORP` and create the profile."
-            },
-            {
               text: "Now create the SCEP profile that actually issues certificates. Create another profile, platform **Windows 10 and later**, profile type **Templates** > **SCEP certificate**.",
               nav: ["Devices", "Configuration", "Create", "New Policy"]
             },
             {
-              text: "Configure it:",
+              text: "Configure it through the wizard tabs:",
               parts: [
                 {
                   kind: "inputs",
@@ -218,15 +243,20 @@ export default {
                   ]
                 },
                 {
+                  kind: "substeps",
+                  items: [
+                    { text: "On the **Basics** tab, enter Name `WIN-Cert-SCEP-Device`, then select **Next**." },
+                    { text: "On the **Configuration settings** tab, configure the certificate settings and select the SCEP server URL from Contoso Issuing CA, then select **Next**." },
+                    { text: "On the **Scope tags** tab, leave **Default**, then select **Next**." },
+                    { text: "On the **Assignments** tab, assign the profile to `GRP-DEV-WIN-CORP`, then select **Next**." },
+                    { text: "On the **Review + create** tab, select **Create**." }
+                  ]
+                },
+                {
                   kind: "callout",
                   variant: "important",
                   text: "Compare this with what the same profile needed before Cloud PKI: an NDES server published to the internet, the Intune Certificate Connector installed and registered, a SCEP challenge password mechanism, and a certificate template configured on an on-premises CA. The profile fields are identical; three servers have disappeared from behind them."
-                }
-              ]
-            },
-            {
-              text: "Assign to `GRP-DEV-WIN-CORP` and create the profile.",
-              parts: [
+                },
                 {
                   kind: "callout",
                   variant: "warning",
@@ -235,7 +265,7 @@ export default {
               ]
             },
             {
-              text: "On **MD102-VM1-Adele**, sync policy, wait, then confirm the certificate arrived:",
+              text: "On **MD102-VM1-Adele**, sync policy, wait, then confirm the certificate arrived (run in an elevated Administrator PowerShell session):",
               parts: [
                 {
                   kind: "code",
@@ -354,7 +384,7 @@ export default {
           title: "Understand the VPN profile equivalent",
           steps: [
             {
-              text: "VPN profiles follow the same pattern. Create one with profile type **Templates** > **VPN** to see the fields.",
+              text: "VPN profiles follow the same pattern. Create one with profile type **Templates** > **VPN** to inspect the fields (review the settings on the **Configuration settings** tab, then cancel without saving):",
               parts: [
                 {
                   kind: "inputs",

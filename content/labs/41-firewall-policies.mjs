@@ -77,7 +77,7 @@ export default {
               ]
             },
             {
-              text: "Configure rule merging, which decides whether locally created rules survive:",
+              text: "Configure rule merging through the wizard tabs (which decides whether locally created rules survive):",
               parts: [
                 {
                   kind: "inputs",
@@ -88,14 +88,21 @@ export default {
                   ]
                 },
                 {
+                  kind: "substeps",
+                  items: [
+                    { text: "On the **Basics** tab, enter Name `FW-Windows-Corporate`, then select **Next**." },
+                    { text: "On the **Configuration settings** tab, configure the network profile settings and rule merging settings above, then select **Next**." },
+                    { text: "On the **Scope tags** tab, leave **Default**, then select **Next**." },
+                    { text: "On the **Assignments** tab, assign to `GRP-DEV-WIN-CORP`, then select **Next**." },
+                    { text: "On the **Review + create** tab, select **Create**." }
+                  ]
+                },
+                {
                   kind: "callout",
                   variant: "important",
                   text: "Disabling local rule merging means only rules you deploy apply. Without it, a local administrator or an application installer can add a rule that punches a hole in your configuration, and nothing in the portal will tell you. Turning merging off is the difference between a firewall policy and a firewall suggestion."
                 }
               ]
-            },
-            {
-              text: "Assign to `GRP-DEV-WIN-CORP` and create the policy."
             }
           ],
           result: {
@@ -153,7 +160,7 @@ export default {
               nav: ["Endpoint security", "Firewall", "Create Policy"]
             },
             {
-              text: "Name it `FW-Rules-LineOfBusiness`, then add a rule:",
+              text: "Name it `FW-Rules-LineOfBusiness`, add a rule, and work through the wizard tabs:",
               parts: [
                 {
                   kind: "inputs",
@@ -168,15 +175,20 @@ export default {
                   ]
                 },
                 {
+                  kind: "substeps",
+                  items: [
+                    { text: "On the **Basics** tab, enter Name `FW-Rules-LineOfBusiness`, then select **Next**." },
+                    { text: "On the **Configuration settings** tab, select **Add**, configure the inbound rule fields above, select **Save**, then select **Next**." },
+                    { text: "On the **Scope tags** tab, leave **Default**, then select **Next**." },
+                    { text: "On the **Assignments** tab, assign to `GRP-DEV-WIN-CORP`, then select **Next**." },
+                    { text: "On the **Review + create** tab, select **Create**." }
+                  ]
+                },
+                {
                   kind: "callout",
                   variant: "tip",
                   text: "Scope every rule as tightly as it will go: a specific program, a specific port, and only the network profiles where it makes sense. A rule that allows a port on all profiles for any program is a hole with a name."
-                }
-              ]
-            },
-            {
-              text: "Assign to a narrow group and create the policy.",
-              parts: [
+                },
                 {
                   kind: "callout",
                   variant: "note",
@@ -185,7 +197,7 @@ export default {
               ]
             },
             {
-              text: "After a sync, confirm on the client:",
+              text: "After a sync, on **MD102-VM1-Adele** open PowerShell and confirm the rule:",
               parts: [
                 {
                   kind: "code",

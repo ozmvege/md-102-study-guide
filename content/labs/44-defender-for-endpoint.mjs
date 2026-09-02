@@ -132,7 +132,7 @@ export default {
               text: "Assign to `GRP-DEV-WIN-CORP` and create the policy."
             },
             {
-              text: "On **MD102-VM2-Alex**, sync and verify the sensor:",
+              text: "On **MD102-VM2-Alex**, sync policy, open Windows PowerShell as an administrator, and verify the sensor:",
               parts: [
                 {
                   kind: "code",
@@ -233,7 +233,7 @@ export default {
               ]
             },
             {
-              text: "Confirm the local detection:",
+              text: "On **MD102-VM2-Alex**, open PowerShell and confirm the local detection:",
               parts: [
                 {
                   kind: "code",

@@ -50,7 +50,7 @@ export default {
               nav: ["Groups", "GRP-LIC-M365-E5", "Members"]
             },
             {
-              text: "Wait a few minutes for the licence to be revoked, then confirm:",
+              text: "Wait a few minutes for the licence to be revoked, then confirm in PowerShell on your management workstation:",
               parts: [
                 {
                   kind: "code",
@@ -173,7 +173,7 @@ export default {
               ]
             },
             {
-              text: "Also inspect the registry directly, which is faster when you only need enrollment state:",
+              text: "On **MD102-VM1-Adele**, inspect the registry directly in an elevated Administrator PowerShell session (which is faster when you only need enrollment state):",
               parts: [
                 {
                   kind: "code",
@@ -204,7 +204,7 @@ export default {
               nav: ["Applications and Services Logs", "Microsoft", "Windows", "DeviceManagement-Enterprise-Diagnostics-Provider", "Admin"]
             },
             {
-              text: "Or query it from PowerShell, which is faster:",
+              text: "Or query it from PowerShell on **MD102-VM1-Adele**, which is faster:",
               parts: [
                 {
                   kind: "code",

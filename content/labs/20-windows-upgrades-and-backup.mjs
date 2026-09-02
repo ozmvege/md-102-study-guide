@@ -60,7 +60,7 @@ export default {
               ]
             },
             {
-              text: "Inspect the licensing state:",
+              text: "On **MD102-VM1-Adele**, inspect the licensing state in Command Prompt:",
               parts: [
                 {
                   kind: "code",
@@ -114,7 +114,7 @@ export default {
               ]
             },
             {
-              text: "Give it a few minutes, then check the edition again:",
+              text: "Give it a few minutes, then check the edition again in PowerShell on **MD102-VM1-Adele**:",
               parts: [
                 {
                   kind: "code",
@@ -128,7 +128,7 @@ export default {
               ]
             },
             {
-              text: "If nothing changed, check the service that performs the upgrade:",
+              text: "If nothing changed, check the service that performs the upgrade in PowerShell on **MD102-VM1-Adele**:",
               parts: [
                 {
                   kind: "code",
@@ -182,7 +182,7 @@ export default {
               ]
             },
             {
-              text: "In the settings picker, search for `Windows Backup` and add the settings from the **Windows Backup** category. Configure:",
+              text: "In the settings picker, search for `Windows Backup`, add the settings from the **Windows Backup** category, and work through the wizard tabs:",
               parts: [
                 {
                   kind: "inputs",
@@ -194,14 +194,21 @@ export default {
                   ]
                 },
                 {
+                  kind: "substeps",
+                  items: [
+                    { text: "On the **Basics** tab, enter Name `WIN-Backup-Corporate`, then select **Next**." },
+                    { text: "On the **Configuration settings** tab, select **Add settings**, find the four settings above and enable each, then select **Next**." },
+                    { text: "On the **Scope tags** tab, leave **Default**, then select **Next**." },
+                    { text: "On the **Assignments** tab, assign the profile to `GRP-DEV-WIN-CORP`, then select **Next**." },
+                    { text: "On the **Review + create** tab, select **Create**." }
+                  ]
+                },
+                {
                   kind: "callout",
                   variant: "important",
                   text: "Windows Backup restores *settings and a list of apps*, not files and not the applications themselves. User files are OneDrive's job through Known Folder Move, and applications are redeployed by Intune. Confusing these is a common exam trap: a question asking how a user's documents survive a rebuild is asking about OneDrive, not Windows Backup."
                 }
               ]
-            },
-            {
-              text: "Assign the profile to `GRP-DEV-WIN-CORP` and create it."
             }
           ],
           result: {

@@ -58,7 +58,7 @@ export default {
               ]
             },
             {
-              text: "Select **Create restriction** > **Windows restriction**, then configure:",
+              text: "Select **Create restriction** > **Windows restriction**, then configure through the wizard tabs:",
               parts: [
                 {
                   kind: "inputs",
@@ -69,14 +69,21 @@ export default {
                     { label: "Minimum OS version", value: "10.0.22000", note: "Windows 11 baseline. Below this, enrollment is refused." },
                     { label: "Maximum OS version", value: "Leave blank" }
                   ]
+                },
+                {
+                  kind: "substeps",
+                  items: [
+                    { text: "On the **Basics** tab, enter Name `WIN-Corporate-Only`, then select **Next**." },
+                    { text: "On the **Platform settings** tab, set **Windows (MDM)** to **Allow**, **Personally owned** to **Block**, and set **Min OS** to `10.0.22000`, then select **Next**." },
+                    { text: "On the **Scope tags** tab, leave **Default**, then select **Next**." },
+                    { text: "On the **Assignments** tab, select **Add groups**, choose `GRP-USR-FINANCE` and `GRP-USR-IT`, then select **Next**." },
+                    { text: "On the **Review + create** tab, select **Create**." }
+                  ]
                 }
               ]
             },
             {
-              text: "On **Assignments**, assign it to `GRP-USR-FINANCE` and `GRP-USR-IT`, then create it."
-            },
-            {
-              text: "Create a second restriction for the BYOD population:",
+              text: "Create a second restriction for the BYOD population using the **Create restriction** > **Windows restriction** wizard:",
               parts: [
                 {
                   kind: "inputs",
@@ -84,6 +91,16 @@ export default {
                     { label: "Name", value: "WIN-BYOD-AppProtectionOnly" },
                     { label: "Windows (MDM)", value: "Block", note: "These users get app protection policies instead of device enrollment." },
                     { label: "Assignment", value: "GRP-USR-BYOD" }
+                  ]
+                },
+                {
+                  kind: "substeps",
+                  items: [
+                    { text: "On the **Basics** tab, enter Name `WIN-BYOD-AppProtectionOnly`, then select **Next**." },
+                    { text: "On the **Platform settings** tab, set **Windows (MDM)** to **Block**, then select **Next**." },
+                    { text: "On the **Scope tags** tab, leave **Default**, then select **Next**." },
+                    { text: "On the **Assignments** tab, assign to `GRP-USR-BYOD`, then select **Next**." },
+                    { text: "On the **Review + create** tab, select **Create**." }
                   ]
                 },
                 {
@@ -122,7 +139,7 @@ export default {
               nav: ["Devices", "Enrollment", "Device limit restrictions"]
             },
             {
-              text: "Select **Create restriction** and configure:",
+              text: "Select **Create restriction** and configure through the wizard tabs:",
               parts: [
                 {
                   kind: "inputs",
@@ -130,6 +147,16 @@ export default {
                     { label: "Name", value: "LIMIT-Standard-3" },
                     { label: "Device limit", value: "3" },
                     { label: "Assignment", value: "GRP-USR-FINANCE" }
+                  ]
+                },
+                {
+                  kind: "substeps",
+                  items: [
+                    { text: "On the **Basics** tab, enter Name `LIMIT-Standard-3`, then select **Next**." },
+                    { text: "On the **Device limit** tab, select `3`, then select **Next**." },
+                    { text: "On the **Scope tags** tab, leave **Default**, then select **Next**." },
+                    { text: "On the **Assignments** tab, select **Add groups**, select `GRP-USR-FINANCE`, then select **Next**." },
+                    { text: "On the **Review + create** tab, select **Create**." }
                   ]
                 },
                 {
@@ -178,12 +205,12 @@ export default {
               ]
             },
             {
-              text: "Create a CSV file with no header row, containing the identifier and an optional description:",
+              text: "On your host workstation, create a CSV file named `corporate-identifiers.csv` with no header row, containing the identifier and an optional description:",
               parts: [
                 {
                   kind: "code",
                   lang: "text",
-                  caption: "corporate-identifiers.csv — no header row",
+                  caption: "corporate-identifiers.csv — save on host or management workstation with no header row",
                   code: "1234-5678-9012-3456-7890-1234-56,Finance laptop - Alex Wilber"
                 },
                 {

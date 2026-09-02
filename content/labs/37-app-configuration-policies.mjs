@@ -163,7 +163,7 @@ export default {
               ]
             },
             {
-              text: "On **Settings**, add key and value pairs. Managed apps policies use raw configuration keys rather than a designer:",
+              text: "On **Settings**, add key and value pairs, then work through the wizard tabs:",
               parts: [
                 {
                   kind: "inputs",
@@ -172,6 +172,16 @@ export default {
                     { label: "com.microsoft.intune.mam.managedbrowser.AllowListURLs", value: "contoso.com|sharepoint.com|office.com" },
                     { label: "com.microsoft.intune.mam.managedbrowser.defaultHTTPS", value: "true" },
                     { label: "com.microsoft.intune.mam.managedbrowser.disableShare", value: "true" }
+                  ]
+                },
+                {
+                  kind: "substeps",
+                  items: [
+                    { text: "On the **Basics** tab, enter Name `CFG-Edge-ManagedApps` and select Microsoft Edge, then select **Next**." },
+                    { text: "On the **Settings** tab, enter the four configuration keys and values above, then select **Next**." },
+                    { text: "On the **Scope tags** tab, leave **Default**, then select **Next**." },
+                    { text: "On the **Assignments** tab, assign to `GRP-USR-BYOD`, then select **Next**." },
+                    { text: "On the **Review + create** tab, select **Create**." }
                   ]
                 },
                 {
