@@ -3369,19 +3369,22 @@ After completing this lab, you will be able to:
 - Licences: M365-E5, ENTRA-P2
 - Roles: Global Administrator, Intune Administrator
 - Devices and portals: Microsoft Intune admin center, vm2-alex (Windows 11 Pro)
-- Personas: admin-breakglass, alex.wilber, helpdesk.operator
+- Personas: alex.wilber, helpdesk.operator
 
 ### Exercise 1: Enable automatic enrollment
 
 #### Task 1: Configure the MDM user scope
 
-1. Sign in to the **Microsoft Intune admin center** as `admin-breakglass`, your **Global Administrator**. This one page needs it.
+1. Sign in to the **Microsoft Intune admin center** as the **Global Administrator** for your trial tenant — the signup account you first used in lab 0. This one page needs it.
 
    > [!IMPORTANT]
    > Automatic enrollment is shown inside Intune but is not an Intune setting. The page writes the **Mobility (MDM and MAM)** application configuration in Microsoft Entra ID, and only **Global Administrator** may change that — **Intune Administrator** is not enough. Signed in as `admin-intune` you can open this blade and read every field, and **Save** fails or the controls are greyed out. It looks like a bug and it is a permission.
 
+   > [!CAUTION]
+   > Use the tenant's own Global Administrator, **not** `admin-breakglass`. The emergency account is not a spare Global Administrator to reach for whenever a page needs one — lab 4 gives it a passphrase stored outside the tenant precisely so that using it is inconvenient, and makes its sign-ins discoverable so that one appearing means something. Spend it on a settings page and every future sign-in is noise you have trained yourself to ignore. Break-glass is for when normal administrative access has failed, which is not the case here.
+
    > [!NOTE]
-   > This is a deliberate exception to the rule from lab 4 that you work as `admin-intune`. Sign back in as `admin-intune` as soon as this task is saved — the rest of the lab does not need Global Administrator.
+   > This is a deliberate exception to the rule from lab 4 that you work as `admin-intune`, and it is the only task in this lab that needs one. Sign back in as `admin-intune` as soon as the page is saved.
 
 2. Select **Devices**, then **Enrollment**, then on the **Windows** tab select **Automatic Enrollment**.
    *Path:* **Devices** > **Enrollment** > **Windows** > **Automatic Enrollment**
@@ -3412,7 +3415,7 @@ After completing this lab, you will be able to:
 
 - [ ] **MDM user scope** is set to **All**.
 - [ ] **Windows Information Protection (WIP) user scope** — the MAM user scope — is set to **None**.
-- [ ] **Save** succeeded rather than erroring, which confirms you were signed in as a Global Administrator.
+- [ ] **Save** succeeded rather than erroring, which confirms you were signed in as a Global Administrator — and that you did not need `admin-breakglass` to do it.
 
 #### Task 2: Review the remaining enrollment settings
 
