@@ -30,7 +30,7 @@ export default {
       { kind: "portal", id: "Microsoft Intune admin center" },
       { kind: "vm", id: "vm2-alex", os: "Windows 11 Pro" }
     ],
-    personas: ["admin-breakglass", "alex.wilber", "helpdesk.operator"],
+    personas: ["alex.wilber", "helpdesk.operator"],
     labs: ["device-identity", "intune-rbac"]
   },
 
@@ -46,7 +46,7 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Sign in to the **Microsoft Intune admin center** as `admin-breakglass`, your **Global Administrator**. This one page needs it.",
+              text: "Sign in to the **Microsoft Intune admin center** as the **Global Administrator** for your trial tenant — the signup account you first used in lab 0. This one page needs it.",
               parts: [
                 {
                   kind: "callout",
@@ -55,8 +55,13 @@ export default {
                 },
                 {
                   kind: "callout",
+                  variant: "caution",
+                  text: "Use the tenant's own Global Administrator, **not** `admin-breakglass`. The emergency account is not a spare Global Administrator to reach for whenever a page needs one — lab 4 gives it a passphrase stored outside the tenant precisely so that using it is inconvenient, and makes its sign-ins discoverable so that one appearing means something. Spend it on a settings page and every future sign-in is noise you have trained yourself to ignore. Break-glass is for when normal administrative access has failed, which is not the case here."
+                },
+                {
+                  kind: "callout",
                   variant: "note",
-                  text: "This is a deliberate exception to the rule from lab 4 that you work as `admin-intune`. Sign back in as `admin-intune` as soon as this task is saved — the rest of the lab does not need Global Administrator."
+                  text: "This is a deliberate exception to the rule from lab 4 that you work as `admin-intune`, and it is the only task in this lab that needs one. Sign back in as `admin-intune` as soon as the page is saved."
                 }
               ]
             },
@@ -108,7 +113,7 @@ export default {
             verify: [
               { text: "**MDM user scope** is set to **All**." },
               { text: "**Windows Information Protection (WIP) user scope** — the MAM user scope — is set to **None**." },
-              { text: "**Save** succeeded rather than erroring, which confirms you were signed in as a Global Administrator." }
+              { text: "**Save** succeeded rather than erroring, which confirms you were signed in as a Global Administrator — and that you did not need `admin-breakglass` to do it." }
             ]
           }
         },
