@@ -127,7 +127,18 @@ export default {
               nav: ["Devices", "Enrollment", "Enrollment notifications"]
             },
             {
-              text: "Open **Device categories**. Create one so you can see how it changes the enrollment experience:",
+              text: "Leave the enrollment blade for the last part of this task. In the **Devices** menu, expand **Manage devices**, select **Device categories**, then select **Create**.",
+              nav: ["Devices", "Manage devices", "Device categories", "Create"],
+              parts: [
+                {
+                  kind: "callout",
+                  variant: "important",
+                  text: "Device categories are not inside **Devices** > **Enrollment**, so no amount of looking around **Enrollment notifications** or the platform tabs will turn them up. They used to live under *Device enrollment*, which is where older documentation and a good deal of exam material still puts them, and the portal has since moved them into **Manage devices** with the other device-wide lists. Only the location changed."
+                }
+              ]
+            },
+            {
+              text: "Fill in *Basics*, then select **Next**, leave the scope tags at **Default**, select **Next** again and select **Create**:",
               parts: [
                 {
                   kind: "inputs",
@@ -139,15 +150,20 @@ export default {
                 {
                   kind: "callout",
                   variant: "tip",
-                  text: "When device categories exist, users are prompted to pick one during enrollment, and the choice can drive dynamic group membership through `device.deviceCategory`. It is a cheap way to let users self-classify hardware you cannot pre-register."
+                  text: "The name is the value the rest of the tenant keys off, so it is worth settling now. A dynamic group rule of `device.deviceCategory -eq \"Shared workstation\"` and an assignment filter on the same property both match the literal string, and renaming the category later silently breaks every rule that quoted the old name."
+                },
+                {
+                  kind: "callout",
+                  variant: "note",
+                  text: "Where the user is asked for a category depends on the platform, and Windows is the awkward one. On iOS/iPadOS, macOS and Android the prompt appears in the Company Portal app; Windows users are never prompted during enrollment and choose at `portal.manage.microsoft.com` under **My devices**. Do not expect `MD102-VM2-Alex` to ask for one when it enrolls in exercise 3 — an administrator sets the category on **Devices** > **All devices** > the device > **Properties** instead. The **Customization** profile from the next exercise is also where that prompt can be suppressed entirely."
                 }
               ]
             }
           ],
           result: {
-            text: "You know what else lives in the enrollment blade beyond the automatic enrollment toggle.",
+            text: "You know what else lives in the enrollment blade beyond the automatic enrollment toggle, and where one setting people go looking for there actually lives.",
             verify: [
-              { text: "A device category exists." }
+              { text: "**Devices** > **Manage devices** > **Device categories** lists **Shared workstation**." }
             ]
           }
         }
