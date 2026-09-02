@@ -84,7 +84,7 @@ export default {
                   headers: ["Requirement", "What happens when you miss it"],
                   rows: [
                     ["The approver group is a **security group**", "Microsoft 365 groups, distribution lists and mail-enabled security groups silently fail to resolve. No error — just no approvers."],
-                    ["The group is directly assigned to an Intune role as a *member group*", "If the group is not on a role assignment, Intune periodically strips its members and approvals stop working. Permissions the members hold individually or through other groups do not count."],
+                    ["The group is directly assigned to an Intune role as a *member group* — the page the portal labels **Admin Groups**", "If the group is not on a role assignment, Intune periodically strips its members and approvals stop working. Permissions the members hold individually or through other groups do not count."],
                     ["Members are direct members of that group", "Nested group membership behaves unreliably."],
                     ["The approver holds *Read* on the resource being approved", "An approver who cannot read scripts cannot approve a script request. Approving a device delete needs `ManagedDevices/Read`."],
                     ["The approver is not the requester", "An administrator can never approve their own request."]
@@ -138,20 +138,54 @@ export default {
               text: "In the **Microsoft Entra admin center**, create a **security group** named `GRP-ADM-APPROVERS` and add `patti.fernandez` as a direct member."
             },
             {
-              text: "In the **Microsoft Intune admin center**, assign the built-in **Read Only Operator** role to the group, using the flow from lab 7. Assign it to `GRP-ADM-APPROVERS` as the *member group* — not to Patti directly.",
-              nav: ["Tenant administration", "Roles", "All roles"],
+              text: "In the **Microsoft Intune admin center**, select **Tenant administration**, then **Roles**, then **All roles**, then select the built-in **Read Only Operator** role from the list.",
+              nav: ["Tenant administration", "Roles", "All roles", "Read Only Operator"],
               parts: [
                 {
                   kind: "callout",
                   variant: "note",
-                  text: "This assignment does two jobs. It gives Patti the *Read* permissions she needs to see what she is approving, and it satisfies the rule that the approver group must itself be on a role assignment or Intune will strip its members."
+                  text: "This assignment does two jobs. It gives Patti the *Read* permissions she needs to see what she is approving, and it satisfies the rule that the approver group must itself be on a role assignment, or Intune periodically strips its members and approvals stop working."
                 }
               ]
             },
             {
-              text: "**Read Only Operator** cannot approve an access policy, so create a custom role for that. Select **Tenant administration**, then **Roles**, then **All roles**, then **Create**.",
-              nav: ["Tenant administration", "Roles", "All roles", "Create"],
+              text: "Select **Assignments**, then **Create assignment**. The blade that opens is titled **Add Role Assignment** and has five pages — **Basics**, **Admin Groups**, **Scope Groups**, **Scope tags** and **Review + create**. Fill them in like this:",
               parts: [
+                {
+                  kind: "substeps",
+                  items: [
+                    { text: "*Basics* — **Name** `MAA approvers — read access`, **Description** `Read access so approvers can see what they are approving`. Select **Next**." },
+                    { text: "*Admin Groups* — select **Add groups**, tick `GRP-ADM-APPROVERS`, choose **Select**, then **Next**. This page is *who receives the role*." },
+                    { text: "*Scope Groups* — the *Included groups* list opens reading **No groups selected**. Select **Add all users**, then **Add all devices**, then **Next**. This page is *which users and devices they may act on*." },
+                    { text: "*Scope tags* — leave **Default** selected and choose **Next**." },
+                    { text: "*Review + create* — check the summary and choose **Create**." }
+                  ]
+                },
+                {
+                  kind: "callout",
+                  variant: "important",
+                  text: "**Admin Groups** is the page the multi-admin approval documentation calls the *member group*. Two names, one thing, and the mismatch strands people — put `GRP-ADM-APPROVERS` there, not on **Scope Groups** and not on `patti.fernandez` directly. A group named only under *Scope Groups* looks assigned in the list and satisfies nothing, so Intune strips the approver list on its next pass."
+                },
+                {
+                  kind: "callout",
+                  variant: "note",
+                  text: "Leaving *Scope Groups* empty breaks this the other way. The assignment saves, Patti holds the role, and she can read nothing — so a request she opens describes a change she has no permission to see. Approving a script request needs *Read* on scripts; approving a device delete needs `ManagedDevices/Read`."
+                },
+                {
+                  kind: "verify",
+                  text: "**Read Only Operator** > **Assignments** lists **MAA approvers — read access**, and opening it shows `GRP-ADM-APPROVERS` under *Admin Groups*."
+                }
+              ]
+            },
+            {
+              text: "**Read Only Operator** cannot approve an access policy, so create a custom role for that. Select **Tenant administration**, then **Roles**, then **All roles**, then **Create**, then **Intune role**. On *Basics*, fill in:",
+              nav: ["Tenant administration", "Roles", "All roles", "Create", "Intune role"],
+              parts: [
+                {
+                  kind: "callout",
+                  variant: "note",
+                  text: "**Create** is a dropdown rather than a button, and which entry you pick matters. **Intune role** is the only one that can carry multi-admin approval permissions — **Windows 365 role** builds a Cloud PC role instead, and **Windows Autopatch role** is greyed out until Autopatch is set up."
+                },
                 {
                   kind: "inputs",
                   rows: [
@@ -180,11 +214,25 @@ export default {
               ]
             },
             {
-              text: "Finish the wizard, then assign **MAA Approver** to `GRP-ADM-APPROVERS` as the member group, exactly as you did for **Read Only Operator**.",
+              text: "Select **Next** to reach *Scope tags*, leave **Default** selected, select **Next** again, then **Create** on *Review + create*."
+            },
+            {
+              text: "A custom role does nothing until it is assigned. Select **Tenant administration**, then **Roles**, then **All roles**, then **MAA Approver**, then **Assignments**, then **Create assignment**, and work the same five pages you used for **Read Only Operator**:",
+              nav: ["Tenant administration", "Roles", "All roles", "MAA Approver", "Assignments"],
               parts: [
                 {
+                  kind: "substeps",
+                  items: [
+                    { text: "*Basics* — **Name** `MAA approvers — approval rights`." },
+                    { text: "*Admin Groups* — **Add groups**, then `GRP-ADM-APPROVERS`." },
+                    { text: "*Scope Groups* — **Add all users** and **Add all devices**." },
+                    { text: "*Scope tags* — leave **Default** selected." },
+                    { text: "*Review + create* — select **Create**." }
+                  ]
+                },
+                {
                   kind: "verify",
-                  text: "`GRP-ADM-APPROVERS` appears as a member group on two role assignments: **Read Only Operator** and **MAA Approver**."
+                  text: "`GRP-ADM-APPROVERS` appears under *Admin Groups* on two role assignments: one on **Read Only Operator** and one on **MAA Approver**."
                 }
               ]
             }
@@ -451,7 +499,21 @@ export default {
               ]
             },
             {
-              text: "Now give the script an audience. Open **MAA test script**, select **Edit** beside *Assignments*, add `GRP-USR-PILOT`, and save.",
+              text: "Now give the script an audience. Select **Devices**, then **Scripts and remediations**, then the **Platform scripts** tab, then select **MAA test script** to open it.",
+              nav: ["Devices", "Scripts and remediations", "Platform scripts", "MAA test script"]
+            },
+            {
+              text: "The script opens on **Overview**. Under *Manage* in the left-hand menu, select **Properties**. That page lists the script's sections — *Basics*, *Script settings*, *Scope tags* and *Assignments* — each with its own **Edit** link. Select **Edit** beside *Assignments*.",
+              parts: [
+                {
+                  kind: "callout",
+                  variant: "note",
+                  text: "**Properties** is where every change to an existing script starts, and there is no *Assignments* entry in the left-hand menu to shortcut to. The two entries under *Monitor* — **Device status** and **User status** — report on where the script has already run; they do not target it anywhere new."
+                }
+              ]
+            },
+            {
+              text: "Select **Add groups**, tick `GRP-USR-PILOT`, choose **Select**, then **Review + save**. Because the script is a protected resource, saving asks for a justification and the final button reads **Submit for approval** rather than **Save**.",
               parts: [
                 {
                   kind: "inputs",

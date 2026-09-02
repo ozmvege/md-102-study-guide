@@ -414,14 +414,14 @@ if ($missing.Count -eq 0) {
 
 **Q1.** You are choosing installation media for the lab virtual machines. Which should you use so that every lab in this course can be completed?
 
-A. A Windows 11 Pro ISO, so subscription activation to Enterprise can be demonstrated
-B. The Windows 11 Enterprise evaluation ISO, because the labs require Enterprise features
-C. A Windows 11 Home ISO, upgraded in place later
-D. Any Windows 11 ISO — the edition has no bearing on Intune management
+A. Any Windows 11 ISO — the edition has no bearing on Intune management
+B. A Windows 11 Pro ISO, so subscription activation to Enterprise can be demonstrated
+C. The Windows 11 Enterprise evaluation ISO, because the labs require Enterprise features
+D. A Windows 11 Home ISO, upgraded in place later
 
 <details><summary>Answer</summary>
 
-**A** — Subscription activation steps a Pro device up to Enterprise using the Windows 11 Enterprise E5 entitlement in Microsoft 365 E5. Starting from Enterprise leaves nothing to activate, and the evaluation image additionally expires after 90 days.
+**B** — Subscription activation steps a Pro device up to Enterprise using the Windows 11 Enterprise E5 entitlement in Microsoft 365 E5. Starting from Enterprise leaves nothing to activate, and the evaluation image additionally expires after 90 days.
 
 *Exam tip:* Subscription activation needs three things and all three fail silently: the device Microsoft Entra joined, the user holding a Windows Enterprise entitlement, and ClipSVC running.
 
@@ -430,9 +430,9 @@ D. Any Windows 11 ISO — the edition has no bearing on Intune management
 **Q2.** You create an Android virtual device to practise Android Enterprise enrollment. Which system image must you choose?
 
 A. An image labelled Google Play
-B. An image labelled Google APIs
-C. An AOSP image, because it is closest to a managed device
-D. Any image — Company Portal is sideloaded during enrollment
+B. Any image — Company Portal is sideloaded during enrollment
+C. An image labelled Google APIs
+D. An AOSP image, because it is closest to a managed device
 
 <details><summary>Answer</summary>
 
@@ -719,14 +719,14 @@ Disconnect-MgGraph
 
 **Q1.** You assign Microsoft 365 E5 to a security group. A new user is added to the group but remains unlicensed. Every other member of the group is licensed correctly and 8 seats are free. What is the most likely cause?
 
-A. The user has no usage location set
-B. The group membership type is Assigned rather than Dynamic
-C. The MDM authority has not been set to Microsoft Intune
+A. The MDM authority has not been set to Microsoft Intune
+B. The user has no usage location set
+C. The group membership type is Assigned rather than Dynamic
 D. The user needs to sign in once before the licence applies
 
 <details><summary>Answer</summary>
 
-**A** — Group-based licensing cannot assign a seat to an account with no usage location, because licence availability is determined per country. Seats being free rules out an exhausted pool, and membership type has no bearing on whether an individual member gets licensed.
+**B** — Group-based licensing cannot assign a seat to an account with no usage location, because licence availability is determined per country. Seats being free rules out an exhausted pool, and membership type has no bearing on whether an individual member gets licensed.
 
 *Exam tip:* When a licensing question tells you seats are available, the answer is almost always usage location or a service-plan conflict — not the pool.
 
@@ -734,14 +734,14 @@ D. The user needs to sign in once before the licence applies
 
 **Q2.** Your tenant was created in 2024. You want your Intune administrators to manage the service without consuming Microsoft 365 E5 seats. What must you do?
 
-A. Nothing — unlicensed admin access is enabled by default for tenants created after July 2021
-B. Enable Allow access to unlicensed admins under Administrator Licensing
-C. Assign each administrator an Intune device-only licence
+A. Assign each administrator an Intune device-only licence
+B. Nothing — unlicensed admin access is enabled by default for tenants created after July 2021
+C. Enable Allow access to unlicensed admins under Administrator Licensing
 D. Add the administrators to a group excluded from group-based licensing
 
 <details><summary>Answer</summary>
 
-**A** — Unlicensed admin access is on by default for tenants created after July 2021. Only older tenants need the setting enabled manually, and that change cannot be reversed.
+**B** — Unlicensed admin access is on by default for tenants created after July 2021. Only older tenants need the setting enabled manually, and that change cannot be reversed.
 
 *Exam tip:* Remember the July 2021 cutoff and that enabling the setting is one-way. Device-only licences are for unattended kiosk and dedicated devices, not for administrators.
 
@@ -1075,14 +1075,14 @@ Get-VM MD102-* | ForEach-Object {
 
 **Q1.** You created a Hyper-V virtual machine for a Windows 11 lab, but BitLocker will not enable silently and the device reports non-compliant against a rule requiring a TPM. The machine runs Windows 11 correctly. What is the most likely cause?
 
-A. The virtual machine is Generation 1, so it has no TPM and cannot be given one
-B. The virtual machine has too little memory assigned
-C. Secure Boot is enabled but the template is set to Microsoft Windows
+A. The virtual machine has too little memory assigned
+B. Secure Boot is enabled but the template is set to Microsoft Windows
+C. The virtual machine is Generation 1, so it has no TPM and cannot be given one
 D. Dynamic memory prevents the TPM from initialising
 
 <details><summary>Answer</summary>
 
-**A** — A virtual TPM requires Generation 2 UEFI firmware. Generation 1 machines are BIOS-based and cannot have Secure Boot or a vTPM at all, and generation cannot be changed after creation — the machine has to be rebuilt.
+**C** — A virtual TPM requires Generation 2 UEFI firmware. Generation 1 machines are BIOS-based and cannot have Secure Boot or a vTPM at all, and generation cannot be changed after creation — the machine has to be rebuilt.
 
 *Exam tip:* TPM 2.0 underpins silent BitLocker, hardware-backed Windows Hello for Business and several default compliance rules. When several unrelated things fail at once on one device, suspect the platform rather than each policy.
 
@@ -1528,14 +1528,14 @@ if ($failures) { exit 1 }
 
 **Q1.** A script creates twenty users and adds them to a group that has Microsoft 365 E5 assigned. All twenty appear in the group, ten receive licences and ten do not. Sixty seats are available. What should you check first?
 
-A. Whether the ten unlicensed accounts have a usage location set
+A. Whether the ten accounts have signed in at least once
 B. Whether the group membership type is dynamic
-C. Whether the tenant MDM authority is set to Intune
-D. Whether the ten accounts have signed in at least once
+C. Whether the ten unlicensed accounts have a usage location set
+D. Whether the tenant MDM authority is set to Intune
 
 <details><summary>Answer</summary>
 
-**A** — Licence availability is determined per country, so an account with no usage location cannot be assigned a seat. The assignment fails without an error on the user object, which is why a partial failure like this points straight at usage location once you know the pool is not exhausted.
+**C** — Licence availability is determined per country, so an account with no usage location cannot be assigned a seat. The assignment fails without an error on the user object, which is why a partial failure like this points straight at usage location once you know the pool is not exhausted.
 
 *Exam tip:* Group-based licensing has exactly three common failure causes: no usage location, an exhausted pool, and a service-plan conflict with another licence. Rule them out in that order.
 
@@ -1543,14 +1543,14 @@ D. Whether the ten accounts have signed in at least once
 
 **Q2.** You are connected to Microsoft Graph as a Global Administrator with the scope `User.Read.All`. You attempt to create a group and receive an authorisation error. What is the cause?
 
-A. The access token was not granted the scopes needed for the operation
-B. Global Administrator cannot create groups without Privileged Identity Management activation
+A. Global Administrator cannot create groups without Privileged Identity Management activation
+B. The access token was not granted the scopes needed for the operation
 C. The Microsoft.Graph.Groups sub-module is not installed
 D. Group creation requires the beta Graph endpoint
 
 <details><summary>Answer</summary>
 
-**A** — Directory role membership and token scopes are separate. A token issued for `User.Read.All` carries only that permission regardless of how privileged the signed-in account is, so the call is rejected before any role check happens.
+**B** — Directory role membership and token scopes are separate. A token issued for `User.Read.All` carries only that permission regardless of how privileged the signed-in account is, so the call is rejected before any role check happens.
 
 *Exam tip:* For any Graph automation question, ask what the token was granted rather than who the user is. Reconnecting with additional scopes is the fix.
 
@@ -1786,14 +1786,14 @@ $rows | Sort-Object Role, Principal | Format-Table -AutoSize
 
 **Q1.** Which configuration is correct for an emergency access account intended to survive a Conditional Access misconfiguration?
 
-A. Cloud-only, permanently assigned Global Administrator, and excluded from all Conditional Access policies
-B. Synchronised from on-premises Active Directory with a permanently assigned Global Administrator role
-C. Cloud-only and eligible for Global Administrator through Privileged Identity Management, activated with MFA
-D. Cloud-only with Global Administrator, included in Conditional Access but exempt from MFA
+A. Synchronised from on-premises Active Directory with a permanently assigned Global Administrator role
+B. Cloud-only and eligible for Global Administrator through Privileged Identity Management, activated with MFA
+C. Cloud-only with Global Administrator, included in Conditional Access but exempt from MFA
+D. Cloud-only, permanently assigned Global Administrator, and excluded from all Conditional Access policies
 
 <details><summary>Answer</summary>
 
-**A** — The account must not depend on anything that can break. Directory synchronisation adds an on-premises dependency, and PIM eligibility requires an activation flow that can itself be blocked by the misconfiguration you are trying to fix. Permanent assignment plus explicit Conditional Access exclusion is the supported pattern.
+**D** — The account must not depend on anything that can break. Directory synchronisation adds an on-premises dependency, and PIM eligibility requires an activation flow that can itself be blocked by the misconfiguration you are trying to fix. Permanent assignment plus explicit Conditional Access exclusion is the supported pattern.
 
 *Exam tip:* Exclusion from a policy and exemption within it are not the same. Only exclusion guarantees the policy is never evaluated for that account.
 
@@ -2069,14 +2069,14 @@ Get-MgDevice -All |
 
 **Q1.** A user's personally owned Windows 11 laptop must access corporate email with data protection applied, but the organisation must not take ownership of the device or control its sign-in. Which device identity is appropriate?
 
-A. Microsoft Entra registered
-B. Microsoft Entra joined
-C. Hybrid Microsoft Entra joined
-D. Domain joined only
+A. Microsoft Entra joined
+B. Domain joined only
+C. Microsoft Entra registered
+D. Hybrid Microsoft Entra joined
 
 <details><summary>Answer</summary>
 
-**A** — Registration gives the organisation a device identity while the user keeps their local or Microsoft account sign-in and ownership of the machine. Joining replaces the Windows sign-in with a work account and implies corporate ownership.
+**C** — Registration gives the organisation a device identity while the user keeps their local or Microsoft account sign-in and ownership of the machine. Joining replaces the Windows sign-in with a work account and implies corporate ownership.
 
 *Exam tip:* Read the ownership sentence in the scenario first. Personal ownership means registered; corporate ownership means joined, and hybrid joined only when on-premises Active Directory must remain in the picture.
 
@@ -2084,14 +2084,14 @@ D. Domain joined only
 
 **Q2.** `dsregcmd /status` on a Windows 11 device reports `AzureAdJoined : YES`, `DomainJoined : YES` and `AzureAdPrt : YES`. What is this device?
 
-A. Hybrid Microsoft Entra joined
+A. Microsoft Entra registered
 B. Microsoft Entra joined only
-C. Microsoft Entra registered
-D. Co-managed but not joined to Microsoft Entra ID
+C. Co-managed but not joined to Microsoft Entra ID
+D. Hybrid Microsoft Entra joined
 
 <details><summary>Answer</summary>
 
-**A** — `AzureAdJoined` and `DomainJoined` both reading YES is the definition of hybrid join — the device holds a trust relationship with both on-premises Active Directory and Microsoft Entra ID.
+**D** — `AzureAdJoined` and `DomainJoined` both reading YES is the definition of hybrid join — the device holds a trust relationship with both on-premises Active Directory and Microsoft Entra ID.
 
 *Exam tip:* Memorise the three signatures: joined is AzureAdJoined YES with DomainJoined NO; hybrid is both YES; registered is WorkplaceJoined YES with AzureAdJoined NO.
 
@@ -2303,14 +2303,14 @@ Get-MgGroup -All |
 
 **Q1.** You need a dynamic device group containing every device registered with Windows Autopilot. Which membership rule is correct?
 
-A. `(device.devicePhysicalIds -any (_ -startsWith "[ZTDId]"))`
+A. `(device.deviceOwnership -eq "Autopilot")`
 B. `(device.devicePhysicalIds -startsWith "[ZTDId]")`
-C. `(device.deviceOwnership -eq "Autopilot")`
-D. `(device.enrollmentProfileName -eq "Autopilot")`
+C. `(device.enrollmentProfileName -eq "Autopilot")`
+D. `(device.devicePhysicalIds -any (_ -startsWith "[ZTDId]"))`
 
 <details><summary>Answer</summary>
 
-**A** — `devicePhysicalIds` is multi-valued, so it requires the `-any` operator with the `_` placeholder representing each element. Without `-any` the expression is rejected as invalid syntax.
+**D** — `devicePhysicalIds` is multi-valued, so it requires the `-any` operator with the `_` placeholder representing each element. Without `-any` the expression is rejected as invalid syntax.
 
 *Exam tip:* This exact rule appears in Microsoft's Autopilot documentation and on the exam. Learn it verbatim, including the square brackets around ZTDId.
 
@@ -2318,14 +2318,14 @@ D. `(device.enrollmentProfileName -eq "Autopilot")`
 
 **Q2.** A dynamic device group uses the rule `(device.deviceOwnership -eq "Corporate")`. The group has no members despite many corporate devices being enrolled. What is wrong?
 
-A. The correct attribute value is `Company`, not `Corporate`
-B. Dynamic device groups require Microsoft Entra ID P2
+A. Device ownership can only be evaluated in a Dynamic User group
+B. The correct attribute value is `Company`, not `Corporate`
 C. The rule must use `-contains` rather than `-eq`
-D. Device ownership can only be evaluated in a Dynamic User group
+D. Dynamic device groups require Microsoft Entra ID P2
 
 <details><summary>Answer</summary>
 
-**A** — The Intune portal displays corporate devices as *Corporate*, but the directory attribute value is the string `Company`. The rule is syntactically valid, so it saves and evaluates successfully — it simply matches nothing.
+**B** — The Intune portal displays corporate devices as *Corporate*, but the directory attribute value is the string `Company`. The rule is syntactically valid, so it saves and evaluates successfully — it simply matches nothing.
 
 *Exam tip:* Valid syntax with zero members almost always means a wrong literal value rather than a wrong operator. Use Validate Rules against a known-good device to confirm.
 
@@ -2592,14 +2592,14 @@ $rows | Sort-Object Role | Format-Table -AutoSize
 
 **Q1.** You create a custom Intune role granting only application permissions and assign it to a help desk group. One member reports they can also edit compliance policies. What is the most likely explanation?
 
-A. That member holds the Microsoft Entra Intune Administrator role, which supersedes Intune RBAC
-B. Custom roles always inherit the permissions of the Help Desk Operator built-in role
-C. The role assignment scope group includes All devices
-D. Compliance policy permissions cannot be removed from a custom role
+A. Custom roles always inherit the permissions of the Help Desk Operator built-in role
+B. Compliance policy permissions cannot be removed from a custom role
+C. That member holds the Microsoft Entra Intune Administrator role, which supersedes Intune RBAC
+D. The role assignment scope group includes All devices
 
 <details><summary>Answer</summary>
 
-**A** — Microsoft Entra directory roles grant service-wide permissions that Intune RBAC cannot reduce. Restricting an account with Intune RBAC only works if that account holds no broad directory role.
+**C** — Microsoft Entra directory roles grant service-wide permissions that Intune RBAC cannot reduce. Restricting an account with Intune RBAC only works if that account holds no broad directory role.
 
 *Exam tip:* When a restriction does not hold, check directory role membership before re-reading the Intune role. Scope groups limit which objects can be acted upon, never which actions exist.
 
@@ -2607,14 +2607,14 @@ D. Compliance policy permissions cannot be removed from a custom role
 
 **Q2.** In an Intune role assignment, what does the Scope Groups setting control?
 
-A. Which users and devices the assigned administrators may manage
-B. Which administrators receive the role
-C. Which scope tags the role can read
-D. Which Microsoft Entra directory roles are inherited
+A. Which administrators receive the role
+B. Which scope tags the role can read
+C. Which Microsoft Entra directory roles are inherited
+D. Which users and devices the assigned administrators may manage
 
 <details><summary>Answer</summary>
 
-**A** — Admin Groups defines who holds the role; Scope Groups defines the set of users and devices they may act on. Confusing the two is the most common misconfiguration in Intune RBAC.
+**D** — Admin Groups defines who holds the role; Scope Groups defines the set of users and devices they may act on. Confusing the two is the most common misconfiguration in Intune RBAC.
 
 *Exam tip:* Read it as a sentence: members of the *Admin Group* may perform the role's actions against members of the *Scope Group*.
 
@@ -2863,14 +2863,14 @@ Get-MgDeviceManagementManagedDevice -All -Property DeviceName,RoleScopeTagIds |
 
 **Q1.** You scope a Help Desk Operator assignment to the tag `TAG-FINANCE` but leave the **Default** tag also selected. What is the result?
 
-A. The operator can see every object carrying the Default tag, which is nearly the whole tenant
-B. The operator sees only objects carrying both tags
-C. The assignment is rejected because two tags cannot be combined
-D. Default is ignored whenever a specific tag is present
+A. The operator sees only objects carrying both tags
+B. The assignment is rejected because two tags cannot be combined
+C. Default is ignored whenever a specific tag is present
+D. The operator can see every object carrying the Default tag, which is nearly the whole tenant
 
 <details><summary>Answer</summary>
 
-**A** — Scope tags on an assignment are additive, not intersecting. Because Intune applies Default automatically to objects created without an explicit tag, including it grants visibility of essentially everything.
+**D** — Scope tags on an assignment are additive, not intersecting. Because Intune applies Default automatically to objects created without an explicit tag, including it grants visibility of essentially everything.
 
 *Exam tip:* Scope tags combine with OR, not AND. Removing Default is a required step whenever you scope an operator, not an optional tidy-up.
 
@@ -2878,14 +2878,14 @@ D. Default is ignored whenever a specific tag is present
 
 **Q2.** A regional help desk must reset passwords only for users in its own region. Which feature achieves this?
 
-A. A Microsoft Entra administrative unit containing those users, with a scoped Password Administrator assignment
-B. An Intune scope tag applied to those users
-C. An Intune custom role with password reset permission
-D. A dynamic security group with a Conditional Access policy
+A. An Intune custom role with password reset permission
+B. A dynamic security group with a Conditional Access policy
+C. A Microsoft Entra administrative unit containing those users, with a scoped Password Administrator assignment
+D. An Intune scope tag applied to those users
 
 <details><summary>Answer</summary>
 
-**A** — Password reset is a Microsoft Entra directory permission, so it is scoped with administrative units. Intune scope tags restrict Intune objects and have no bearing on directory role permissions.
+**C** — Password reset is a Microsoft Entra directory permission, so it is scoped with administrative units. Intune scope tags restrict Intune objects and have no bearing on directory role permissions.
 
 *Exam tip:* Decide which service owns the object first. Directory objects mean administrative units; Intune objects mean scope tags.
 
@@ -2951,7 +2951,7 @@ After completing this lab, you will be able to:
    | Requirement | What happens when you miss it |
    | --- | --- |
    | The approver group is a **security group** | Microsoft 365 groups, distribution lists and mail-enabled security groups silently fail to resolve. No error — just no approvers. |
-   | The group is directly assigned to an Intune role as a *member group* | If the group is not on a role assignment, Intune periodically strips its members and approvals stop working. Permissions the members hold individually or through other groups do not count. |
+   | The group is directly assigned to an Intune role as a *member group* — the page the portal labels **Admin Groups** | If the group is not on a role assignment, Intune periodically strips its members and approvals stop working. Permissions the members hold individually or through other groups do not count. |
    | Members are direct members of that group | Nested group membership behaves unreliably. |
    | The approver holds *Read* on the resource being approved | An approver who cannot read scripts cannot approve a script request. Approving a device delete needs `ManagedDevices/Read`. |
    | The approver is not the requester | An administrator can never approve their own request. |
@@ -2978,21 +2978,40 @@ After completing this lab, you will be able to:
 
 2. In the **Microsoft Entra admin center**, create a **security group** named `GRP-ADM-APPROVERS` and add `patti.fernandez` as a direct member.
 
-3. In the **Microsoft Intune admin center**, assign the built-in **Read Only Operator** role to the group, using the flow from lab 7. Assign it to `GRP-ADM-APPROVERS` as the *member group* — not to Patti directly.
-   *Path:* **Tenant administration** > **Roles** > **All roles**
+3. In the **Microsoft Intune admin center**, select **Tenant administration**, then **Roles**, then **All roles**, then select the built-in **Read Only Operator** role from the list.
+   *Path:* **Tenant administration** > **Roles** > **All roles** > **Read Only Operator**
 
    > [!NOTE]
-   > This assignment does two jobs. It gives Patti the *Read* permissions she needs to see what she is approving, and it satisfies the rule that the approver group must itself be on a role assignment or Intune will strip its members.
+   > This assignment does two jobs. It gives Patti the *Read* permissions she needs to see what she is approving, and it satisfies the rule that the approver group must itself be on a role assignment, or Intune periodically strips its members and approvals stop working.
 
-4. **Read Only Operator** cannot approve an access policy, so create a custom role for that. Select **Tenant administration**, then **Roles**, then **All roles**, then **Create**.
-   *Path:* **Tenant administration** > **Roles** > **All roles** > **Create**
+4. Select **Assignments**, then **Create assignment**. The blade that opens is titled **Add Role Assignment** and has five pages — **Basics**, **Admin Groups**, **Scope Groups**, **Scope tags** and **Review + create**. Fill them in like this:
+
+   a. *Basics* — **Name** `MAA approvers — read access`, **Description** `Read access so approvers can see what they are approving`. Select **Next**.
+   b. *Admin Groups* — select **Add groups**, tick `GRP-ADM-APPROVERS`, choose **Select**, then **Next**. This page is *who receives the role*.
+   c. *Scope Groups* — the *Included groups* list opens reading **No groups selected**. Select **Add all users**, then **Add all devices**, then **Next**. This page is *which users and devices they may act on*.
+   d. *Scope tags* — leave **Default** selected and choose **Next**.
+   e. *Review + create* — check the summary and choose **Create**.
+
+   > [!IMPORTANT]
+   > **Admin Groups** is the page the multi-admin approval documentation calls the *member group*. Two names, one thing, and the mismatch strands people — put `GRP-ADM-APPROVERS` there, not on **Scope Groups** and not on `patti.fernandez` directly. A group named only under *Scope Groups* looks assigned in the list and satisfies nothing, so Intune strips the approver list on its next pass.
+
+   > [!NOTE]
+   > Leaving *Scope Groups* empty breaks this the other way. The assignment saves, Patti holds the role, and she can read nothing — so a request she opens describes a change she has no permission to see. Approving a script request needs *Read* on scripts; approving a device delete needs `ManagedDevices/Read`.
+
+   **Verify:** **Read Only Operator** > **Assignments** lists **MAA approvers — read access**, and opening it shows `GRP-ADM-APPROVERS` under *Admin Groups*.
+
+5. **Read Only Operator** cannot approve an access policy, so create a custom role for that. Select **Tenant administration**, then **Roles**, then **All roles**, then **Create**, then **Intune role**. On *Basics*, fill in:
+   *Path:* **Tenant administration** > **Roles** > **All roles** > **Create** > **Intune role**
+
+   > [!NOTE]
+   > **Create** is a dropdown rather than a button, and which entry you pick matters. **Intune role** is the only one that can carry multi-admin approval permissions — **Windows 365 role** builds a Cloud PC role instead, and **Windows Autopatch role** is greyed out until Autopatch is set up.
 
    | Setting | Value |
    | --- | --- |
    | Name | **MAA Approver** |
    | Description | **Approve or reject multi-admin approval requests** |
 
-5. On *Permissions*, find the **Multi Admin Approval** category and enable exactly these two:
+6. On *Permissions*, find the **Multi Admin Approval** category and enable exactly these two:
 
    | Permission | Why |
    | --- | --- |
@@ -3002,9 +3021,18 @@ After completing this lab, you will be able to:
    > [!NOTE]
    > The other three permissions in this category — *Create access policy*, *Update access policy* and *Delete access policy* — belong to whoever manages policies, not to whoever approves them. Leave them off.
 
-6. Finish the wizard, then assign **MAA Approver** to `GRP-ADM-APPROVERS` as the member group, exactly as you did for **Read Only Operator**.
+7. Select **Next** to reach *Scope tags*, leave **Default** selected, select **Next** again, then **Create** on *Review + create*.
 
-   **Verify:** `GRP-ADM-APPROVERS` appears as a member group on two role assignments: **Read Only Operator** and **MAA Approver**.
+8. A custom role does nothing until it is assigned. Select **Tenant administration**, then **Roles**, then **All roles**, then **MAA Approver**, then **Assignments**, then **Create assignment**, and work the same five pages you used for **Read Only Operator**:
+   *Path:* **Tenant administration** > **Roles** > **All roles** > **MAA Approver** > **Assignments**
+
+   a. *Basics* — **Name** `MAA approvers — approval rights`.
+   b. *Admin Groups* — **Add groups**, then `GRP-ADM-APPROVERS`.
+   c. *Scope Groups* — **Add all users** and **Add all devices**.
+   d. *Scope tags* — leave **Default** selected.
+   e. *Review + create* — select **Create**.
+
+   **Verify:** `GRP-ADM-APPROVERS` appears under *Admin Groups* on two role assignments: one on **Read Only Operator** and one on **MAA Approver**.
 
 **Results:** The approver group can read what it approves and is permitted to approve access policies.
 
@@ -3149,7 +3177,15 @@ After completing this lab, you will be able to:
    > [!NOTE]
    > If the script is still missing after **Complete**, check the portal notifications. Intune reports there whether applying the approved change succeeded or failed.
 
-6. Now give the script an audience. Open **MAA test script**, select **Edit** beside *Assignments*, add `GRP-USR-PILOT`, and save.
+6. Now give the script an audience. Select **Devices**, then **Scripts and remediations**, then the **Platform scripts** tab, then select **MAA test script** to open it.
+   *Path:* **Devices** > **Scripts and remediations** > **Platform scripts** > **MAA test script**
+
+7. The script opens on **Overview**. Under *Manage* in the left-hand menu, select **Properties**. That page lists the script's sections — *Basics*, *Script settings*, *Scope tags* and *Assignments* — each with its own **Edit** link. Select **Edit** beside *Assignments*.
+
+   > [!NOTE]
+   > **Properties** is where every change to an existing script starts, and there is no *Assignments* entry in the left-hand menu to shortcut to. The two entries under *Monitor* — **Device status** and **User status** — report on where the script has already run; they do not target it anywhere new.
+
+8. Select **Add groups**, tick `GRP-USR-PILOT`, choose **Select**, then **Review + save**. Because the script is a protected resource, saving asks for a justification and the final button reads **Submit for approval** rather than **Save**.
 
    | Setting | Value |
    | --- | --- |
@@ -3160,14 +3196,14 @@ After completing this lab, you will be able to:
    > [!IMPORTANT]
    > Every action on a protected resource is protected — create, edit, assign and delete each raise their own request. That is the real cost of the control, and it is why the wizard dropped its *Assignments* page: putting a script in front of a group is a decision somebody has to agree with separately from writing the script.
 
-7. Select that pending **Assign** request under **My requests** and select **Cancel request**.
+9. Select that pending **Assign** request under **My requests** and select **Cancel request**.
 
    > [!NOTE]
    > Withdraw it rather than approving it, for a reason worth remembering: while a request is pending against an object, no further request can be submitted for that object. Leave the assignment pending and the deletion in the next step is refused.
 
-8. Now exercise the rejection path: delete the script, supply a justification, and this time have Patti **Reject request** with a note explaining why.
+10. Now exercise the rejection path: delete the script, supply a justification, and this time have Patti **Reject request** with a note explaining why.
 
-   **Verify:** The script remains in place and **My requests** shows the request as **Rejected** with the approver's note. A rejected request makes no change at all, and there is nothing to complete.
+    **Verify:** The script remains in place and **My requests** shows the request as **Rejected** with the approver's note. A rejected request makes no change at all, and there is nothing to complete.
 
 **Results:** You have driven the approval workflow from both sides and seen both outcomes.
 
@@ -3256,14 +3292,14 @@ After completing this lab, you will be able to:
 
 **Q1.** You enable multi-admin approval for Apps and name an approver group containing only your own administrator account. What happens when you submit an app change?
 
-A. The request sits at Needs approval until it expires, because nobody may approve their own request
-B. The request is created and you can approve it yourself
-C. The change applies immediately because you are in the approver group
-D. The access policy fails to save
+A. The access policy fails to save
+B. The change applies immediately because you are in the approver group
+C. The request is created and you can approve it yourself
+D. The request sits at Needs approval until it expires, because nobody may approve their own request
 
 <details><summary>Answer</summary>
 
-**A** — An administrator can never approve their own request, whatever role they hold and whether or not they are in the approver group. The request is created, appears on **All requests** where you can see but not action it, and expires after three days — leaving Apps effectively read-only for the tenant. The approver group has to contain somebody else.
+**D** — An administrator can never approve their own request, whatever role they hold and whether or not they are in the approver group. The request is created, appears on **All requests** where you can see but not action it, and expires after three days — leaving Apps effectively read-only for the tenant. The approver group has to contain somebody else.
 
 *Exam tip:* The control is technical, not merely procedural: Intune enforces the second person rather than just recommending one. Name at least two approvers, and never make the requesting account the only approver.
 
@@ -3271,14 +3307,14 @@ D. The access policy fails to save
 
 **Q2.** You are the first administrator to configure multi-admin approval in a tenant. You create an access policy for Scripts and select Submit for approval. What is the immediate result?
 
-A. A pending request with resource type Access policy — the policy is not active and scripts are not yet protected
-B. The policy is created and active, because the first policy has nothing to be approved by
+A. An error, because no access policy protects access policies yet
+B. A pending request with resource type Access policy — the policy is not active and scripts are not yet protected
 C. The policy is created but disabled until you enable it
-D. An error, because no access policy protects access policies yet
+D. The policy is created and active, because the first policy has nothing to be approved by
 
 <details><summary>Answer</summary>
 
-**A** — Access policies are protected automatically, which is why **Access policy** is not offered as a profile type. That protection applies to the very first policy too: creating it produces a request a different administrator holding *Approval for Multi Admin Approval* must approve, after which the requester selects **Complete** to apply it. Until then nothing is enforced.
+**B** — Access policies are protected automatically, which is why **Access policy** is not offered as a profile type. That protection applies to the very first policy too: creating it produces a request a different administrator holding *Approval for Multi Admin Approval* must approve, after which the requester selects **Complete** to apply it. Until then nothing is enforced.
 
 *Exam tip:* Remember the three-step shape of every protected change: submit with a justification, somebody else approves, the requester completes. Approval alone does not apply the change.
 
@@ -3286,14 +3322,14 @@ D. An error, because no access policy protects access policies yet
 
 **Q3.** Patti is a direct member of the approver group named on your Scripts access policy, and the group is assigned the Read Only Operator role. She can see a pending access policy request but cannot approve it. Why?
 
-A. Approving an access policy request needs the Approval for Multi Admin Approval permission, which Read Only Operator does not include
-B. Read Only Operator cannot be used as an approver role for any request type
-C. Her membership is nested rather than direct
+A. Read Only Operator cannot be used as an approver role for any request type
+B. Her membership is nested rather than direct
+C. Approving an access policy request needs the Approval for Multi Admin Approval permission, which Read Only Operator does not include
 D. Access policy requests can only be approved by a Global Administrator
 
 <details><summary>Answer</summary>
 
-**A** — Approving a change to a protected resource needs *Read* on that resource, but approving a change to an access policy needs the separate *Approval for Multi Admin Approval* permission in the **Multi Admin Approval** category. Read Only Operator grants the reads and not that permission, so Patti can approve script requests but not access policy requests until a custom role supplies it.
+**C** — Approving a change to a protected resource needs *Read* on that resource, but approving a change to an access policy needs the separate *Approval for Multi Admin Approval* permission in the **Multi Admin Approval** category. Read Only Operator grants the reads and not that permission, so Patti can approve script requests but not access policy requests until a custom role supplies it.
 
 *Exam tip:* Distinguish the three MAA roles: the access policy manager creates policies, the approver approves requests, and the requestor submits and completes changes. They need different permissions.
 
@@ -3311,13 +3347,13 @@ Get Windows and Android devices under management: enrollment settings, automatic
 
 ### Lab scenario
 
-A device that joins Microsoft Entra ID does not automatically become managed by Intune. Automatic enrollment is the setting that connects those two events, and without it you get exactly what lab 5 produced: a joined device with no management. You will turn it on, brand the enrollment experience so users can tell it is legitimate, and understand why the MDM user scope is the single most consequential toggle in this blade.
+A device that joins Microsoft Entra ID does not automatically become managed by Intune. Automatic enrollment is the setting that connects those two events, and without it you get exactly what lab 5 produced: a joined device with no management. You will turn it on, brand the enrollment experience so users can tell it is legitimate, and understand why the MDM user scope is the single most consequential toggle in this blade — and why it takes a Global Administrator to move it.
 
 ### Objectives
 
 After completing this lab, you will be able to:
 
-- Configure automatic MDM enrollment for Windows and understand MDM versus MAM user scope
+- Configure automatic MDM enrollment for Windows and understand the MDM user scope against the WIP (formerly MAM) user scope
 - Apply organisation branding so the sign-in and Company Portal experience is recognisable
 - Confirm a joined device enrolls into Intune without further action
 - Read the enrollment status of a device from both the client and the portal
@@ -3331,36 +3367,52 @@ After completing this lab, you will be able to:
 
 - Completed labs: `device-identity`, `intune-rbac`
 - Licences: M365-E5, ENTRA-P2
-- Roles: Intune Administrator
+- Roles: Global Administrator, Intune Administrator
 - Devices and portals: Microsoft Intune admin center, vm2-alex (Windows 11 Pro)
-- Personas: alex.wilber, helpdesk.operator
+- Personas: admin-breakglass, alex.wilber, helpdesk.operator
 
 ### Exercise 1: Enable automatic enrollment
 
 #### Task 1: Configure the MDM user scope
 
-1. In the **Microsoft Intune admin center**, select **Devices**, then **Enrollment**, then on the **Windows** tab select **Automatic Enrollment**.
+1. Sign in to the **Microsoft Intune admin center** as `admin-breakglass`, your **Global Administrator**. This one page needs it.
+
+   > [!IMPORTANT]
+   > Automatic enrollment is shown inside Intune but is not an Intune setting. The page writes the **Mobility (MDM and MAM)** application configuration in Microsoft Entra ID, and only **Global Administrator** may change that — **Intune Administrator** is not enough. Signed in as `admin-intune` you can open this blade and read every field, and **Save** fails or the controls are greyed out. It looks like a bug and it is a permission.
+
+   > [!NOTE]
+   > This is a deliberate exception to the rule from lab 4 that you work as `admin-intune`. Sign back in as `admin-intune` as soon as this task is saved — the rest of the lab does not need Global Administrator.
+
+2. Select **Devices**, then **Enrollment**, then on the **Windows** tab select **Automatic Enrollment**.
    *Path:* **Devices** > **Enrollment** > **Windows** > **Automatic Enrollment**
 
-2. Set the scopes:
+3. Set the scopes. The blade holds two, one above the MDM URLs and one below them:
 
    | Setting | Value |
    | --- | --- |
-   | MDM user scope | **All** <br> In production you would scope this to a group during a phased rollout. |
-   | MAM user scope | **None** <br> Set deliberately. See the note below. |
+   | MDM user scope | **All** <br> The first setting on the page. In production you would scope this to a group during a phased rollout. |
+   | Windows Information Protection (WIP) user scope | **None** <br> Further down, under the MDM URLs. This is the setting older documentation and exam material call the MAM user scope — the portal renamed it and there is no field labelled MAM here any more. Leave it at None. |
 
    > [!IMPORTANT]
-   > These two scopes do different things and overlap badly. **MDM user scope** enrolls the whole device into management when the user joins or adds a work account. **MAM user scope** applies application management to Windows without enrolling the device. If a user is in both scopes on a personal device, Windows applies MAM and the device is *not* MDM-enrolled — which looks exactly like automatic enrollment being broken.
-
-3. Leave the three URLs at their defaults and select **Save**.
+   > These two scopes do different things and overlap badly. **MDM user scope** enrolls the whole device into management when the user joins or adds a work account. The **WIP user scope** — the MAM user scope under its old name — applies application management to Windows without enrolling the device. If a user is in both scopes on a personal device, Windows applies app management and the device is *not* MDM-enrolled, which looks exactly like automatic enrollment being broken.
 
    > [!NOTE]
-   > The **MDM terms of use URL**, **MDM discovery URL** and **MDM compliance URL** are pre-populated for Intune. You would only change them if a third-party MDM were the authority, which is a scenario the exam occasionally uses to test whether you know these exist.
+   > The blade shows an information banner reading that creating new WIP without enrollment policies is no longer supported, and Windows Information Protection is deprecated. The scope setting is still there and still capable of intercepting your enrollments, which is the only reason this lab makes you look at it. Answer **MAM user scope** if the exam asks — the concept did not change with the label.
+
+4. Leave everything between the two scopes alone — the three MDM URLs and the **Disable MDM enrollment when adding work or school account on Windows** toggle — then select **Save**.
+
+   | Setting | Value |
+   | --- | --- |
+   | Disable MDM enrollment when adding work or school account on Windows | **No** <br> The default. Set it to Yes and you block the automatic enrollment you have just turned on. |
+
+   > [!NOTE]
+   > The **MDM terms of use URL**, **MDM discovery URL** and **MDM compliance URL** are pre-populated for Intune, and **Restore default MDM URLs** puts them back if you edit one by accident. You would only change them if a third-party MDM were the authority, which is a scenario the exam occasionally uses to test whether you know these exist. The WIP URLs below them are in the same position for app management and stay untouched.
 
 **Results:** Windows devices joining Microsoft Entra ID will now enroll into Intune automatically.
 
 - [ ] **MDM user scope** is set to **All**.
-- [ ] **MAM user scope** is set to **None**.
+- [ ] **Windows Information Protection (WIP) user scope** — the MAM user scope — is set to **None**.
+- [ ] **Save** succeeded rather than erroring, which confirms you were signed in as a Global Administrator.
 
 #### Task 2: Review the remaining enrollment settings
 
@@ -3474,7 +3526,7 @@ After completing this lab, you will be able to:
 
 **Symptom:** A Microsoft Entra joined Windows device never appears in Intune.
 
-- **Root cause:** Automatic enrollment is off, the user is outside the MDM user scope, or the user is in the MAM user scope — in which case Windows applies app management instead of enrolling the device.
+- **Root cause:** Automatic enrollment is off, the user is outside the MDM user scope, or the user is inside the WIP (MAM) user scope — in which case Windows applies app management instead of enrolling the device. A fourth possibility is that the change was never saved: only a Global Administrator can write this page, and an Intune Administrator's Save does not take.
 - **Diagnostic:**
 
   ```powershell
@@ -3482,21 +3534,21 @@ After completing this lab, you will be able to:
   Get-ChildItem "HKLM:\SOFTWARE\Microsoft\Enrollments"
   ```
 
-- **Resolution:** Set **MDM user scope** to **All** or to a group containing the user, and set **MAM user scope** to **None** for devices you intend to fully manage. Then sign out and back in — the scope is evaluated at sign-in.
+- **Resolution:** Signed in as a Global Administrator, set **MDM user scope** to **All** or to a group containing the user, and set the **Windows Information Protection (WIP) user scope** to **None** for devices you intend to fully manage. Save, then have the user sign out and back in — the scope is evaluated at sign-in.
 - **Error codes:** `0x80180018`
 
 ### Knowledge check
 
 **Q1.** Users report that their Microsoft Entra joined Windows devices are not enrolling into Intune, although they can sign in and access corporate resources. Automatic enrollment shows MDM user scope set to All. What should you check next?
 
-A. Whether the users are also in the MAM user scope
-B. Whether the devices have a device category assigned
-C. Whether the MDM discovery URL has been customised
+A. Whether the devices have a device category assigned
+B. Whether the MDM discovery URL has been customised
+C. Whether the users are also in the WIP (MAM) user scope
 D. Whether the users have a Microsoft Entra ID P2 licence
 
 <details><summary>Answer</summary>
 
-**A** — When a user falls in both the MDM and MAM user scopes, Windows applies application management rather than enrolling the device into MDM. The device stays joined and functional but never becomes managed, which matches the symptom exactly.
+**C** — When a user falls in both the MDM and the WIP user scopes, Windows applies application management rather than enrolling the device into MDM. The device stays joined and functional but never becomes managed, which matches the symptom exactly. The portal labels that second scope **Windows Information Protection (WIP) user scope**; documentation and exam questions still call it the MAM user scope.
 
 *Exam tip:* MDM scope enrolls the device; MAM scope manages apps without enrolling. Overlapping them is a classic exam distractor and a real-world misconfiguration.
 
@@ -3702,14 +3754,14 @@ A device enrolled by hand through Settings is marked **Personal** by default. Co
 
 **Q1.** A user belongs to two groups, each assigned a different Windows enrollment restriction. One allows personally owned devices and one blocks them. What happens?
 
-A. The restriction with the lowest priority number applies, and only that one
-B. The two restrictions merge and the most restrictive setting wins
-C. Enrollment is blocked because the restrictions conflict
+A. The two restrictions merge and the most restrictive setting wins
+B. Enrollment is blocked because the restrictions conflict
+C. The restriction with the lowest priority number applies, and only that one
 D. The built-in All Users restriction applies instead
 
 <details><summary>Answer</summary>
 
-**A** — Enrollment restrictions do not merge. Intune evaluates priority and applies a single restriction — the one with the lowest priority number. This is different from compliance and configuration policy, where the most restrictive setting generally wins.
+**C** — Enrollment restrictions do not merge. Intune evaluates priority and applies a single restriction — the one with the lowest priority number. This is different from compliance and configuration policy, where the most restrictive setting generally wins.
 
 *Exam tip:* Enrollment restrictions: priority decides, one winner. Configuration profiles: conflicts leave the setting unapplied. Compliance: most restrictive wins. Keep those three straight.
 
@@ -3717,14 +3769,14 @@ D. The built-in All Users restriction applies instead
 
 **Q2.** You import a CSV of serial numbers under Corporate device identifiers. Devices already enrolled still show as Personal. Why?
 
-A. Corporate identifiers are evaluated at enrollment time and do not change existing records
-B. Serial numbers are only supported for iOS and Android
-C. The CSV requires a header row that was missing
-D. The devices must be added to a dynamic group before ownership updates
+A. Serial numbers are only supported for iOS and Android
+B. The devices must be added to a dynamic group before ownership updates
+C. Corporate identifiers are evaluated at enrollment time and do not change existing records
+D. The CSV requires a header row that was missing
 
 <details><summary>Answer</summary>
 
-**A** — The identifier list is consulted when a device enrolls, to decide ownership at that moment. Devices already enrolled keep whatever ownership they were given, and must be changed individually in the device's properties.
+**C** — The identifier list is consulted when a device enrolls, to decide ownership at that moment. Devices already enrolled keep whatever ownership they were given, and must be changed individually in the device's properties.
 
 *Exam tip:* Import identifiers before deployment. And remember the CSV takes no header row — a header is parsed as a device identifier and silently matches nothing.
 
@@ -3961,14 +4013,14 @@ Lab 8 built the scope tags and scoped the help desk role, but it could not apply
 
 **Q1.** Contoso has 400 Windows devices already joined to an on-premises Active Directory domain. They must be managed by Intune without visiting each device or reimaging. What should you implement?
 
-A. Hybrid Microsoft Entra join with Group Policy automatic MDM enrollment
-B. Windows Autopilot user-driven deployment
-C. A bulk enrollment provisioning package on a USB drive
-D. Ask each user to add a work or school account
+A. A bulk enrollment provisioning package on a USB drive
+B. Hybrid Microsoft Entra join with Group Policy automatic MDM enrollment
+C. Ask each user to add a work or school account
+D. Windows Autopilot user-driven deployment
 
 <details><summary>Answer</summary>
 
-**A** — Hybrid join keeps the existing domain membership and gives the devices a Microsoft Entra identity, and the Group Policy setting then enrolls them into Intune automatically. Autopilot applies to new or reset devices, and both remaining options require touching each device.
+**B** — Hybrid join keeps the existing domain membership and gives the devices a Microsoft Entra identity, and the Group Policy setting then enrolls them into Intune automatically. Autopilot applies to new or reset devices, and both remaining options require touching each device.
 
 *Exam tip:* Existing domain-joined estate plus no reimaging equals hybrid join plus Group Policy enrollment. Autopilot only ever answers questions about new or reset hardware.
 
@@ -3977,8 +4029,8 @@ D. Ask each user to add a work or school account
 **Q2.** Devices enrolled using a bulk enrollment provisioning package do not receive an application assigned to a user group. Device-targeted policies apply correctly. Why?
 
 A. Bulk enrolled devices have no primary user, so user-targeted assignments never apply
-B. Provisioning packages block application installation
-C. The bulk token does not include application permissions
+B. The bulk token does not include application permissions
+C. Provisioning packages block application installation
 D. Applications must be assigned before the package is created
 
 <details><summary>Answer</summary>
@@ -4182,14 +4234,14 @@ After completing this lab, you will be able to:
 
 **Q1.** A field engineer enrolls their personal Android phone with a work profile. Which action can the Intune administrator perform?
 
-A. Retire the device, removing the work profile and leaving personal data intact
-B. Perform a full factory wipe of the entire device
-C. View the list of personal applications installed outside the work profile
-D. Read the device's call history and messages
+A. Read the device's call history and messages
+B. View the list of personal applications installed outside the work profile
+C. Perform a full factory wipe of the entire device
+D. Retire the device, removing the work profile and leaving personal data intact
 
 <details><summary>Answer</summary>
 
-**A** — On a personally owned work profile, management is confined to the work container. Retire removes the work profile only. Full wipe, personal app inventory and personal data are all outside the administrator's reach by design.
+**D** — On a personally owned work profile, management is confined to the work container. Retire removes the work profile only. Full wipe, personal app inventory and personal data are all outside the administrator's reach by design.
 
 *Exam tip:* Personally owned work profile questions almost always test the limits of administrative visibility. The safe answer is that anything personal is invisible and only the work container can be removed.
 
@@ -4197,14 +4249,14 @@ D. Read the device's call history and messages
 
 **Q2.** Contoso is deploying shop-floor scanners that must run one application, have no user sign-in, and be locked down. Which Android Enterprise scenario applies?
 
-A. Corporate-owned dedicated device
-B. Corporate-owned fully managed device
-C. Corporate-owned work profile
-D. Personally owned work profile
+A. Corporate-owned fully managed device
+B. Personally owned work profile
+C. Corporate-owned dedicated device
+D. Corporate-owned work profile
 
 <details><summary>Answer</summary>
 
-**A** — Dedicated devices are for unattended, single-purpose hardware with no user affinity, enrolled with a token or QR code and typically locked to a small set of applications. Fully managed still assumes a signed-in user.
+**C** — Dedicated devices are for unattended, single-purpose hardware with no user affinity, enrolled with a token or QR code and typically locked to a small set of applications. Fully managed still assumes a signed-in user.
 
 *Exam tip:* The phrases *no user sign-in*, *kiosk* and *single purpose* point at dedicated. A named user with a company phone points at fully managed.
 
@@ -4388,14 +4440,14 @@ Nothing Apple works without this certificate. It is also the single most common 
 
 **Q1.** Contoso must deploy iPads that run a single application in kiosk mode and from which users cannot remove management. Which enrollment method is required?
 
-A. Automated Device Enrollment through Apple Business Manager
-B. Personal device enrollment using the Company Portal
+A. Apple Configurator with manual pairing
+B. Automated Device Enrollment through Apple Business Manager
 C. Account driven user enrollment with a managed Apple Account
-D. Apple Configurator with manual pairing
+D. Personal device enrollment using the Company Portal
 
 <details><summary>Answer</summary>
 
-**A** — Single-app mode and a non-removable management profile both require supervision, and supervision comes only from Automated Device Enrollment or Apple Configurator. Neither personal enrollment path can supervise a device.
+**B** — Single-app mode and a non-removable management profile both require supervision, and supervision comes only from Automated Device Enrollment or Apple Configurator. Neither personal enrollment path can supervise a device.
 
 *Exam tip:* Map the requirement to supervision first. Kiosk mode, locked enrollment and application allow-lists all mean supervision, which means ADE.
 
@@ -4403,14 +4455,14 @@ D. Apple Configurator with manual pairing
 
 **Q2.** Contoso bought 200 Samsung handsets from a high-street retailer and wants them to enrol automatically at first power-on with non-removable management. What should you tell them?
 
-A. Knox Mobile Enrollment is unavailable because the devices were not bought through an enrolled reseller; use dedicated device enrollment with a QR code instead
-B. Register the IMEI numbers in the Knox portal manually to enable zero-touch
-C. Use Google Zero Touch, which works with any retail Android device
-D. Import the serial numbers as corporate device identifiers to enable zero-touch
+A. Use Google Zero Touch, which works with any retail Android device
+B. Knox Mobile Enrollment is unavailable because the devices were not bought through an enrolled reseller; use dedicated device enrollment with a QR code instead
+C. Import the serial numbers as corporate device identifiers to enable zero-touch
+D. Register the IMEI numbers in the Knox portal manually to enable zero-touch
 
 <details><summary>Answer</summary>
 
-**A** — Both Knox Mobile Enrollment and Google Zero Touch require devices to be registered by a participating reseller at the point of sale. Retail hardware cannot be added afterwards, so the practical path is factory reset plus QR code enrollment against a corporate enrollment profile.
+**B** — Both Knox Mobile Enrollment and Google Zero Touch require devices to be registered by a participating reseller at the point of sale. Retail hardware cannot be added afterwards, so the practical path is factory reset plus QR code enrollment against a corporate enrollment profile.
 
 *Exam tip:* Corporate device identifiers mark ownership; they do not enable zero-touch. Only the reseller-registered programmes do that on Apple and Android.
 
@@ -4644,14 +4696,14 @@ Get-MgDeviceManagementManagedDevice -All |
 
 **Q1.** A user with a valid Microsoft 365 E5 licence cannot enrol a Windows 11 device. The client reports `0x80180014`. What is the cause?
 
-A. An enrollment restriction is blocking the platform, ownership type or OS version
-B. The user has no Intune licence assigned
-C. The user has reached their device limit
-D. The Microsoft Entra device quota has been exceeded
+A. The user has reached their device limit
+B. The Microsoft Entra device quota has been exceeded
+C. An enrollment restriction is blocking the platform, ownership type or OS version
+D. The user has no Intune licence assigned
 
 <details><summary>Answer</summary>
 
-**A** — `0x80180014` is `MENROLL_E_PLATFORM_BLOCKED` and always points at an enrollment restriction. A missing licence produces `0x80180018` and a device limit produces `0x80180026`.
+**C** — `0x80180014` is `MENROLL_E_PLATFORM_BLOCKED` and always points at an enrollment restriction. A missing licence produces `0x80180018` and a device limit produces `0x80180026`.
 
 *Exam tip:* Learn the three enrollment codes as a set: 18 is licence, 14 is restriction, 26 is device limit. Scenario questions frequently give you the code and expect the cause immediately.
 
@@ -4659,14 +4711,14 @@ D. The Microsoft Entra device quota has been exceeded
 
 **Q2.** A user reports `0x80180026` when enrolling a new laptop. They physically own one device. What is the most likely explanation?
 
-A. Stale Intune device records from previous rebuilds still count toward the device limit
-B. The Microsoft Entra ID licence has lapsed
-C. The device serial number is not in Corporate device identifiers
-D. The enrollment restriction blocks personally owned devices
+A. The enrollment restriction blocks personally owned devices
+B. The device serial number is not in Corporate device identifiers
+C. Stale Intune device records from previous rebuilds still count toward the device limit
+D. The Microsoft Entra ID licence has lapsed
 
 <details><summary>Answer</summary>
 
-**A** — The device limit restriction counts enrolled records, not physical hardware. Rebuilding a machine without retiring the old record leaves the slot occupied, so a user with one laptop can genuinely exhaust a limit of three.
+**C** — The device limit restriction counts enrolled records, not physical hardware. Rebuilding a machine without retiring the old record leaves the slot occupied, so a user with one laptop can genuinely exhaust a limit of three.
 
 *Exam tip:* Device cleanup rules exist precisely to prevent this. If a question mentions repeated rebuilds or reimaging, stale records are almost always the answer.
 
@@ -4784,14 +4836,14 @@ After completing this lab, you will be able to:
 
 **Q1.** Contoso has 200 laptops returned from a closed office. They were previously domain joined, no hardware hashes were ever collected, and the vendor is out of business. They must be redeployed as Microsoft Entra joined, Intune managed devices. What should you use?
 
-A. A Windows Autopilot device preparation policy
+A. A bulk enrollment provisioning package
 B. A Windows Autopilot deployment profile in user-driven mode
-C. A Windows Autopilot deployment profile in self-deploying mode
-D. A bulk enrollment provisioning package
+C. A Windows Autopilot device preparation policy
+D. A Windows Autopilot deployment profile in self-deploying mode
 
 <details><summary>Answer</summary>
 
-**A** — Device preparation does not require devices to be registered in advance, which is exactly the constraint here. Every classic Autopilot mode depends on a hardware hash being uploaded before the device is switched on.
+**C** — Device preparation does not require devices to be registered in advance, which is exactly the constraint here. Every classic Autopilot mode depends on a hardware hash being uploaded before the device is switched on.
 
 *Exam tip:* No hardware hash, or hardware that cannot be registered, always points at device preparation. It is the answer to the problem that made classic Autopilot painful.
 
@@ -4800,9 +4852,9 @@ D. A bulk enrollment provisioning package
 **Q2.** Which Autopilot deployment mode should be used for shared meeting-room devices that must provision with no user interaction and no assigned user?
 
 A. Self-deploying
-B. User-driven
+B. Device preparation
 C. Pre-provisioning
-D. Device preparation
+D. User-driven
 
 <details><summary>Answer</summary>
 
@@ -5102,14 +5154,14 @@ After completing this lab, you will be able to:
 
 **Q1.** You configure an Autopilot device name template as `CONTOSO-FINANCE-%SERIAL%`. Deployments fail during naming. Why?
 
-A. The resolved name exceeds the 15-character limit for Windows device names
-B. %SERIAL% is not a valid Autopilot variable
-C. Device name templates require self-deploying mode
-D. Hyphens are not permitted in device name templates
+A. %SERIAL% is not a valid Autopilot variable
+B. Device name templates require self-deploying mode
+C. Hyphens are not permitted in device name templates
+D. The resolved name exceeds the 15-character limit for Windows device names
 
 <details><summary>Answer</summary>
 
-**A** — Windows device names are limited to 15 characters. `CONTOSO-FINANCE-` alone is 16 before the serial number is inserted, so the template can never resolve to a valid name.
+**D** — Windows device names are limited to 15 characters. `CONTOSO-FINANCE-` alone is 16 before the serial number is inserted, so the template can never resolve to a valid name.
 
 *Exam tip:* Count the characters in any name template question. 15 is the hard limit, letters, numbers and hyphens only, and it cannot be entirely numeric.
 
@@ -5117,14 +5169,14 @@ D. Hyphens are not permitted in device name templates
 
 **Q2.** During an Autopilot deployment the Enrollment Status Page reports an error after the configured timeout. Which change is most likely to fix the underlying problem?
 
-A. Reduce the number of blocking apps to those genuinely required before first use
-B. Increase the timeout to 7200 seconds
-C. Disable the Enrollment Status Page entirely
+A. Disable the Enrollment Status Page entirely
+B. Reduce the number of blocking apps to those genuinely required before first use
+C. Increase the timeout to 7200 seconds
 D. Switch the deployment mode to self-deploying
 
 <details><summary>Answer</summary>
 
-**A** — The timeout is a symptom. A blocking application that cannot install will still fail with a longer timeout, and disabling the page hides a genuine configuration failure rather than resolving it.
+**B** — The timeout is a symptom. A blocking application that cannot install will still fail with a longer timeout, and disabling the page hides a genuine configuration failure rather than resolving it.
 
 *Exam tip:* Treat blocking apps as a deliberate, minimal list. The exam favours answers that fix the cause over answers that extend the wait.
 
@@ -5268,14 +5320,14 @@ After completing this lab, you will be able to:
 
 **Q1.** You want IT to install a large application before shipping laptops, so users wait only a few minutes at first sign-in. Which deployment mode should the Autopilot profile use?
 
-A. User-driven, with Allow pre-provisioned deployment set to Yes
-B. Self-deploying
+A. Self-deploying
+B. User-driven, with the Enrollment Status Page disabled
 C. Pre-provisioning, selected as the deployment mode
-D. User-driven, with the Enrollment Status Page disabled
+D. User-driven, with Allow pre-provisioned deployment set to Yes
 
 <details><summary>Answer</summary>
 
-**A** — Pre-provisioning is not a deployment mode in its own right. It is user-driven mode with **Allow pre-provisioned deployment** enabled, which unlocks the technician phase at the out-of-box experience.
+**D** — Pre-provisioning is not a deployment mode in its own right. It is user-driven mode with **Allow pre-provisioned deployment** enabled, which unlocks the technician phase at the out-of-box experience.
 
 *Exam tip:* The three deployment modes are user-driven, pre-provisioning and self-deploying as concepts, but in the profile only user-driven and self-deploying are selectable — pre-provisioning is a toggle on user-driven.
 
@@ -5283,14 +5335,14 @@ D. User-driven, with the Enrollment Status Page disabled
 
 **Q2.** A meeting-room device provisioned with self-deploying mode does not receive an application assigned to a user group. Why?
 
-A. Self-deploying assigns no primary user, so user-targeted assignments never resolve
-B. Self-deploying blocks application installation during provisioning
-C. The application must be assigned before the profile is created
-D. Self-deploying supports only Microsoft Store applications
+A. Self-deploying supports only Microsoft Store applications
+B. Self-deploying assigns no primary user, so user-targeted assignments never resolve
+C. Self-deploying blocks application installation during provisioning
+D. The application must be assigned before the profile is created
 
 <details><summary>Answer</summary>
 
-**A** — Self-deploying provisions with no user present and therefore no primary user. Only device-targeted assignments reach the device.
+**B** — Self-deploying provisions with no user present and therefore no primary user. Only device-targeted assignments reach the device.
 
 *Exam tip:* Bulk enrollment and self-deploying share this property. Whenever a question mentions a shared or kiosk device receiving nothing, check whether the assignment was user-targeted.
 
@@ -5488,8 +5540,8 @@ This exercise is entirely about one setting. Skip it and the deployment fails la
 
 A. That the Intune Provisioning Client service principal is an owner of the device group
 B. That the device's hardware hash has been imported
-C. That the policy is assigned to a device group
-D. That the deployment mode is set to self-deploying
+C. That the deployment mode is set to self-deploying
+D. That the policy is assigned to a device group
 
 <details><summary>Answer</summary>
 
@@ -5679,14 +5731,14 @@ After completing this lab, you will be able to:
 
 **Q1.** A user's Windows 11 Pro device is Microsoft Entra joined and the user holds Microsoft 365 E5. Which additional step is required to upgrade the device to Enterprise?
 
-A. None — sign out and back in, and subscription activation steps the edition up
+A. Reinstall Windows using Enterprise media
 B. Enter a Windows 11 Enterprise product key
-C. Reinstall Windows using Enterprise media
-D. Deploy a Windows 11 feature update policy targeting Enterprise
+C. Deploy a Windows 11 feature update policy targeting Enterprise
+D. None — sign out and back in, and subscription activation steps the edition up
 
 <details><summary>Answer</summary>
 
-**A** — Subscription activation upgrades the edition in place using the user's entitlement, with no key, no media and no restart. It is evaluated at interactive sign-in.
+**D** — Subscription activation upgrades the edition in place using the user's entitlement, with no key, no media and no restart. It is evaluated at interactive sign-in.
 
 *Exam tip:* Remember the three prerequisites — Entra joined, Windows Enterprise entitlement, ClipSVC running — and that all three fail silently.
 
@@ -5694,14 +5746,14 @@ D. Deploy a Windows 11 feature update policy targeting Enterprise
 
 **Q2.** A user's device is reset and redeployed with Autopilot. Windows Backup is enabled. Which of the following is restored?
 
-A. Windows settings, saved credentials and a list of previously installed apps
+A. The applications themselves, reinstalled from the backup
 B. The user's documents and desktop files
-C. The applications themselves, reinstalled from the backup
+C. Windows settings, saved credentials and a list of previously installed apps
 D. Local user accounts and their profiles
 
 <details><summary>Answer</summary>
 
-**A** — Windows Backup covers settings, credentials and an app list that is pinned for reinstall. Files are OneDrive's responsibility and applications are redeployed by Intune.
+**C** — Windows Backup covers settings, credentials and an app list that is pinned for reinstall. Files are OneDrive's responsibility and applications are redeployed by Intune.
 
 *Exam tip:* Windows Backup restores the shape of the environment, not its contents. Files mean OneDrive Known Folder Move.
 
@@ -5877,14 +5929,14 @@ After completing this lab, you will be able to:
 
 **Q1.** Contoso needs Cloud PCs that can reach an on-premises file server and be hybrid Microsoft Entra joined. Which network configuration is required?
 
-A. An Azure network connection using a virtual network with line of sight to a domain controller
-B. The Microsoft hosted network with a site-to-site VPN
+A. The Microsoft hosted network with a site-to-site VPN
+B. An Azure network connection using a virtual network with line of sight to a domain controller
 C. The Microsoft hosted network, which supports hybrid join by default
 D. An Azure network connection is optional; hybrid join works on either network
 
 <details><summary>Answer</summary>
 
-**A** — The Microsoft hosted network provides no route to on-premises resources and does not support hybrid Microsoft Entra join. Both requirements force an Azure network connection.
+**B** — The Microsoft hosted network provides no route to on-premises resources and does not support hybrid Microsoft Entra join. Both requirements force an Azure network connection.
 
 *Exam tip:* On-premises access or hybrid join always means Azure network connection. Cloud-only with no on-premises dependency means Microsoft hosted network.
 
@@ -5892,14 +5944,14 @@ D. An Azure network connection is optional; hybrid join works on either network
 
 **Q2.** You update the image on an existing Windows 365 provisioning policy. What happens to Cloud PCs already provisioned by that policy?
 
-A. Nothing — the new image applies only to newly provisioned Cloud PCs
-B. They are rebuilt automatically on the new image at the next restart
+A. They are rebuilt automatically on the new image at the next restart
+B. Nothing — the new image applies only to newly provisioned Cloud PCs
 C. They are placed under review until an administrator approves the change
 D. They are resized to match the new image requirements
 
 <details><summary>Answer</summary>
 
-**A** — Provisioning policy image changes affect new provisioning only. Moving an existing Cloud PC to a new image requires a reprovision, which destroys everything on the local disk.
+**B** — Provisioning policy image changes affect new provisioning only. Moving an existing Cloud PC to a new image requires a reprovision, which destroys everything on the local disk.
 
 *Exam tip:* Reprovision is destructive. Any question offering it as a routine maintenance action is testing whether you know that.
 
@@ -6081,14 +6133,14 @@ After completing this lab, you will be able to:
 
 **Q1.** Two settings catalog profiles assigned to the same device group set the same setting to different values. What happens on the device?
 
-A. The setting reports Conflict and neither value is applied
+A. The profile created most recently wins
 B. The most restrictive value is applied
-C. The profile created most recently wins
+C. The setting reports Conflict and neither value is applied
 D. The profile with the lowest priority number wins
 
 <details><summary>Answer</summary>
 
-**A** — Device configuration conflicts are not resolved by Intune. The setting is reported as Conflict and left unapplied, so the device keeps its previous value.
+**C** — Device configuration conflicts are not resolved by Intune. The setting is reported as Conflict and left unapplied, so the device keeps its previous value.
 
 *Exam tip:* Three different resolution models to keep straight: configuration conflicts leave the setting unapplied, compliance takes the most restrictive value, and enrollment restrictions are decided by priority.
 
@@ -6098,8 +6150,8 @@ D. The profile with the lowest priority number wins
 
 A. Nothing — exclusion takes precedence over inclusion
 B. The profile, because inclusion is evaluated first
-C. The profile, but with conflicting settings omitted
-D. The assignment is rejected as invalid
+C. The assignment is rejected as invalid
+D. The profile, but with conflicting settings omitted
 
 <details><summary>Answer</summary>
 
@@ -6283,14 +6335,14 @@ After completing this lab, you will be able to:
 
 **Q1.** Group Policy analytics reports that a GPO has 62 percent MDM support. What does this mean?
 
-A. 62 percent of the settings in that GPO have a configuration service provider equivalent and can be migrated
-B. 62 percent of targeted devices support MDM management
+A. 62 percent of targeted devices support MDM management
+B. 62 percent of the settings are already applied through Intune
 C. The migration will succeed on 62 percent of devices
-D. 62 percent of the settings are already applied through Intune
+D. 62 percent of the settings in that GPO have a configuration service provider equivalent and can be migrated
 
 <details><summary>Answer</summary>
 
-**A** — The percentage describes setting coverage, not devices. The remainder are deprecated, apply to scenarios with no modern equivalent, or belong to software whose ADMX has not been imported.
+**D** — The percentage describes setting coverage, not devices. The remainder are deprecated, apply to scenarios with no modern equivalent, or belong to software whose ADMX has not been imported.
 
 *Exam tip:* A low percentage is normal for an old GPO and is not an error. The report's purpose is triage — deciding what to migrate, what to replace, and what to abandon.
 
@@ -6298,14 +6350,14 @@ D. 62 percent of the settings are already applied through Intune
 
 **Q2.** You imported a third-party ADMX successfully but cannot find its settings in the settings catalog. Why?
 
-A. Imported ADMX settings appear under the Imported Administrative templates profile type, not the settings catalog
-B. The ADML file was not imported
+A. The import must finish replicating for 24 hours before settings appear
+B. Imported ADMX settings appear under the Imported Administrative templates profile type, not the settings catalog
 C. Imported ADMX settings require a custom OMA-URI profile
-D. The import must finish replicating for 24 hours before settings appear
+D. The ADML file was not imported
 
 <details><summary>Answer</summary>
 
-**A** — Ingested administrative templates are exposed through their own profile type. The settings catalog contains Microsoft's own configuration service providers only.
+**B** — Ingested administrative templates are exposed through their own profile type. The settings catalog contains Microsoft's own configuration service providers only.
 
 *Exam tip:* Three distinct places configure Windows: settings catalog for built-in CSPs, Administrative templates for the Microsoft ADMX-backed set, and Imported Administrative templates for third-party ADMX.
 
@@ -6475,14 +6527,14 @@ After completing this lab, you will be able to:
 
 **Q1.** A configuration profile is assigned to a group with an include filter. A device is a member of that group, matches the filter, and is also a member of a group excluded from the same profile. What does the device receive?
 
-A. Nothing — group exclusion is evaluated before filters and always wins
-B. The profile, because the include filter matched
+A. The profile, because the include filter matched
+B. Nothing, and the assignment is reported as a conflict
 C. The profile, with filtered settings only
-D. Nothing, and the assignment is reported as a conflict
+D. Nothing — group exclusion is evaluated before filters and always wins
 
 <details><summary>Answer</summary>
 
-**A** — Group exclusion takes precedence over both group inclusion and any filter. A filter narrows an assignment; it cannot restore a device that exclusion has removed.
+**D** — Group exclusion takes precedence over both group inclusion and any filter. A filter narrows an assignment; it cannot restore a device that exclusion has removed.
 
 *Exam tip:* The evaluation order is: group exclusion first, then group inclusion, then the filter. Work through it in that order for any assignment question.
 
@@ -6490,14 +6542,14 @@ D. Nothing, and the assignment is reported as a conflict
 
 **Q2.** During Autopilot deployments, devices frequently reach the desktop without their configuration profiles, because dynamic group membership has not yet been evaluated. Which feature addresses this?
 
-A. Enrollment time grouping, using a group owned by the Intune Provisioning Client
-B. An assignment filter in include mode
-C. Reducing the dynamic group rule to a single clause
-D. Increasing the Enrollment Status Page timeout
+A. Reducing the dynamic group rule to a single clause
+B. Enrollment time grouping, using a group owned by the Intune Provisioning Client
+C. Increasing the Enrollment Status Page timeout
+D. An assignment filter in include mode
 
 <details><summary>Answer</summary>
 
-**A** — Enrollment time grouping has the provisioning service write group membership during enrollment, so policy targeting that group is available while the Enrollment Status Page is still running. Filters do not affect timing, and a longer timeout only waits longer for membership that may still not arrive.
+**B** — Enrollment time grouping has the provisioning service write group membership during enrollment, so policy targeting that group is available while the Enrollment Status Page is still running. Filters do not affect timing, and a longer timeout only waits longer for membership that may still not arrive.
 
 *Exam tip:* Filters narrow *which* devices get a policy. Enrollment time grouping fixes *when* they are eligible for it. Questions about timing during provisioning point at the latter.
 
@@ -6650,14 +6702,14 @@ After completing this lab, you will be able to:
 
 **Q1.** You need to enforce a device unlock passcode on personally owned Android devices enrolled with a work profile. Which is true?
 
-A. You can enforce a work profile passcode but not a device unlock passcode, because the device is personally owned
+A. Device passcode settings apply once the device is marked as Corporate
 B. You can enforce both by using a Fully Managed device restrictions profile
-C. You can enforce a device passcode using a compliance policy instead
-D. Device passcode settings apply once the device is marked as Corporate
+C. You can enforce a work profile passcode but not a device unlock passcode, because the device is personally owned
+D. You can enforce a device passcode using a compliance policy instead
 
 <details><summary>Answer</summary>
 
-**A** — A personally owned work profile confines management to the work container. The work profile challenge is configurable; the user's own device unlock code is not, because the organisation does not own the handset.
+**C** — A personally owned work profile confines management to the work container. The work profile challenge is configurable; the user's own device unlock code is not, because the organisation does not own the handset.
 
 *Exam tip:* Ownership determines the boundary. Any question asking what can be enforced on a personally owned work profile is asking where that boundary sits.
 
@@ -6824,14 +6876,14 @@ D. A settings catalog profile for Android Enterprise
 
 **Q2.** Which profile type should you use on macOS when the setting you need is not present in the settings catalog and comes as an Apple property list from a vendor?
 
-A. Templates > Custom, uploading the .mobileconfig file
-B. Templates > Preference file
-C. Settings catalog with a custom row added
-D. An OMA-URI custom profile
+A. Settings catalog with a custom row added
+B. An OMA-URI custom profile
+C. Templates > Custom, uploading the .mobileconfig file
+D. Templates > Preference file
 
 <details><summary>Answer</summary>
 
-**A** — A custom profile uploads a `.mobileconfig` property list containing vendor payloads. Preference files set a specific application's preference domain and OMA-URI is a Windows mechanism, not an Apple one.
+**C** — A custom profile uploads a `.mobileconfig` property list containing vendor payloads. Preference files set a specific application's preference domain and OMA-URI is a Windows mechanism, not an Apple one.
 
 *Exam tip:* Custom profiles have no per-setting reporting — the whole file applies or fails as one unit. That trade-off is why they are a last resort.
 
@@ -7103,14 +7155,14 @@ After completing this lab, you will be able to:
 
 **Q1.** Contoso needs S/MIME certificates so users can read encrypted email on both their laptop and their phone. Which certificate profile type is required?
 
-A. PKCS, because the same private key must exist on multiple devices
-B. SCEP, because the private key is generated in the TPM
-C. A trusted certificate profile
-D. Either, since both generate the key on the certification authority
+A. A trusted certificate profile
+B. PKCS, because the same private key must exist on multiple devices
+C. Either, since both generate the key on the certification authority
+D. SCEP, because the private key is generated in the TPM
 
 <details><summary>Answer</summary>
 
-**A** — S/MIME requires the same private key on every device the user reads mail on. SCEP generates a unique key on each device that never leaves it, which makes it unsuitable — PKCS generates the key centrally and delivers it, which is exactly what this scenario needs.
+**B** — S/MIME requires the same private key on every device the user reads mail on. SCEP generates a unique key on each device that never leaves it, which makes it unsuitable — PKCS generates the key centrally and delivers it, which is exactly what this scenario needs.
 
 *Exam tip:* SCEP is the default and the more secure choice. PKCS is the answer only when a scenario requires the same key in more than one place, and S/MIME is the canonical example.
 
@@ -7118,14 +7170,14 @@ D. Either, since both generate the key on the certification authority
 
 **Q2.** A Wi-Fi profile using EAP-TLS fails to connect on newly enrolled devices but works on devices enrolled last week. What is the most likely cause?
 
-A. The trusted root certificate profile has not yet reached the new devices, so the certificate chain cannot be validated
-B. EAP-TLS is not supported on newly enrolled devices
-C. The Wi-Fi profile must be assigned to a user group rather than a device group
-D. The SSID is not broadcasting
+A. EAP-TLS is not supported on newly enrolled devices
+B. The trusted root certificate profile has not yet reached the new devices, so the certificate chain cannot be validated
+C. The SSID is not broadcasting
+D. The Wi-Fi profile must be assigned to a user group rather than a device group
 
 <details><summary>Answer</summary>
 
-**A** — Certificate profiles depend on the trusted root arriving first. Devices enrolled earlier already have the root, so they work; newly enrolled devices fail until the root profile syncs.
+**B** — Certificate profiles depend on the trusted root arriving first. Devices enrolled earlier already have the root, so they work; newly enrolled devices fail until the root profile syncs.
 
 *Exam tip:* Whenever a certificate-dependent feature works on older devices and fails on new ones, suspect profile ordering rather than the feature itself.
 
@@ -7359,8 +7411,8 @@ After completing this lab, you will be able to:
 **Q1.** Which statement about a Windows Hello for Business PIN is correct?
 
 A. The PIN never leaves the device and unlocks a private key held in the TPM
-B. The PIN is transmitted to Microsoft Entra ID and validated centrally
-C. The PIN replaces the password and is synchronised across the user's devices
+B. The PIN replaces the password and is synchronised across the user's devices
+C. The PIN is transmitted to Microsoft Entra ID and validated centrally
 D. The PIN is stored as a reversible hash in the local SAM database
 
 <details><summary>Answer</summary>
@@ -7373,14 +7425,14 @@ D. The PIN is stored as a reversible hash in the local SAM database
 
 **Q2.** You deploy a Windows LAPS policy backing up to Microsoft Entra ID. The policy reports success but no passwords appear in the portal. What is the most likely cause?
 
-A. The Microsoft Entra ID device setting enabling LAPS has not been turned on
-B. The devices do not have a TPM
-C. The administrator account name field was left blank
-D. The password length exceeds the directory maximum
+A. The password length exceeds the directory maximum
+B. The administrator account name field was left blank
+C. The Microsoft Entra ID device setting enabling LAPS has not been turned on
+D. The devices do not have a TPM
 
 <details><summary>Answer</summary>
 
-**A** — The directory must be configured to accept escrowed passwords. Without it the client-side policy applies and rotates the password locally, but the backup to Microsoft Entra ID is rejected — leaving a device whose local administrator password is unknown.
+**C** — The directory must be configured to accept escrowed passwords. Without it the client-side policy applies and rotates the password locally, but the backup to Microsoft Entra ID is rejected — leaving a device whose local administrator password is unknown.
 
 *Exam tip:* LAPS is a two-part configuration: the directory setting and the Intune policy. Leaving the account name blank is correct — it targets the built-in account by SID.
 
@@ -7388,14 +7440,14 @@ D. The password length exceeds the directory maximum
 
 **Q3.** Which action should you use in a Local Users and Groups policy when you want to add a group to the local Administrators group without disturbing existing members?
 
-A. Update
-B. Replace
+A. Replace
+B. Merge
 C. Restrict
-D. Merge
+D. Update
 
 <details><summary>Answer</summary>
 
-**A** — **Update** adds and removes the members you name, leaving everything else intact. **Replace** sets the group to exactly the listed members, which can remove the accounts needed to administer the device locally.
+**D** — **Update** adds and removes the members you name, leaving everything else intact. **Replace** sets the group to exactly the listed members, which can remove the accounts needed to administer the device locally.
 
 *Exam tip:* Replace is the dangerous option and the exam knows it. Any scenario mentioning preserving existing membership is pointing at Update.
 
@@ -7593,9 +7645,9 @@ After completing this lab, you will be able to:
 **Q1.** Two compliance policies target the same Windows device. One requires a minimum password length of 6, the other 8. What is enforced?
 
 A. 8 — compliance policies resolve conflicts by applying the most restrictive value
-B. 6 — the least restrictive value is applied to avoid lockouts
+B. The policy with the lower priority number wins
 C. Neither — the setting is reported as a conflict and left unapplied
-D. The policy with the lower priority number wins
+D. 6 — the least restrictive value is applied to avoid lockouts
 
 <details><summary>Answer</summary>
 
@@ -7607,14 +7659,14 @@ D. The policy with the lower priority number wins
 
 **Q2.** You want users to have several days to fix a compliance failure before losing access to corporate resources. Which configuration achieves this?
 
-A. Schedule the Mark device noncompliant action several days after non-compliance
-B. Set the compliance status validity period to several days
-C. Configure Conditional Access in report-only mode
-D. Set the tenant default to mark untargeted devices as compliant
+A. Configure Conditional Access in report-only mode
+B. Set the tenant default to mark untargeted devices as compliant
+C. Schedule the Mark device noncompliant action several days after non-compliance
+D. Set the compliance status validity period to several days
 
 <details><summary>Answer</summary>
 
-**A** — The **Mark device noncompliant** action's schedule is the grace period. Until it fires, the device continues to report as compliant and Conditional Access does not block it, which gives the user time to remediate.
+**C** — The **Mark device noncompliant** action's schedule is the grace period. Until it fires, the device continues to report as compliant and Conditional Access does not block it, which gives the user time to remediate.
 
 *Exam tip:* Scheduling that action at day 0 removes the grace period entirely. Any question about giving users time to remediate is asking about this schedule.
 
@@ -7874,14 +7926,14 @@ return $result | ConvertTo-Json -Compress
 
 **Q1.** A custom compliance discovery script runs correctly when tested manually, but every device reports an error for the custom compliance policy. What is the most likely cause?
 
-A. The script output is not compressed to a single line of JSON
-B. The script is not digitally signed
-C. The script is running in 32-bit PowerShell
-D. The JSON rules file exceeds the maximum size
+A. The script is running in 32-bit PowerShell
+B. The JSON rules file exceeds the maximum size
+C. The script is not digitally signed
+D. The script output is not compressed to a single line of JSON
 
 <details><summary>Answer</summary>
 
-**A** — The parser expects exactly one line of compressed JSON on standard output. Omitting `ConvertTo-Json -Compress`, or leaving any other output in the script, produces a parse error reported as an error state rather than a compliance result.
+**D** — The parser expects exactly one line of compressed JSON on standard output. Omitting `ConvertTo-Json -Compress`, or leaving any other output in the script, produces a parse error reported as an error state rather than a compliance result.
 
 *Exam tip:* `-Compress` and exit code 0 are the two things to check first for any custom compliance error. Signing and bitness cause different symptoms.
 
@@ -7889,14 +7941,14 @@ D. The JSON rules file exceeds the maximum size
 
 **Q2.** In a custom compliance JSON rules file, what is the purpose of RemediationStrings?
 
-A. It provides the title and description the user sees explaining how to fix the failure
-B. It defines the PowerShell commands that remediate the failure automatically
-C. It maps the rule to a proactive remediation script
+A. It maps the rule to a proactive remediation script
+B. It provides the title and description the user sees explaining how to fix the failure
+C. It defines the PowerShell commands that remediate the failure automatically
 D. It supplies the localised name of the compliance policy
 
 <details><summary>Answer</summary>
 
-**A** — RemediationStrings are user-facing text shown in Company Portal when a rule fails. Custom compliance detects only — it does not remediate. Automatic remediation is the job of proactive remediations.
+**B** — RemediationStrings are user-facing text shown in Company Portal when a rule fails. Custom compliance detects only — it does not remediate. Automatic remediation is the job of proactive remediations.
 
 *Exam tip:* Custom compliance detects; proactive remediations fix. A question asking how to automatically correct a condition is pointing at proactive remediations, covered in lab 53.
 
@@ -8109,14 +8161,14 @@ After completing this lab, you will be able to:
 
 **Q1.** You are about to enable a Conditional Access policy requiring compliant devices for all users. What must you do first?
 
-A. Exclude the emergency access account and test the policy in report-only mode
-B. Set the tenant to mark devices with no compliance policy as compliant
-C. Assign the policy to a device group rather than a user group
-D. Disable security defaults in Microsoft Entra ID
+A. Set the tenant to mark devices with no compliance policy as compliant
+B. Exclude the emergency access account and test the policy in report-only mode
+C. Disable security defaults in Microsoft Entra ID
+D. Assign the policy to a device group rather than a user group
 
 <details><summary>Answer</summary>
 
-**A** — Excluding a permanently assigned, cloud-only emergency account guarantees a way back in, and report-only mode shows the real impact before anyone is affected. Both are standard practice for every Conditional Access change.
+**B** — Excluding a permanently assigned, cloud-only emergency account guarantees a way back in, and report-only mode shows the real impact before anyone is affected. Both are standard practice for every Conditional Access change.
 
 *Exam tip:* Conditional Access policies are assigned to users, groups and workload identities — never to device groups. Device state is a condition or a grant control, not a target.
 
@@ -8125,9 +8177,9 @@ D. Disable security defaults in Microsoft Entra ID
 **Q2.** Joni uses a personally owned Windows device that is deliberately blocked from MDM enrollment. She must still reach corporate email with data protection. Which Conditional Access grant control applies?
 
 A. Require app protection policy
-B. Require device to be marked as compliant
+B. Require multifactor authentication
 C. Require Microsoft Entra hybrid joined device
-D. Require multifactor authentication
+D. Require device to be marked as compliant
 
 <details><summary>Answer</summary>
 
@@ -8303,14 +8355,14 @@ After completing this lab, you will be able to:
 
 **Q1.** A user is in a group with an application assigned as Required and another group with the same application assigned as Uninstall. What happens on their device?
 
-A. The application is uninstalled — Uninstall takes precedence over Required
-B. The application is installed — Required takes precedence
-C. The assignment is reported as a conflict and nothing happens
-D. The most recently created assignment wins
+A. The application is installed — Required takes precedence
+B. The assignment is reported as a conflict and nothing happens
+C. The most recently created assignment wins
+D. The application is uninstalled — Uninstall takes precedence over Required
 
 <details><summary>Answer</summary>
 
-**A** — Uninstall has the highest precedence of the assignment intents. This makes it a reliable way to remove software, and a common cause of applications disappearing from users who are unexpectedly members of a broader group.
+**D** — Uninstall has the highest precedence of the assignment intents. This makes it a reliable way to remove software, and a common cause of applications disappearing from users who are unexpectedly members of a broader group.
 
 *Exam tip:* Precedence order: Uninstall beats Required, and Required beats Available. Also remember that simply removing an assignment does not uninstall anything.
 
@@ -8318,14 +8370,14 @@ D. The most recently created assignment wins
 
 **Q2.** You want to publish an optional application that users can install themselves from Company Portal. Which assignment must you use, and to what kind of group?
 
-A. Available for enrolled devices, assigned to a user group
+A. Required, assigned to a user group
 B. Available for enrolled devices, assigned to a device group
-C. Required, assigned to a user group
+C. Available for enrolled devices, assigned to a user group
 D. Required, assigned to a device group
 
 <details><summary>Answer</summary>
 
-**A** — Available publishes the app for self-service and is supported only for user groups, because a device cannot choose to install something. Required installs without user interaction.
+**C** — Available publishes the app for self-service and is supported only for user groups, because a device cannot choose to install something. Required installs without user interaction.
 
 *Exam tip:* Available is user-groups-only. Required and Uninstall accept both user and device groups.
 
@@ -8588,8 +8640,8 @@ After completing this lab, you will be able to:
 **Q1.** A Win32 application installs correctly on the device but Intune reports it as failed with 0x87D1041C. What should you correct?
 
 A. The detection rule
-B. The install command line
-C. The requirement rules
+B. The requirement rules
+C. The install command line
 D. The return code mapping
 
 <details><summary>Answer</summary>
@@ -8602,14 +8654,14 @@ D. The return code mapping
 
 **Q2.** You write a PowerShell detection rule for a Win32 app. What must the script do to indicate the application is detected?
 
-A. Write output to STDOUT and exit with code 0
-B. Exit with code 0 only
-C. Write output to STDOUT only
-D. Return $true from the script
+A. Write output to STDOUT only
+B. Return $true from the script
+C. Exit with code 0 only
+D. Write output to STDOUT and exit with code 0
 
 <details><summary>Answer</summary>
 
-**A** — Both conditions are required. Exit code 0 with no output means not detected, and output with a non-zero exit code also means not detected.
+**D** — Both conditions are required. Exit code 0 with no output means not detected, and output with a non-zero exit code also means not detected.
 
 *Exam tip:* This two-part contract is unique to Win32 detection scripts and differs from proactive remediation scripts, where the exit code alone decides.
 
@@ -8797,14 +8849,14 @@ After completing this lab, you will be able to:
 
 **Q1.** Contoso wants Microsoft 365 Apps feature updates on a predictable monthly schedule with security updates every month. Which update channel should you configure?
 
-A. Monthly Enterprise Channel
-B. Current Channel
-C. Semi-Annual Enterprise Channel
-D. Semi-Annual Enterprise Channel (Preview)
+A. Semi-Annual Enterprise Channel (Preview)
+B. Semi-Annual Enterprise Channel
+C. Current Channel
+D. Monthly Enterprise Channel
 
 <details><summary>Answer</summary>
 
-**A** — Monthly Enterprise Channel delivers feature updates once a month on a predictable date, with security updates every month. Current Channel ships features continuously, and the semi-annual channels ship features only twice a year.
+**D** — Monthly Enterprise Channel delivers feature updates once a month on a predictable date, with security updates every month. Current Channel ships features continuously, and the semi-annual channels ship features only twice a year.
 
 *Exam tip:* Monthly Enterprise Channel is the standard production answer. Reach for Semi-Annual only when a scenario stresses long validation cycles or regulatory change control.
 
@@ -8812,14 +8864,14 @@ D. Semi-Annual Enterprise Channel (Preview)
 
 **Q2.** You need an Office macro policy to follow users onto devices that Intune does not manage. Which tool should you use?
 
-A. Cloud policy in the Microsoft 365 Apps admin center
-B. An administrative template configuration profile in Intune
-C. A settings catalog profile in Intune
-D. An app configuration policy in Intune
+A. A settings catalog profile in Intune
+B. An app configuration policy in Intune
+C. An administrative template configuration profile in Intune
+D. Cloud policy in the Microsoft 365 Apps admin center
 
 <details><summary>Answer</summary>
 
-**A** — Cloud policy is user-based and applies wherever the user signs in to Microsoft 365 Apps, including unmanaged devices. Intune configuration profiles apply to managed devices only.
+**D** — Cloud policy is user-based and applies wherever the user signs in to Microsoft 365 Apps, including unmanaged devices. Intune configuration profiles apply to managed devices only.
 
 *Exam tip:* User follows the policy means cloud policy. Device receives the policy means an Intune configuration profile.
 
@@ -8959,14 +9011,14 @@ After completing this lab, you will be able to:
 
 **Q1.** Contoso deploys shared iPads in retail stores. Users do not have individual Apple Accounts. Which VPP licensing mode should be used?
 
-A. Device licensing
-B. User licensing
-C. Either, since both work without an Apple Account
+A. User licensing
+B. Either, since both work without an Apple Account
+C. Device licensing
 D. Neither — shared devices cannot use VPP applications
 
 <details><summary>Answer</summary>
 
-**A** — Device licensing assigns the licence to the hardware, requiring no Apple Account and no invitation acceptance. User licensing requires each user to have an Apple Account and accept an invitation, which shared-device users do not have.
+**C** — Device licensing assigns the licence to the hardware, requiring no Apple Account and no invitation acceptance. User licensing requires each user to have an Apple Account and accept an invitation, which shared-device users do not have.
 
 *Exam tip:* Shared, kiosk or unattended Apple hardware always means device licensing. A named user across several devices means user licensing.
 
@@ -9184,9 +9236,9 @@ After completing this lab, you will be able to:
 **Q1.** An employee leaves and returns their corporate laptop, but their personal phone had corporate mail through Outlook with an app protection policy. What action removes corporate data without affecting their personal content?
 
 A. App selective wipe
-B. Retire
-C. Wipe
-D. Delete the device record from Intune
+B. Delete the device record from Intune
+C. Retire
+D. Wipe
 
 <details><summary>Answer</summary>
 
@@ -9198,14 +9250,14 @@ D. Delete the device record from Intune
 
 **Q2.** You create a Conditional Access policy combining Require device to be marked as compliant and Require app protection policy, and set it to require all selected controls. What is the effect on a BYOD user with an unenrolled but app-protected device?
 
-A. They are blocked, because an unenrolled device cannot satisfy the compliance control
-B. They are granted access, because app protection is satisfied
+A. They are granted access, because app protection is satisfied
+B. The policy does not apply to unenrolled devices
 C. They are prompted to enrol the device
-D. The policy does not apply to unenrolled devices
+D. They are blocked, because an unenrolled device cannot satisfy the compliance control
 
 <details><summary>Answer</summary>
 
-**A** — Requiring all selected controls means every control must be satisfied. An unenrolled device can never be marked compliant, so the user is blocked regardless of app protection.
+**D** — Requiring all selected controls means every control must be satisfied. An unenrolled device can never be marked compliant, so the user is blocked regardless of app protection.
 
 *Exam tip:* When combining grant controls, *Require one of the selected controls* is what lets managed and unmanaged devices coexist under one policy. Requiring all of them is a common lockout.
 
@@ -9357,9 +9409,9 @@ After completing this lab, you will be able to:
 **Q1.** Joni's personally owned device is blocked from enrollment but has app protection policies. You need to set the home page in Microsoft Edge on that device. Which policy type do you use?
 
 A. An app configuration policy of type Managed apps
-B. An app configuration policy of type Managed devices
-C. A device configuration profile
-D. A settings catalog profile targeting Edge
+B. A device configuration profile
+C. A settings catalog profile targeting Edge
+D. An app configuration policy of type Managed devices
 
 <details><summary>Answer</summary>
 
@@ -9371,14 +9423,14 @@ D. A settings catalog profile targeting Edge
 
 **Q2.** In an app configuration policy, what does the value {{userprincipalname}} do?
 
-A. It is a configuration token resolved to each user's UPN when the policy is applied
-B. It is a placeholder that must be replaced before saving the policy
-C. It refers to the administrator who created the policy
-D. It is a PowerShell variable evaluated on the device
+A. It refers to the administrator who created the policy
+B. It is a PowerShell variable evaluated on the device
+C. It is a placeholder that must be replaced before saving the policy
+D. It is a configuration token resolved to each user's UPN when the policy is applied
 
 <details><summary>Answer</summary>
 
-**A** — Configuration tokens are substituted per user at delivery, letting one policy serve an entire population. Common tokens include `{{mail}}`, `{{partialupn}}`, `{{deviceid}}` and `{{serialnumber}}`.
+**D** — Configuration tokens are substituted per user at delivery, letting one policy serve an entire population. Common tokens include `{{mail}}`, `{{partialupn}}`, `{{deviceid}}` and `{{serialnumber}}`.
 
 *Exam tip:* Any question showing double-brace values in an app configuration policy is testing whether you recognise tokens. They are resolved by Intune, not by the app or by PowerShell.
 
@@ -9542,14 +9594,14 @@ After completing this lab, you will be able to:
 
 **Q1.** An application reports Not applicable for 40 devices. What does this indicate?
 
-A. A requirement rule excluded those devices, so installation was never attempted
+A. The detection rule could not be evaluated
 B. The installation failed and was rolled back
 C. The devices have not checked in recently
-D. The detection rule could not be evaluated
+D. A requirement rule excluded those devices, so installation was never attempted
 
 <details><summary>Answer</summary>
 
-**A** — Not applicable means a requirement rule — architecture, minimum operating system, disk space — excluded the device deliberately. Nothing was attempted and nothing failed.
+**D** — Not applicable means a requirement rule — architecture, minimum operating system, disk space — excluded the device deliberately. Nothing was attempted and nothing failed.
 
 *Exam tip:* Not applicable points at requirement rules; Failed points at the installer or the detection rule; Pending points at device check-in. Three statuses, three completely different investigations.
 
@@ -9557,14 +9609,14 @@ D. The detection rule could not be evaluated
 
 **Q2.** Which log file explains why a Win32 application's detection rule evaluated as not detected?
 
-A. AppWorkload.log
-B. IntuneManagementExtension.log
-C. AgentExecutor.log
-D. ClientHealth.log
+A. ClientHealth.log
+B. AppWorkload.log
+C. IntuneManagementExtension.log
+D. AgentExecutor.log
 
 <details><summary>Answer</summary>
 
-**A** — `AppWorkload.log` records per-application workload detail including detection rule evaluation. `IntuneManagementExtension.log` covers policy retrieval, download and installer exit codes, and `AgentExecutor.log` covers script execution.
+**B** — `AppWorkload.log` records per-application workload detail including detection rule evaluation. `IntuneManagementExtension.log` covers policy retrieval, download and installer exit codes, and `AgentExecutor.log` covers script execution.
 
 *Exam tip:* All four live in `C:\ProgramData\Microsoft\IntuneManagementExtension\Logs`. Knowing which one answers which question is what turns a two-hour investigation into a ten-minute one.
 
@@ -9724,8 +9776,8 @@ After completing this lab, you will be able to:
 **Q1.** A security baseline and a settings catalog profile both configure the same setting to different values on the same device. What happens?
 
 A. The setting reports a conflict and neither value is applied
-B. The security baseline takes precedence
-C. The most restrictive value is applied
+B. The most restrictive value is applied
+C. The security baseline takes precedence
 D. The settings catalog profile takes precedence because it is more specific
 
 <details><summary>Answer</summary>
@@ -9914,14 +9966,14 @@ After completing this lab, you will be able to:
 
 **Q1.** After enabling tamper protection, an administrator finds that `Set-MpPreference` no longer changes Defender settings on managed devices. What is the explanation?
 
-A. Tamper protection blocks Defender configuration changes from all sources except Intune and the Defender portal
-B. Set-MpPreference requires the device to be in passive mode
-C. The PowerShell module must be updated to a version that supports tamper protection
-D. Tamper protection only permits changes made by SYSTEM
+A. The PowerShell module must be updated to a version that supports tamper protection
+B. Tamper protection only permits changes made by SYSTEM
+C. Set-MpPreference requires the device to be in passive mode
+D. Tamper protection blocks Defender configuration changes from all sources except Intune and the Defender portal
 
 <details><summary>Answer</summary>
 
-**A** — Tamper protection deliberately blocks local changes to Defender configuration, including PowerShell, registry edits and Group Policy, regardless of the account's privileges. Only Intune and the Defender portal remain authoritative.
+**D** — Tamper protection deliberately blocks local changes to Defender configuration, including PowerShell, registry edits and Group Policy, regardless of the account's privileges. Only Intune and the Defender portal remain authoritative.
 
 *Exam tip:* This is the intended behaviour, not a bug. Any exam scenario where a local administrator cannot disable Defender is describing tamper protection.
 
@@ -9929,14 +9981,14 @@ D. Tamper protection only permits changes made by SYSTEM
 
 **Q2.** Which pair of settings work together to let Defender block a file it has never seen before?
 
-A. Cloud-delivered protection and sample submission
-B. Real-time protection and behaviour monitoring
-C. Tamper protection and attack surface reduction
-D. Signature update interval and scheduled scanning
+A. Real-time protection and behaviour monitoring
+B. Cloud-delivered protection and sample submission
+C. Signature update interval and scheduled scanning
+D. Tamper protection and attack surface reduction
 
 <details><summary>Answer</summary>
 
-**A** — Cloud-delivered protection queries the Microsoft service for a reputation verdict in real time, and sample submission is what supplies the service with the files that build that reputation. Disabling submission degrades cloud protection.
+**B** — Cloud-delivered protection queries the Microsoft service for a reputation verdict in real time, and sample submission is what supplies the service with the files that build that reputation. Disabling submission degrades cloud protection.
 
 *Exam tip:* Behaviour monitoring detects malicious activity locally; cloud protection is what handles files with no local signature. The two are complementary and the exam distinguishes them.
 
@@ -10097,14 +10149,14 @@ After completing this lab, you will be able to:
 
 **Q1.** You deploy a firewall policy blocking inbound connections by default. A line-of-business application's installer creates a local firewall rule to open its port, and the application works. What setting would have prevented that?
 
-A. Setting local policy rules not merged to True
-B. Setting the default inbound action to Block on all profiles
-C. Enabling stealth mode on the Public profile
-D. Assigning the policy to a device group rather than a user group
+A. Setting the default inbound action to Block on all profiles
+B. Enabling stealth mode on the Public profile
+C. Assigning the policy to a device group rather than a user group
+D. Setting local policy rules not merged to True
 
 <details><summary>Answer</summary>
 
-**A** — By default, locally created firewall rules merge with policy-deployed rules. Disabling merging means only rules you deploy apply, so an installer cannot open a port behind your back.
+**D** — By default, locally created firewall rules merge with policy-deployed rules. Disabling merging means only rules you deploy apply, so an installer cannot open a port behind your back.
 
 *Exam tip:* Rule merging is the setting that turns firewall policy from advisory into authoritative. Any scenario where an unexpected rule exists on a managed device points at it.
 
@@ -10310,14 +10362,14 @@ After completing this lab, you will be able to:
 
 **Q1.** You are deploying attack surface reduction rules to 500 devices. What should you do first?
 
-A. Deploy the rules in Audit mode and review events 1122 before enabling Block
-B. Deploy the rules in Block mode to a pilot group
-C. Configure ASR-only exclusions for all line-of-business applications
+A. Configure ASR-only exclusions for all line-of-business applications
+B. Deploy the rules in Audit mode and review events 1122 before enabling Block
+C. Deploy the rules in Block mode to a pilot group
 D. Enable Warn mode so users can report problems
 
 <details><summary>Answer</summary>
 
-**A** — Audit mode records what each rule would have blocked without affecting anyone, which is the evidence you need before enforcing. Blocking first — even on a pilot — breaks work before you know which rules are safe.
+**B** — Audit mode records what each rule would have blocked without affecting anyone, which is the evidence you need before enforcing. Blocking first — even on a pilot — breaks work before you know which rules are safe.
 
 *Exam tip:* Audit, review, exclude, then block. Event 1122 is audit and 1121 is block; knowing which is which is frequently the question.
 
@@ -10326,9 +10378,9 @@ D. Enable Warn mode so users can report problems
 **Q2.** A line-of-business application is repeatedly audited by the rule blocking Office applications from creating child processes. You need the rule enforced but this application to keep working. What should you configure?
 
 A. An ASR-only exclusion for that application
-B. A Microsoft Defender Antivirus path exclusion
-C. Set the rule to Warn mode
-D. Remove the rule from the policy
+B. Set the rule to Warn mode
+C. Remove the rule from the policy
+D. A Microsoft Defender Antivirus path exclusion
 
 <details><summary>Answer</summary>
 
@@ -10532,14 +10584,14 @@ After completing this lab, you will be able to:
 
 **Q1.** Which BitLocker policy setting prevents a device from encrypting before its recovery key has been successfully escrowed?
 
-A. Store recovery information in Microsoft Entra ID before enabling BitLocker
-B. Save BitLocker recovery information to Microsoft Entra ID
-C. Require devices to be encrypted
-D. Configure client-driven recovery password rotation
+A. Configure client-driven recovery password rotation
+B. Store recovery information in Microsoft Entra ID before enabling BitLocker
+C. Save BitLocker recovery information to Microsoft Entra ID
+D. Require devices to be encrypted
 
 <details><summary>Answer</summary>
 
-**A** — *Save recovery information* enables escrow; *store before enabling* makes successful escrow a precondition for encryption starting. Without the second, a device can encrypt and fail to upload its key, leaving no way to recover it.
+**B** — *Save recovery information* enables escrow; *store before enabling* makes successful escrow a precondition for encryption starting. Without the second, a device can encrypt and fail to upload its key, leaving no way to recover it.
 
 *Exam tip:* The two settings sound almost identical and only one prevents unrecoverable devices. Read the wording carefully in exam questions.
 
@@ -10547,14 +10599,14 @@ D. Configure client-driven recovery password rotation
 
 **Q2.** Silent BitLocker enablement fails on devices where the signed-in user is a standard user. What setting resolves this?
 
-A. Allow standard users to enable encryption during Microsoft Entra join
-B. Allow warning for other disk encryption
-C. Compatible TPM startup PIN set to Required
-D. Encryption method set to XTS-AES 256-bit
+A. Compatible TPM startup PIN set to Required
+B. Allow standard users to enable encryption during Microsoft Entra join
+C. Encryption method set to XTS-AES 256-bit
+D. Allow warning for other disk encryption
 
 <details><summary>Answer</summary>
 
-**A** — Starting encryption normally requires administrative rights. This setting delegates that specific action to standard users, which is essential because Autopilot deployments correctly make users standard rather than local administrators.
+**B** — Starting encryption normally requires administrative rights. This setting delegates that specific action to standard users, which is essential because Autopilot deployments correctly make users standard rather than local administrators.
 
 *Exam tip:* Silent enablement needs both this setting and the warning blocked. A question mentioning standard users points at this one specifically.
 
@@ -10768,14 +10820,14 @@ After completing this lab, you will be able to:
 
 **Q1.** You configure a compliance policy requiring devices to be at or under a machine risk score of Clear. What is the practical consequence?
 
-A. Any device with a single active alert of any severity becomes non-compliant and is blocked by Conditional Access
-B. Only devices with high-severity alerts become non-compliant
+A. Only devices with high-severity alerts become non-compliant
+B. Any device with a single active alert of any severity becomes non-compliant and is blocked by Conditional Access
 C. The rule has no effect until Defender for Endpoint is licensed separately
 D. Devices are quarantined automatically by Defender
 
 <details><summary>Answer</summary>
 
-**A** — Clear means no detections at all. Any active alert, however minor, pushes the device above the threshold, making it non-compliant and — with a compliance-requiring Conditional Access policy — blocking the user entirely.
+**B** — Clear means no detections at all. Any active alert, however minor, pushes the device above the threshold, making it non-compliant and — with a compliance-requiring Conditional Access policy — blocking the user entirely.
 
 *Exam tip:* Medium is the usual production setting. Clear is defensible only for the highest-value systems, and the exam tests whether you understand the operational cost.
 
@@ -10965,14 +11017,14 @@ After completing this lab, you will be able to:
 
 **Q1.** Which App Control for Business setting causes applications deployed through Intune to be trusted automatically?
 
-A. Trust apps from managed installers
-B. Trust apps with good reputation
-C. Trust Windows components and Store apps
-D. Enable App Control for Business in audit mode
+A. Trust Windows components and Store apps
+B. Trust apps from managed installers
+C. Enable App Control for Business in audit mode
+D. Trust apps with good reputation
 
 <details><summary>Answer</summary>
 
-**A** — Managed installer trust designates the Intune Management Extension as an authorised installer, so anything it installs is trusted. This is what makes App Control manageable without maintaining a signed catalogue of every binary.
+**B** — Managed installer trust designates the Intune Management Extension as an authorised installer, so anything it installs is trusted. This is what makes App Control manageable without maintaining a signed catalogue of every binary.
 
 *Exam tip:* Intelligent Security Graph covers well-known third-party software by reputation; managed installer covers your own deployments. Most estates need both.
 
@@ -10980,14 +11032,14 @@ D. Enable App Control for Business in audit mode
 
 **Q2.** Which event ID indicates that App Control for Business would have blocked a file, but did not because the policy is in audit mode?
 
-A. 3076
-B. 3077
-C. 1121
-D. 1122
+A. 1121
+B. 3076
+C. 1122
+D. 3077
 
 <details><summary>Answer</summary>
 
-**A** — Event 3076 in the CodeIntegrity operational log is the audit event, and 3077 is the enforcement block. Events 1121 and 1122 belong to attack surface reduction in the Defender operational log.
+**B** — Event 3076 in the CodeIntegrity operational log is the audit event, and 3077 is the enforcement block. Events 1121 and 1122 belong to attack surface reduction in the Defender operational log.
 
 *Exam tip:* Two audit-and-block pairs to keep apart: ASR uses 1122 and 1121 in the Defender log; App Control uses 3076 and 3077 in the CodeIntegrity log.
 
@@ -11170,14 +11222,14 @@ After completing this lab, you will be able to:
 
 **Q1.** A quality update released three days ago is causing crashes on pilot devices. You need to prevent it reaching the broad ring, which has a 7-day quality deferral. What should you do?
 
-A. Pause quality updates on the broad ring
+A. Set the broad ring's servicing channel to Semi-Annual
 B. Increase the broad ring's quality update deferral to 14 days
-C. Set the broad ring's servicing channel to Semi-Annual
-D. Remove the broad ring assignment
+C. Remove the broad ring assignment
+D. Pause quality updates on the broad ring
 
 <details><summary>Answer</summary>
 
-**A** — Pause immediately stops updates being offered to that ring, for up to 35 days. Changing the deferral shifts the offer window relative to the release date but is a less direct control and can behave unexpectedly for updates already in flight.
+**D** — Pause immediately stops updates being offered to that ring, for up to 35 days. Changing the deferral shifts the offer window relative to the release date but is a less direct control and can behave unexpectedly for updates already in flight.
 
 *Exam tip:* Deferral is planning; pause is incident response. Any scenario describing a bad update already in the wild is asking about pause.
 
@@ -11186,9 +11238,9 @@ D. Remove the broad ring assignment
 **Q2.** What is the purpose of the grace period setting in an update ring?
 
 A. It guarantees a minimum time after installation before a restart is forced, regardless of the deadline
-B. It extends the deferral period for devices that are offline
-C. It delays when the update is offered to the device
-D. It allows users to pause updates for a set number of days
+B. It delays when the update is offered to the device
+C. It allows users to pause updates for a set number of days
+D. It extends the deferral period for devices that are offline
 
 <details><summary>Answer</summary>
 
@@ -11370,14 +11422,14 @@ After completing this lab, you will be able to:
 
 **Q1.** A critical security update must reach all devices today, but your update rings have deferrals of 3 and 7 days and one ring is paused. What should you use?
 
-A. An expedited quality update, which overrides deferrals, deadlines and pauses
+A. Resume the paused ring and force a device sync
 B. Reduce the deferral on both rings to 0 days
-C. Resume the paused ring and force a device sync
+C. An expedited quality update, which overrides deferrals, deadlines and pauses
 D. Create a new update ring with no deferral and reassign all devices
 
 <details><summary>Answer</summary>
 
-**A** — Expedited quality updates are delivered through a separate accelerated channel that overrides deferrals, deadlines and pauses. Every other option is slower and leaves the paused ring's devices unprotected.
+**C** — Expedited quality updates are delivered through a separate accelerated channel that overrides deferrals, deadlines and pauses. Every other option is slower and leaves the paused ring's devices unprotected.
 
 *Exam tip:* Expedited is the emergency control and should stay exceptional. Reserve it for actively exploited vulnerabilities, not for impatience.
 
@@ -11385,14 +11437,14 @@ D. Create a new update ring with no deferral and reassign all devices
 
 **Q2.** Which statement about Windows Hotpatch is correct?
 
-A. Quarterly baseline updates require a restart; the two months following each baseline are patched without one
-B. All security updates are applied without a restart, eliminating them entirely
-C. It requires Windows 11 Pro and any Intune update ring
-D. It applies to feature updates as well as quality updates
+A. It applies to feature updates as well as quality updates
+B. Quarterly baseline updates require a restart; the two months following each baseline are patched without one
+C. All security updates are applied without a restart, eliminating them entirely
+D. It requires Windows 11 Pro and any Intune update ring
 
 <details><summary>Answer</summary>
 
-**A** — Hotpatch reduces restarts from monthly to quarterly. Each quarter a baseline update establishes a new starting point and needs a restart; the intervening two months are hotpatched in memory. It requires Enterprise or Education editions and Windows Autopatch.
+**B** — Hotpatch reduces restarts from monthly to quarterly. Each quarter a baseline update establishes a new starting point and needs a restart; the intervening two months are hotpatched in memory. It requires Enterprise or Education editions and Windows Autopatch.
 
 *Exam tip:* The quarterly baseline is the detail that distinguishes a correct answer from a plausible one. Hotpatch reduces restarts, it does not remove them.
 
@@ -11552,14 +11604,14 @@ After completing this lab, you will be able to:
 
 **Q1.** How does Android update management on fully managed devices differ from Windows update rings?
 
-A. Android has no ring model; you control when updates may install, with postponement capped at 30 days
+A. Android updates can be staged across rings using deployment groups
 B. Android uses the same deferral model with a maximum of 30 days
-C. Android updates can be staged across rings using deployment groups
-D. Android updates are managed entirely through Managed Google Play
+C. Android updates are managed entirely through Managed Google Play
+D. Android has no ring model; you control when updates may install, with postponement capped at 30 days
 
 <details><summary>Answer</summary>
 
-**A** — Android system update policy offers Device Default, Postpone, Windowed and Automatic. Postponement is capped at 30 days, after which the update installs regardless. There is no per-release deferral and no ring staging.
+**D** — Android system update policy offers Device Default, Postpone, Windowed and Automatic. Postponement is capped at 30 days, after which the update installs regardless. There is no per-release deferral and no ring staging.
 
 *Exam tip:* The absence of a ring model is the point. And remember these settings exist only for corporate-owned devices — a personally owned work profile has none of them.
 
@@ -11696,14 +11748,14 @@ After completing this lab, you will be able to:
 
 **Q1.** You configure an enforced software update policy specifying iOS 18.1 by a deadline. Corporate iPads enrolled through Apple Business Manager comply, but personally enrolled iPhones do not. Why?
 
-A. Enforced software update requires a supervised device, and personally enrolled devices are not supervised
-B. The policy must be assigned to a device group rather than a user group
-C. iPhones require a separate update policy platform
-D. The deadline must be at least 30 days in the future
+A. iPhones require a separate update policy platform
+B. The deadline must be at least 30 days in the future
+C. The policy must be assigned to a device group rather than a user group
+D. Enforced software update requires a supervised device, and personally enrolled devices are not supervised
 
 <details><summary>Answer</summary>
 
-**A** — Enforced software update is supervised-only. Devices enrolled through Automated Device Enrollment are supervised and comply; personally enrolled devices accept the profile and ignore the payload.
+**D** — Enforced software update is supervised-only. Devices enrolled through Automated Device Enrollment are supervised and comply; personally enrolled devices accept the profile and ignore the payload.
 
 *Exam tip:* Supervision keeps recurring across Apple management — restrictions, kiosk mode, non-removable profiles and enforced updates all depend on it. Establish whether a device is supervised before analysing anything else.
 
@@ -11920,9 +11972,9 @@ foreach ($device in $stale) {
 **Q1.** An employee leaves the company. Their personally owned Android phone has a work profile with corporate mail. Which remote action should you use?
 
 A. Retire, which removes the work profile and company data while leaving personal data intact
-B. Wipe, to ensure no corporate data remains on the device
+B. Fresh Start, to reset the device to a clean state
 C. Delete, to remove the device record from Intune
-D. Fresh Start, to reset the device to a clean state
+D. Wipe, to ensure no corporate data remains on the device
 
 <details><summary>Answer</summary>
 
@@ -11934,14 +11986,14 @@ D. Fresh Start, to reset the device to a clean state
 
 **Q2.** A corporate laptop is being reassigned to a different employee. It must return to a business-ready state and redeploy automatically without IT reimaging it. Which action is appropriate?
 
-A. Autopilot Reset, which preserves the Autopilot registration so the device redeploys itself
-B. Wipe, which factory resets the device
-C. Fresh Start, which removes pre-installed applications
-D. Retire, which unenrolls the device
+A. Fresh Start, which removes pre-installed applications
+B. Retire, which unenrolls the device
+C. Autopilot Reset, which preserves the Autopilot registration so the device redeploys itself
+D. Wipe, which factory resets the device
 
 <details><summary>Answer</summary>
 
-**A** — Autopilot Reset removes applications, settings and personal content while preserving Autopilot registration and Microsoft Entra join, so the device provisions itself for its new user. A full Wipe would remove the Entra join and require the deployment to start over.
+**C** — Autopilot Reset removes applications, settings and personal content while preserving Autopilot registration and Microsoft Entra join, so the device provisions itself for its new user. A full Wipe would remove the Entra join and require the deployment to start over.
 
 *Exam tip:* Autopilot Reset is the reassignment action. Its distinguishing property is that the device stays registered and redeploys without being touched.
 
@@ -12104,14 +12156,14 @@ After completing this lab, you will be able to:
 
 **Q1.** A vulnerability is announced in a widely deployed application. You need to know within the hour which devices have it and at what version. Which capability gives live results?
 
-A. Device query using KQL
+A. A custom compliance policy with a discovery script
 B. The discovered apps inventory report
-C. A custom compliance policy with a discovery script
+C. Device query using KQL
 D. Collect diagnostics
 
 <details><summary>Answer</summary>
 
-**A** — Device query executes on the device on demand and returns current state. Discovered apps is cached inventory refreshed on a schedule, and a compliance script would take a full evaluation cycle to report.
+**C** — Device query executes on the device on demand and returns current state. Discovered apps is cached inventory refreshed on a schedule, and a compliance script would take a full evaluation cycle to report.
 
 *Exam tip:* Live versus cached is the distinction being tested. Note also that querying many devices at once belongs to Advanced Analytics, while single-device query is in Plan 1 — Microsoft 365 E5 has included both since July 2026.
 
@@ -12119,14 +12171,14 @@ D. Collect diagnostics
 
 **Q2.** A user reports that an application will not install, and they cannot reliably follow instructions to gather logs. What is the most efficient way to obtain the diagnostic data?
 
-A. Use Collect diagnostics from the device blade, which gathers logs silently and uploads them
-B. Ask the user to run mdmdiagnosticstool.exe and email you the output
-C. Run a device query against the Application table
-D. Retire and re-enrol the device
+A. Ask the user to run mdmdiagnosticstool.exe and email you the output
+B. Run a device query against the Application table
+C. Retire and re-enrol the device
+D. Use Collect diagnostics from the device blade, which gathers logs silently and uploads them
 
 <details><summary>Answer</summary>
 
-**A** — Collect diagnostics gathers Intune Management Extension logs, MDM diagnostics, event logs and update history without any user involvement, and makes the bundle downloadable from the portal.
+**D** — Collect diagnostics gathers Intune Management Extension logs, MDM diagnostics, event logs and update history without any user involvement, and makes the bundle downloadable from the portal.
 
 *Exam tip:* Device query answers a specific question about current state; collect diagnostics gathers everything for an investigation. Pick based on whether you know what you are looking for.
 
@@ -12397,9 +12449,9 @@ Write-Host "Assigned to $($group.DisplayName)" -ForegroundColor Green
 **Q1.** You are writing an unattended script that runs nightly to retire stale devices. Which permission type should it use?
 
 A. Application permissions through an app registration with certificate authentication
-B. Delegated permissions with a stored administrator password
+B. Application permissions using the Intune Administrator directory role
 C. Delegated permissions with the account signed in interactively each night
-D. Application permissions using the Intune Administrator directory role
+D. Delegated permissions with a stored administrator password
 
 <details><summary>Answer</summary>
 
@@ -12411,14 +12463,14 @@ D. Application permissions using the Intune Administrator directory role
 
 **Q2.** You need to automate an Intune action that has no dedicated Graph PowerShell cmdlet. What is the most practical approach?
 
-A. Capture the call the portal makes using browser developer tools, then replay it with Invoke-MgGraphRequest
+A. Use the Intune PowerShell module instead of the Graph SDK
 B. Wait for Microsoft to publish a cmdlet for that operation
-C. Use the Intune PowerShell module instead of the Graph SDK
+C. Capture the call the portal makes using browser developer tools, then replay it with Invoke-MgGraphRequest
 D. Automate the portal with browser scripting
 
 <details><summary>Answer</summary>
 
-**A** — Every portal action is a Graph call. Capturing the request URL, method and body from the Network tab and replaying it with `Invoke-MgGraphRequest` lets you automate anything the portal can do, including beta endpoints with no cmdlet.
+**C** — Every portal action is a Graph call. Capturing the request URL, method and body from the Network tab and replaying it with `Invoke-MgGraphRequest` lets you automate anything the portal can do, including beta endpoints with no cmdlet.
 
 *Exam tip:* Remember that newer features often exist only on the beta endpoint. That is where `Invoke-MgGraphRequest` and the `MgBeta` cmdlets earn their place.
 
@@ -12653,14 +12705,14 @@ catch {
 
 **Q1.** In a proactive remediation detection script, what does exit code 1 signify?
 
-A. An issue was detected and the remediation script should run
-B. The device is compliant and no action is needed
-C. The detection script failed to execute
-D. The remediation has already been applied
+A. The device is compliant and no action is needed
+B. The remediation has already been applied
+C. An issue was detected and the remediation script should run
+D. The detection script failed to execute
 
 <details><summary>Answer</summary>
 
-**A** — Exit 0 means compliant and stops there; exit 1 means an issue was found and triggers the remediation script. Any other exit code is reported as a detection failure.
+**C** — Exit 0 means compliant and stops there; exit 1 means an issue was found and triggers the remediation script. Any other exit code is reported as a detection failure.
 
 *Exam tip:* Do not transpose this with Win32 detection rules, where exit 0 plus output means the app *is* detected. Remediation: 0 is good, 1 means fix it.
 
@@ -12668,14 +12720,14 @@ D. The remediation has already been applied
 
 **Q2.** A remediation consistently reports Issue not remediated. What does this indicate?
 
-A. The remediation script runs but the problem persists when detection re-evaluates
+A. The remediation script is not assigned to the correct group
 B. The detection script is returning an invalid exit code
 C. The devices are offline and cannot run the scripts
-D. The remediation script is not assigned to the correct group
+D. The remediation script runs but the problem persists when detection re-evaluates
 
 <details><summary>Answer</summary>
 
-**A** — That status specifically means the remediation executed and post-remediation detection still found the issue. Detection is working; the fix is not.
+**D** — That status specifically means the remediation executed and post-remediation detection still found the issue. Detection is working; the fix is not.
 
 *Exam tip:* Check context and bitness first. A machine-wide registry fix running in user context or 32-bit PowerShell writes to the wrong place and produces exactly this result.
 
@@ -12830,14 +12882,14 @@ After completing this lab, you will be able to:
 
 **Q1.** Contoso wants to improve its Endpoint analytics score without purchasing new hardware. Which score component is most improvable through configuration?
 
-A. Work from anywhere
-B. Battery health
-C. Resource performance
-D. Application reliability
+A. Resource performance
+B. Work from anywhere
+C. Application reliability
+D. Battery health
 
 <details><summary>Answer</summary>
 
-**A** — Work from anywhere measures cloud identity, cloud management, cloud provisioning and Windows 11 readiness — all of which are configuration and deployment choices. Battery health and resource performance are largely hardware, and application reliability depends on the software itself.
+**B** — Work from anywhere measures cloud identity, cloud management, cloud provisioning and Windows 11 readiness — all of which are configuration and deployment choices. Battery health and resource performance are largely hardware, and application reliability depends on the software itself.
 
 *Exam tip:* Work from anywhere is effectively a scorecard for how modern your deployment is. Entra join, Autopilot and Windows 11 all raise it directly.
 
@@ -12845,14 +12897,14 @@ D. Application reliability
 
 **Q2.** Which Endpoint Analytics capability requires Intune Advanced Analytics rather than Plan 1?
 
-A. Anomaly detection and the device timeline
-B. Startup performance scores
-C. Proactive remediations
-D. Application reliability reporting
+A. Application reliability reporting
+B. Proactive remediations
+C. Anomaly detection and the device timeline
+D. Startup performance scores
 
 <details><summary>Answer</summary>
 
-**A** — Anomaly detection, the per-device timeline and multi-device query belong to Advanced Analytics. The core score, startup performance, application reliability and proactive remediations are Plan 1 capabilities.
+**C** — Anomaly detection, the per-device timeline and multi-device query belong to Advanced Analytics. The core score, startup performance, application reliability and proactive remediations are Plan 1 capabilities.
 
 *Exam tip:* The exam objective for Advanced Analytics names anomaly detection, proactive insights and risk-based policy recommendations — those three phrases are the tell. The plan boundary is still examined even though Microsoft 365 E5 now grants both sides of it.
 
@@ -13014,8 +13066,8 @@ After completing this lab, you will be able to:
 **Q1.** You need to confirm right now whether a specific device is compliant after remediating it. Which Intune reporting surface should you use?
 
 A. An operational report, or the device's own compliance blade
-B. An organizational report
-C. A historical report
+B. A historical report
+C. An organizational report
 D. A Log Analytics workbook
 
 <details><summary>Answer</summary>
@@ -13029,9 +13081,9 @@ D. A Log Analytics workbook
 **Q2.** Contoso needs a dashboard correlating Intune compliance data with Microsoft Entra sign-in logs, retained for two years. What is required?
 
 A. Diagnostic settings streaming to a Log Analytics workspace, then a workbook built with KQL
-B. A historical report exported monthly to CSV
-C. The Intune report export API with a scheduled script
-D. Endpoint Analytics with a custom baseline
+B. The Intune report export API with a scheduled script
+C. Endpoint Analytics with a custom baseline
+D. A historical report exported monthly to CSV
 
 <details><summary>Answer</summary>
 
@@ -13182,14 +13234,14 @@ After completing this lab, you will be able to:
 
 **Q1.** Why should an alert rule threshold be based on a recorded operational baseline rather than an arbitrary number?
 
-A. A threshold set below normal variation produces constant false alerts, which trains people to ignore the rule
-B. Intune requires a baseline before an alert rule can be enabled
+A. Alert rules cannot be created without historical reporting enabled
+B. A threshold set below normal variation produces constant false alerts, which trains people to ignore the rule
 C. Baselines determine how long alert history is retained
-D. Alert rules cannot be created without historical reporting enabled
+D. Intune requires a baseline before an alert rule can be enabled
 
 <details><summary>Answer</summary>
 
-**A** — Alerting is only useful if firing means something. A threshold below normal variation fires constantly, gets muted, and leaves everyone believing they are monitored when they are not. The baseline is what makes a threshold meaningful.
+**B** — Alerting is only useful if firing means something. A threshold below normal variation fires constantly, gets muted, and leaves everyone believing they are monitored when they are not. The baseline is what makes a threshold meaningful.
 
 *Exam tip:* *Establishing operational baselines* is named in the exam objective alongside monitoring tenant health. The two go together for exactly this reason.
 
@@ -13198,9 +13250,9 @@ D. Alert rules cannot be created without historical reporting enabled
 **Q2.** Every iOS and macOS device stops checking in on the same morning. Where should you look first?
 
 A. Tenant status service health, and the Apple MDM push certificate expiry date
-B. The compliance policy assignments for Apple devices
-C. The Conditional Access sign-in logs
-D. The device configuration profile status for iOS
+B. The device configuration profile status for iOS
+C. The compliance policy assignments for Apple devices
+D. The Conditional Access sign-in logs
 
 <details><summary>Answer</summary>
 
@@ -13336,14 +13388,14 @@ After completing this lab, you will be able to:
 
 **Q1.** A Security Copilot agent in Intune recommends tightening a configuration policy across all devices. What is the appropriate response?
 
-A. Review the reasoning and evidence, assess the impact, then pilot the change before deploying it broadly
+A. Forward it to Microsoft support for validation
 B. Apply the recommendation immediately, since it is based on tenant telemetry
 C. Dismiss it, because agent recommendations are advisory only
-D. Forward it to Microsoft support for validation
+D. Review the reasoning and evidence, assess the impact, then pilot the change before deploying it broadly
 
 <details><summary>Answer</summary>
 
-**A** — Agents surface and propose; administrators decide. A recommendation is evaluated on its reasoning and evidence, assessed for impact, and then piloted like any other change — the agent has no knowledge of business context, regulatory constraints or local exceptions.
+**D** — Agents surface and propose; administrators decide. A recommendation is evaluated on its reasoning and evidence, assessed for impact, and then piloted like any other change — the agent has no knowledge of business context, regulatory constraints or local exceptions.
 
 *Exam tip:* Every Security Copilot objective is phrased around the administrator retaining the decision. Answers describing autonomous action, or uncritical application, are both wrong.
 
@@ -13352,8 +13404,8 @@ D. Forward it to Microsoft support for validation
 **Q2.** What licensing is required to use Security Copilot agents in Intune?
 
 A. Microsoft Security Copilot, billed by provisioned Security Compute Units, purchased separately
-B. Microsoft 365 E5, which includes Security Copilot
-C. Microsoft Intune Suite
+B. Microsoft Intune Suite
+C. Microsoft 365 E5, which includes Security Copilot
 D. Microsoft Defender for Endpoint Plan 2
 
 <details><summary>Answer</summary>
@@ -13637,14 +13689,14 @@ After completing this lab, you will be able to:
 
 **Q1.** Contoso removes local administrator rights from all users. Engineers must still install a specific approved driver utility. Which Endpoint Privilege Management elevation type best balances productivity and audit?
 
-A. User confirmed, with a business justification prompt
+A. Deny, and handle each case through a ticket
 B. Automatic elevation with no prompt
 C. Support approved elevation requiring help desk authorisation
-D. Deny, and handle each case through a ticket
+D. User confirmed, with a business justification prompt
 
 <details><summary>Answer</summary>
 
-**A** — User confirmed lets the engineer work immediately while recording who elevated what and why. Automatic removes the audit prompt entirely, and support approved adds help desk load that a routine, approved utility does not warrant.
+**D** — User confirmed lets the engineer work immediately while recording who elevated what and why. Automatic removes the audit prompt entirely, and support approved adds help desk load that a routine, approved utility does not warrant.
 
 *Exam tip:* User confirmed is the default answer for routine elevation. Reserve automatic for vetted applications and support approved for genuinely high-risk actions.
 
@@ -13652,14 +13704,14 @@ D. Deny, and handle each case through a ticket
 
 **Q2.** An Endpoint Privilege Management elevation rules policy is deployed but no applications elevate. What is the most likely cause?
 
-A. No elevation settings policy is deployed, so the client component is not enabled
-B. The rules use file hash validation instead of certificate validation
-C. The rules policy was assigned to a user group rather than a device group
-D. Child process behaviour is set to Deny all
+A. The rules use file hash validation instead of certificate validation
+B. The rules policy was assigned to a user group rather than a device group
+C. Child process behaviour is set to Deny all
+D. No elevation settings policy is deployed, so the client component is not enabled
 
 <details><summary>Answer</summary>
 
-**A** — EPM requires both policies. The elevation settings policy enables the client component and sets default behaviour; rules alone deploy successfully and do nothing without it. Rules policies are correctly assigned to user groups.
+**D** — EPM requires both policies. The elevation settings policy enables the client component and sets default behaviour; rules alone deploy successfully and do nothing without it. Rules policies are correctly assigned to user groups.
 
 *Exam tip:* This two-part pattern recurs across Intune — LAPS needs a directory setting plus a policy, EPM needs settings plus rules. When a policy deploys and nothing happens, look for the missing half.
 
@@ -13667,14 +13719,14 @@ D. Child process behaviour is set to Deny all
 
 **Q3.** You create an EPM rule permitting an installer to elevate, and set child process behaviour to Allow all. What risk does this introduce?
 
-A. The elevated application can spawn a command prompt that inherits elevation, giving the user full local administrator access
+A. The rule will be ignored because child process behaviour must be configured
 B. The rule will apply to every application on the device
 C. The elevation will not be recorded in the managed elevations report
-D. The rule will be ignored because child process behaviour must be configured
+D. The elevated application can spawn a command prompt that inherits elevation, giving the user full local administrator access
 
 <details><summary>Answer</summary>
 
-**A** — Child processes inheriting elevation turns a narrow, audited grant into a general one. Anything the elevated application can launch — including a shell — runs with the same privileges.
+**D** — Child processes inheriting elevation turns a narrow, audited grant into a general one. Anything the elevated application can launch — including a shell — runs with the same privileges.
 
 *Exam tip:* Deny all is the safe default, with Require rule where an application genuinely needs to launch something else. This setting is what keeps EPM scoped to the application rather than to the session.
 
@@ -13944,14 +13996,14 @@ The licence is included, but this is the one capability in the module you cannot
 
 **Q1.** A user on a personally owned, unenrolled device needs access to an internal line-of-business web application. Which capability provides this without enrolling the device?
 
-A. Microsoft Tunnel for Mobile Application Management
+A. Microsoft Cloud PKI
 B. A device-wide VPN profile
-C. Microsoft Cloud PKI
-D. Remote Help
+C. Remote Help
+D. Microsoft Tunnel for Mobile Application Management
 
 <details><summary>Answer</summary>
 
-**A** — Tunnel for MAM places the VPN inside the managed application, so an unenrolled device can reach internal resources through that application only. A device-wide VPN profile requires enrollment.
+**D** — Tunnel for MAM places the VPN inside the managed application, so an unenrolled device can reach internal resources through that application only. A device-wide VPN profile requires enrollment.
 
 *Exam tip:* Unenrolled plus internal resource access equals Tunnel for MAM. Remember that the licence alone is not enough — you must also host the Tunnel Gateway yourself.
 
@@ -13959,14 +14011,14 @@ D. Remote Help
 
 **Q2.** Which Intune Advanced Analytics capability helps determine the root cause of a device that recently began performing poorly?
 
-A. Device timeline, showing a chronological history of events on that device
+A. The Endpoint analytics score
 B. Anomaly detection
 C. Multi-device query
-D. The Endpoint analytics score
+D. Device timeline, showing a chronological history of events on that device
 
 <details><summary>Answer</summary>
 
-**A** — Device timeline shows policy changes, application installs, restarts and crashes in order, letting you correlate the onset of a problem with what changed. Anomaly detection identifies that a device is unusual; the timeline explains when and why.
+**D** — Device timeline shows policy changes, application installs, restarts and crashes in order, letting you correlate the onset of a problem with what changed. Anomaly detection identifies that a device is unusual; the timeline explains when and why.
 
 *Exam tip:* Anomaly detection finds the device; device timeline finds the cause; multi-device query answers a specific question across many devices.
 
@@ -13976,8 +14028,8 @@ D. The Endpoint analytics score
 
 A. Install commands and validated detection rules are supplied, removing the most common cause of 0x87D1041C
 B. Catalogue applications install without requiring the Intune Management Extension
-C. Catalogue applications bypass assignment intents and install on all devices
-D. Catalogue applications do not require a licence to deploy
+C. Catalogue applications do not require a licence to deploy
+D. Catalogue applications bypass assignment intents and install on all devices
 
 <details><summary>Answer</summary>
 
@@ -14191,14 +14243,14 @@ Introduce each fault, then diagnose it as though you did not know it was there. 
 
 **Q1.** You have finished this curriculum and your coverage view shows quiz accuracy below 100 percent across several bullets in three different exam groups. How should you prioritise revision?
 
-A. By exam group weight, revising the heaviest weighted groups first
-B. In curriculum order, starting from lab 1
+A. In curriculum order, starting from lab 1
+B. By difficulty, starting with the labs marked advanced
 C. By the number of labs covering each bullet
-D. By difficulty, starting with the labs marked advanced
+D. By exam group weight, revising the heaviest weighted groups first
 
 <details><summary>Answer</summary>
 
-**A** — Exam marks are distributed by group weight, so a gap in a 25–30% group costs more than an equivalent gap in a 10–15% one. Curriculum order optimises for building a tenant, not for passing an exam.
+**D** — Exam marks are distributed by group weight, so a gap in a 25–30% group costs more than an equivalent gap in a 10–15% one. Curriculum order optimises for building a tenant, not for passing an exam.
 
 *Exam tip:* Manage and maintain devices is the heaviest group at 25–30%. Optimize endpoint operations is the lightest, but it is entirely new to this outline and is the group candidates most often neglect.
 

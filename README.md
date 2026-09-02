@@ -72,9 +72,12 @@ npm run build
 | `content/labs/NN-slug.mjs` | One lab each. The `NN` prefix sets the display number, so reordering the curriculum is a file rename. |
 | `content/meta/*.mjs` | Personas, virtual machines, licences, error dictionary, study tracks. |
 | `tools/build.mjs` | Validates, computes coverage, writes the generated artifacts. Zero npm dependencies. |
+| `tools/lib/shuffle-quiz.mjs` | Shuffles quiz options at build time, so the answer you drafted first is not the answer the reader can guess. |
 | `js/content.bundle.js` | **Generated.** The single file the browser loads. |
 | `js/app/inline.js` | **Generated** from `tools/lib/inline.mjs`, so the browser and the Markdown emitter can never disagree about markup. |
 | `LAB_GUIDE.md` | **Generated.** Offline and print copy of the whole curriculum. |
+
+Write quiz questions with the correct answer first — it is the readable way to draft one, and `correctIndex: 0` keeps the source honest. The build shuffles each question's options into a fixed order derived from the lab and question ids, so the site and `LAB_GUIDE.md` never present the answer in a guessable position, and the same option lands in the same place on every machine and every rebuild.
 
 Authored text uses a restricted markup with exactly five productions — `**UI element**`, `` `code` ``, `*emphasis*`, `[text](url)` and `<tenant>`. Raw HTML is rejected by the validator. That restriction is what lets the same content render to both HTML and Markdown, and it is why `LAB_GUIDE.md` can be generated instead of hand-maintained.
 

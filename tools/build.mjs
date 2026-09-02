@@ -22,6 +22,7 @@ import { computeCoverage, formatCoverage } from "./lib/coverage.mjs";
 import { emitBundle } from "./lib/emit-bundle.mjs";
 import { emitMarkdown } from "./lib/emit-markdown.mjs";
 import { emitReadme } from "./lib/emit-readme.mjs";
+import { shuffleLabQuiz } from "./lib/shuffle-quiz.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const argv = new Set(process.argv.slice(2));
@@ -65,6 +66,9 @@ async function loadContent(bust) {
     if (!m) throw new Error("content/labs/" + file + ": filename must start with a number prefix, e.g. 07-my-lab.mjs");
     lab.number = parseInt(m[1], 10);
     lab.sourceFile = "content/labs/" + file;
+    // Questions are authored with the correct answer first because that is how
+    // anybody drafts one. Shuffling on load means the reader never sees that.
+    shuffleLabQuiz(lab);
     labs.push(lab);
   }
   labs.sort((a, b) => a.number - b.number);

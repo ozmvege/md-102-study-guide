@@ -7,16 +7,16 @@ export default {
   estimatedMinutes: 40,
 
   scenario:
-    "A device that joins Microsoft Entra ID does not automatically become managed by Intune. Automatic enrollment is the setting that connects those two events, and without it you get exactly what lab 5 produced: a joined device with no management. You will turn it on, brand the enrollment experience so users can tell it is legitimate, and understand why the MDM user scope is the single most consequential toggle in this blade.",
+    "A device that joins Microsoft Entra ID does not automatically become managed by Intune. Automatic enrollment is the setting that connects those two events, and without it you get exactly what lab 5 produced: a joined device with no management. You will turn it on, brand the enrollment experience so users can tell it is legitimate, and understand why the MDM user scope is the single most consequential toggle in this blade — and why it takes a Global Administrator to move it.",
 
   objectives: [
-    "Configure automatic MDM enrollment for Windows and understand MDM versus MAM user scope",
+    "Configure automatic MDM enrollment for Windows and understand the MDM user scope against the WIP (formerly MAM) user scope",
     "Apply organisation branding so the sign-in and Company Portal experience is recognisable",
     "Confirm a joined device enrolls into Intune without further action",
     "Read the enrollment status of a device from both the client and the portal"
   ],
 
-  keyConcepts: ["Automatic enrollment", "MDM user scope", "MAM user scope", "Company branding", "Company Portal", "MDM enrollment URL"],
+  keyConcepts: ["Automatic enrollment", "MDM user scope", "WIP user scope", "Mobility (MDM and MAM)", "Company branding", "Company Portal", "MDM enrollment URL"],
 
   skills: [
     { id: "g1.t2.s1", depth: "primary" },
@@ -25,12 +25,12 @@ export default {
 
   requires: {
     licenses: ["M365-E5", "ENTRA-P2"],
-    roles: ["Intune Administrator"],
+    roles: ["Global Administrator", "Intune Administrator"],
     platforms: [
       { kind: "portal", id: "Microsoft Intune admin center" },
       { kind: "vm", id: "vm2-alex", os: "Windows 11 Pro" }
     ],
-    personas: ["alex.wilber", "helpdesk.operator"],
+    personas: ["admin-breakglass", "alex.wilber", "helpdesk.operator"],
     labs: ["device-identity", "intune-rbac"]
   },
 
@@ -46,33 +46,59 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "In the **Microsoft Intune admin center**, select **Devices**, then **Enrollment**, then on the **Windows** tab select **Automatic Enrollment**.",
+              text: "Sign in to the **Microsoft Intune admin center** as `admin-breakglass`, your **Global Administrator**. This one page needs it.",
+              parts: [
+                {
+                  kind: "callout",
+                  variant: "important",
+                  text: "Automatic enrollment is shown inside Intune but is not an Intune setting. The page writes the **Mobility (MDM and MAM)** application configuration in Microsoft Entra ID, and only **Global Administrator** may change that — **Intune Administrator** is not enough. Signed in as `admin-intune` you can open this blade and read every field, and **Save** fails or the controls are greyed out. It looks like a bug and it is a permission."
+                },
+                {
+                  kind: "callout",
+                  variant: "note",
+                  text: "This is a deliberate exception to the rule from lab 4 that you work as `admin-intune`. Sign back in as `admin-intune` as soon as this task is saved — the rest of the lab does not need Global Administrator."
+                }
+              ]
+            },
+            {
+              text: "Select **Devices**, then **Enrollment**, then on the **Windows** tab select **Automatic Enrollment**.",
               nav: ["Devices", "Enrollment", "Windows", "Automatic Enrollment"]
             },
             {
-              text: "Set the scopes:",
+              text: "Set the scopes. The blade holds two, one above the MDM URLs and one below them:",
               parts: [
                 {
                   kind: "inputs",
                   rows: [
-                    { label: "MDM user scope", value: "All", note: "In production you would scope this to a group during a phased rollout." },
-                    { label: "MAM user scope", value: "None", note: "Set deliberately. See the note below." }
+                    { label: "MDM user scope", value: "All", note: "The first setting on the page. In production you would scope this to a group during a phased rollout." },
+                    { label: "Windows Information Protection (WIP) user scope", value: "None", note: "Further down, under the MDM URLs. This is the setting older documentation and exam material call the MAM user scope — the portal renamed it and there is no field labelled MAM here any more. Leave it at None." }
                   ]
                 },
                 {
                   kind: "callout",
                   variant: "important",
-                  text: "These two scopes do different things and overlap badly. **MDM user scope** enrolls the whole device into management when the user joins or adds a work account. **MAM user scope** applies application management to Windows without enrolling the device. If a user is in both scopes on a personal device, Windows applies MAM and the device is *not* MDM-enrolled — which looks exactly like automatic enrollment being broken."
+                  text: "These two scopes do different things and overlap badly. **MDM user scope** enrolls the whole device into management when the user joins or adds a work account. The **WIP user scope** — the MAM user scope under its old name — applies application management to Windows without enrolling the device. If a user is in both scopes on a personal device, Windows applies app management and the device is *not* MDM-enrolled, which looks exactly like automatic enrollment being broken."
+                },
+                {
+                  kind: "callout",
+                  variant: "note",
+                  text: "The blade shows an information banner reading that creating new WIP without enrollment policies is no longer supported, and Windows Information Protection is deprecated. The scope setting is still there and still capable of intercepting your enrollments, which is the only reason this lab makes you look at it. Answer **MAM user scope** if the exam asks — the concept did not change with the label."
                 }
               ]
             },
             {
-              text: "Leave the three URLs at their defaults and select **Save**.",
+              text: "Leave everything between the two scopes alone — the three MDM URLs and the **Disable MDM enrollment when adding work or school account on Windows** toggle — then select **Save**.",
               parts: [
+                {
+                  kind: "inputs",
+                  rows: [
+                    { label: "Disable MDM enrollment when adding work or school account on Windows", value: "No", note: "The default. Set it to Yes and you block the automatic enrollment you have just turned on." }
+                  ]
+                },
                 {
                   kind: "callout",
                   variant: "note",
-                  text: "The **MDM terms of use URL**, **MDM discovery URL** and **MDM compliance URL** are pre-populated for Intune. You would only change them if a third-party MDM were the authority, which is a scenario the exam occasionally uses to test whether you know these exist."
+                  text: "The **MDM terms of use URL**, **MDM discovery URL** and **MDM compliance URL** are pre-populated for Intune, and **Restore default MDM URLs** puts them back if you edit one by accident. You would only change them if a third-party MDM were the authority, which is a scenario the exam occasionally uses to test whether you know these exist. The WIP URLs below them are in the same position for app management and stay untouched."
                 }
               ]
             }
@@ -81,7 +107,8 @@ export default {
             text: "Windows devices joining Microsoft Entra ID will now enroll into Intune automatically.",
             verify: [
               { text: "**MDM user scope** is set to **All**." },
-              { text: "**MAM user scope** is set to **None**." }
+              { text: "**Windows Information Protection (WIP) user scope** — the MAM user scope — is set to **None**." },
+              { text: "**Save** succeeded rather than erroring, which confirms you were signed in as a Global Administrator." }
             ]
           }
         },
@@ -279,13 +306,13 @@ export default {
     {
       symptom: "A Microsoft Entra joined Windows device never appears in Intune.",
       rootCause:
-        "Automatic enrollment is off, the user is outside the MDM user scope, or the user is in the MAM user scope — in which case Windows applies app management instead of enrolling the device.",
+        "Automatic enrollment is off, the user is outside the MDM user scope, or the user is inside the WIP (MAM) user scope — in which case Windows applies app management instead of enrolling the device. A fourth possibility is that the change was never saved: only a Global Administrator can write this page, and an Intune Administrator's Save does not take.",
       diagnostic: {
         lang: "powershell",
         code: "dsregcmd /status   # Tenant Details > MdmUrl should be populated\nGet-ChildItem \"HKLM:\\SOFTWARE\\Microsoft\\Enrollments\""
       },
       resolution:
-        "Set **MDM user scope** to **All** or to a group containing the user, and set **MAM user scope** to **None** for devices you intend to fully manage. Then sign out and back in — the scope is evaluated at sign-in.",
+        "Signed in as a Global Administrator, set **MDM user scope** to **All** or to a group containing the user, and set the **Windows Information Protection (WIP) user scope** to **None** for devices you intend to fully manage. Save, then have the user sign out and back in — the scope is evaluated at sign-in.",
       errorCodes: ["0x80180018"]
     }
   ],
@@ -296,14 +323,14 @@ export default {
       question:
         "Users report that their Microsoft Entra joined Windows devices are not enrolling into Intune, although they can sign in and access corporate resources. Automatic enrollment shows MDM user scope set to All. What should you check next?",
       options: [
-        "Whether the users are also in the MAM user scope",
+        "Whether the users are also in the WIP (MAM) user scope",
         "Whether the devices have a device category assigned",
         "Whether the MDM discovery URL has been customised",
         "Whether the users have a Microsoft Entra ID P2 licence"
       ],
       correctIndex: 0,
       rationale:
-        "When a user falls in both the MDM and MAM user scopes, Windows applies application management rather than enrolling the device into MDM. The device stays joined and functional but never becomes managed, which matches the symptom exactly.",
+        "When a user falls in both the MDM and the WIP user scopes, Windows applies application management rather than enrolling the device into MDM. The device stays joined and functional but never becomes managed, which matches the symptom exactly. The portal labels that second scope **Windows Information Protection (WIP) user scope**; documentation and exam questions still call it the MAM user scope.",
       examTip:
         "MDM scope enrolls the device; MAM scope manages apps without enrolling. Overlapping them is a classic exam distractor and a real-world misconfiguration.",
       skills: ["g1.t2.s2"]
