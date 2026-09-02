@@ -118,7 +118,7 @@ export default {
               ]
             },
             {
-              text: "Trace one application end to end:",
+              text: "On **MD102-VM1-Adele**, trace one application end to end in PowerShell:",
               parts: [
                 {
                   kind: "code",
@@ -133,7 +133,7 @@ export default {
               ]
             },
             {
-              text: "Check the staging cache, which explains a class of failure that looks like a bad installer:",
+              text: "On **MD102-VM1-Adele**, check the staging cache in PowerShell (which explains failures that look like a bad installer):",
               parts: [
                 {
                   kind: "code",

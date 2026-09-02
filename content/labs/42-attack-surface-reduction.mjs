@@ -109,7 +109,7 @@ export default {
               ]
             },
             {
-              text: "Learn the two event IDs that matter:",
+              text: "Learn the two event IDs that matter and check the Defender operational log:",
               parts: [
                 {
                   kind: "table",
@@ -124,13 +124,13 @@ export default {
                 {
                   kind: "code",
                   lang: "powershell",
-                  caption: "Read ASR events from the Defender operational log",
+                  caption: "Run on MD102-VM2-Alex in PowerShell to read ASR events",
                   code: "Get-WinEvent -LogName \"Microsoft-Windows-Windows Defender/Operational\" -MaxEvents 200 -ErrorAction SilentlyContinue |\n    Where-Object Id -in 1121,1122,1125,1126 |\n    Select-Object TimeCreated, Id,\n        @{n='Detail'; e={ ($_.Message -split \"`n\")[0] }} |\n    Format-Table -Wrap"
                 }
               ]
             },
             {
-              text: "Generate an audit event so you can see one. Open a document and run a macro, or simply run:",
+              text: "Generate an audit event so you can see one. On **MD102-VM2-Alex**, open PowerShell and run:",
               parts: [
                 {
                   kind: "code",

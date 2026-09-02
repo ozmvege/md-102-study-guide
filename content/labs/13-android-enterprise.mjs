@@ -125,7 +125,7 @@ export default {
               nav: ["Devices", "Enrollment", "Android", "Corporate-owned dedicated devices"]
             },
             {
-              text: "Select **Create profile** and configure:",
+              text: "Select **Create profile** and configure through the wizard tabs:",
               parts: [
                 {
                   kind: "inputs",
@@ -135,11 +135,20 @@ export default {
                     { label: "Token expiration date", value: "A date within 90 days" },
                     { label: "Wi-Fi", value: "Not configured" }
                   ]
+                },
+                {
+                  kind: "substeps",
+                  items: [
+                    { text: "On the **Basics** tab, enter Name `AND-Dedicated-Kiosk` and an optional description, then select **Next**." },
+                    { text: "On the **Settings** tab, configure the **Token type**, **Token expiration date**, and set Wi-Fi to **Not configured**, then select **Next**." },
+                    { text: "On the **Scope tags** tab, leave **Default**, then select **Next**." },
+                    { text: "On the **Review + create** tab, select **Create**." }
+                  ]
                 }
               ]
             },
             {
-              text: "Create it, then open the profile and select **Token** to view the enrollment token, QR code and enrollment URL.",
+              text: "Once created, open the profile and select **Token** to view the enrollment token, QR code and enrollment URL:",
               parts: [
                 {
                   kind: "callout",

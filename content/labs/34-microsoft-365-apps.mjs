@@ -101,7 +101,7 @@ export default {
               text: "Assign as **Required** to `GRP-DEV-WIN-CORP` and create the app."
             },
             {
-              text: "Sync **MD102-VM1-Adele** and confirm installation:",
+              text: "Sync **MD102-VM1-Adele** and confirm installation in an elevated Administrator PowerShell session:",
               parts: [
                 {
                   kind: "code",

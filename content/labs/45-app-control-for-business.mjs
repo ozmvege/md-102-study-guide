@@ -165,7 +165,7 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Audit events land in the code integrity log:",
+              text: "On **MD102-VM2-Alex**, open PowerShell and check the code integrity log for audit events:",
               parts: [
                 {
                   kind: "code",

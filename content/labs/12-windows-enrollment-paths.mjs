@@ -133,7 +133,7 @@ export default {
               ]
             },
             {
-              text: "Once at the desktop, confirm both the join and the enrollment:",
+              text: "Once at the desktop on **MD102-VM1-Adele**, open PowerShell and confirm both the join and the enrollment:",
               parts: [
                 {
                   kind: "code",

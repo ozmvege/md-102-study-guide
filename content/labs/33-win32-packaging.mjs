@@ -50,7 +50,7 @@ export default {
               text: "Download the **Microsoft Win32 Content Prep Tool** from [the GitHub repository](https://github.com/microsoft/Microsoft-Win32-Content-Prep-Tool) and extract `IntuneWinAppUtil.exe`."
             },
             {
-              text: "Create a clean source folder containing only what the installer needs:",
+              text: "On your admin workstation or host, open Windows PowerShell as an administrator and create a clean source folder containing only what the installer needs:",
               parts: [
                 {
                   kind: "code",
@@ -65,7 +65,7 @@ export default {
               ]
             },
             {
-              text: "Run the tool:",
+              text: "On your admin workstation, run the packaging tool from Command Prompt:",
               parts: [
                 {
                   kind: "code",
@@ -199,7 +199,7 @@ export default {
               ]
             },
             {
-              text: "Add a **File** rule as a worked example:",
+              text: "In the **Detection rules** step, select **Add** to configure a **File** rule, and work through the wizard tabs:",
               parts: [
                 {
                   kind: "inputs",
@@ -209,6 +209,15 @@ export default {
                     { label: "File or folder", value: "7z.exe" },
                     { label: "Detection method", value: "File or folder exists" },
                     { label: "Associated with a 32-bit app on 64-bit clients", value: "No" }
+                  ]
+                },
+                {
+                  kind: "substeps",
+                  items: [
+                    { text: "In the detection rule pane, enter the fields above and select **OK**." },
+                    { text: "Select **Next** through **Dependencies** and **Supersedence** (leave empty)." },
+                    { text: "On the **Assignments** tab, under **Required**, select **Add group** and choose `GRP-USR-PILOT`, then select **Next**." },
+                    { text: "On the **Review + create** tab, select **Create**." }
                   ]
                 },
                 {
@@ -229,13 +238,10 @@ export default {
                 {
                   kind: "code",
                   lang: "powershell",
-                  caption: "A correct script detection rule",
+                  caption: "A correct script detection rule (evaluated by Intune Management Extension on client)",
                   code: "if (Test-Path \"C:\\Program Files\\7-Zip\\7z.exe\") {\n    Write-Output \"Detected\"   # output is required\n    exit 0                     # AND exit 0 is required\n}\nexit 1"
                 }
               ]
-            },
-            {
-              text: "On **Assignments**, assign as **Required** to `GRP-USR-PILOT`, then create the app."
             }
           ],
           result: {
@@ -313,7 +319,7 @@ export default {
               text: "On **MD102-VM1-Adele**, sync policy and wait for the app to install."
             },
             {
-              text: "Whatever the outcome, read the log. This is the single most valuable file for Win32 troubleshooting:",
+              text: "On **MD102-VM1-Adele**, open PowerShell as an administrator and read the IME log (the single most valuable file for Win32 troubleshooting):",
               parts: [
                 {
                   kind: "code",

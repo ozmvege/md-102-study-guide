@@ -197,7 +197,7 @@ export default {
               ]
             },
             {
-              text: "Export your configuration as a backup:",
+              text: "On your admin workstation or host, open PowerShell as an administrator and export your Intune configuration as a backup:",
               parts: [
                 {
                   kind: "code",

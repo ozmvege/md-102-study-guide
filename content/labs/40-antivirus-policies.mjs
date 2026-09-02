@@ -131,7 +131,7 @@ export default {
               ]
             },
             {
-              text: "Confirm the policy values arrived:",
+              text: "On **MD102-VM2-Alex**, open PowerShell and confirm the policy values arrived:",
               parts: [
                 {
                   kind: "code",
@@ -188,7 +188,7 @@ export default {
               ]
             },
             {
-              text: "Assign to `GRP-DEV-WIN-CORP`, create the policy, then verify after a sync:",
+              text: "Assign to `GRP-DEV-WIN-CORP`, create the policy, then on **MD102-VM2-Alex** verify in PowerShell after a sync:",
               parts: [
                 {
                   kind: "code",
@@ -219,7 +219,7 @@ export default {
               text: "Create a third policy with profile **Microsoft Defender Antivirus exclusions**, named `AV-Exclusions-LineOfBusiness`."
             },
             {
-              text: "Add only what a documented application vendor requires:",
+              text: "Add only what a documented application vendor requires through the wizard tabs:",
               parts: [
                 {
                   kind: "inputs",
@@ -230,14 +230,21 @@ export default {
                   ]
                 },
                 {
+                  kind: "substeps",
+                  items: [
+                    { text: "On the **Basics** tab, enter Name `AV-Exclusions-LineOfBusiness`, then select **Next**." },
+                    { text: "On the **Configuration settings** tab, enter the excluded path `C:\\Program Files\\ContosoERP\\Data` under Path Exclusions, then select **Next**." },
+                    { text: "On the **Scope tags** tab, leave **Default**, then select **Next**." },
+                    { text: "On the **Assignments** tab, assign to `GRP-DEV-WIN-CORP` (or the specific app group), then select **Next**." },
+                    { text: "On the **Review + create** tab, select **Create**." }
+                  ]
+                },
+                {
                   kind: "callout",
                   variant: "caution",
                   text: "An exclusion is a hole in your antivirus, and attackers look for them. Exclude the narrowest possible path, never a whole drive or a broad extension like `.exe`, and record which vendor document required it. Separating exclusions into their own policy — as here — means you can see every hole in one place rather than hunting through a large antivirus profile."
                 }
               ]
-            },
-            {
-              text: "Assign to a narrow group — only the devices running that application — and create the policy."
             }
           ],
           result: {

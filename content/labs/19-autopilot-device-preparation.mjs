@@ -224,7 +224,7 @@ export default {
               ]
             },
             {
-              text: "When the desktop appears, verify:",
+              text: "When the desktop appears on **MD102-VM3-Megan**, open PowerShell and verify:",
               parts: [
                 {
                   kind: "code",

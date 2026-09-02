@@ -209,8 +209,17 @@ export default {
               text: "Work through Windows Setup, choosing **Windows 11 Pro** if asked which edition to install."
             },
             {
-              text: "At the out-of-box experience, choose **Set up for personal use**, then create a **local account** rather than signing in with a Microsoft account.",
+              text: "At the out-of-box experience, complete the setup wizard to create a local administrator account without signing into a Microsoft account:",
               parts: [
+                {
+                  kind: "substeps",
+                  items: [
+                    { text: "Select your country and keyboard layout, then select **Yes**." },
+                    { text: "When prompted, choose **Set up for personal use**, then select **Next**." },
+                    { text: "On the Microsoft account sign-in prompt, select **Sign-in options** > **Offline account** (or if hidden, enter a bypassed email like `no@thankyou.com` with a dummy password)." },
+                    { text: "Enter the local username `labadmin` and your chosen password, complete the recovery questions, and select **Next** through privacy settings to reach the desktop." }
+                  ]
+                },
                 {
                   kind: "inputs",
                   rows: [

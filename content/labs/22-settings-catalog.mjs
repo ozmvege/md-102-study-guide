@@ -61,7 +61,7 @@ export default {
               ]
             },
             {
-              text: "Select **Add settings**, search for `Known Folder`, and open the **OneDrive** category. Add and configure these:",
+              text: "Select **Add settings**, search for `Known Folder`, open the **OneDrive** category, and work through the wizard tabs:",
               parts: [
                 {
                   kind: "inputs",
@@ -75,15 +75,20 @@ export default {
                   ]
                 },
                 {
+                  kind: "substeps",
+                  items: [
+                    { text: "On the **Basics** tab, enter Name `WIN-OneDrive-KFM`, then select **Next**." },
+                    { text: "On the **Configuration settings** tab, select **Add settings**, add and configure the six settings above, then select **Next**." },
+                    { text: "On the **Scope tags** tab, leave **Default**, then select **Next**." },
+                    { text: "On the **Assignments** tab, assign the profile to `GRP-DEV-WIN-CORP`, then select **Next**." },
+                    { text: "On the **Review + create** tab, select **Create**." }
+                  ]
+                },
+                {
                   kind: "callout",
                   variant: "important",
                   text: "The tenant ID is a GUID, not your tenant name. This is the most common reason Known Folder Move appears to deploy successfully and never actually redirects anything — the profile reports Succeeded because the setting was written, and the setting does nothing because it points at a tenant that is not yours."
-                }
-              ]
-            },
-            {
-              text: "On **Assignments**, include `GRP-DEV-WIN-CORP`, then create the profile.",
-              parts: [
+                },
                 {
                   kind: "callout",
                   variant: "note",
@@ -117,7 +122,7 @@ export default {
               ]
             },
             {
-              text: "Confirm the setting arrived in the registry:",
+              text: "On **MD102-VM1-Adele**, confirm the setting arrived in the registry (run in an elevated Administrator PowerShell session):",
               parts: [
                 {
                   kind: "code",
@@ -186,7 +191,7 @@ export default {
               ]
             },
             {
-              text: "Confirm on the device that the setting did not change:",
+              text: "On **MD102-VM1-Adele**, confirm on the device that the setting did not change (run in an elevated Administrator PowerShell session):",
               parts: [
                 {
                   kind: "code",
@@ -216,7 +221,7 @@ export default {
               text: "Open `WIN-OneDrive-KFM` and select **Properties**, then edit **Assignments**."
             },
             {
-              text: "Add an exclusion:",
+              text: "In the **Assignments** section, select **Add groups** under **Excluded groups** to add an exclusion, then select **Review + save**:",
               parts: [
                 {
                   kind: "inputs",
@@ -233,7 +238,7 @@ export default {
               ]
             },
             {
-              text: "Save, then note the one rule that catches people out:",
+              text: "Select **Review + save**, then **Save**, and note the one rule that catches people out:",
               parts: [
                 {
                   kind: "callout",

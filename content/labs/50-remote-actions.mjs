@@ -126,7 +126,7 @@ export default {
               ]
             },
             {
-              text: "Confirm the sync from the device:",
+              text: "On **MD102-VM1-Adele**, open PowerShell as an administrator and confirm the sync from the device:",
               parts: [
                 {
                   kind: "code",

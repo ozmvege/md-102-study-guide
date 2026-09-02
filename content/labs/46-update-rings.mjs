@@ -81,7 +81,7 @@ export default {
               nav: ["Devices", "Windows updates", "Update rings", "Create profile"]
             },
             {
-              text: "Create the pilot ring:",
+              text: "On the **Basics** tab, enter Name `RING-1-Pilot`, then on the **Update ring settings** tab configure the update settings:",
               parts: [
                 {
                   kind: "inputs",
@@ -99,7 +99,7 @@ export default {
               ]
             },
             {
-              text: "Configure the user experience, which decides how much the update is allowed to interrupt:",
+              text: "Configure the user experience through the wizard tabs (which decides how much the update is allowed to interrupt):",
               parts: [
                 {
                   kind: "inputs",
@@ -117,14 +117,21 @@ export default {
                   ]
                 },
                 {
+                  kind: "substeps",
+                  items: [
+                    { text: "On the **Basics** tab, enter Name `RING-1-Pilot`, then select **Next**." },
+                    { text: "On the **Update ring settings** tab, configure the update settings and user experience fields above, then select **Next**." },
+                    { text: "On the **Scope tags** tab, leave **Default**, then select **Next**." },
+                    { text: "On the **Assignments** tab, assign to `GRP-USR-PILOT`, then select **Next**." },
+                    { text: "On the **Review + create** tab, select **Create**." }
+                  ]
+                },
+                {
                   kind: "callout",
                   variant: "important",
                   text: "**Deadline** and **grace period** work together and are frequently confused. The deadline is how long a device may defer restarting after an update is ready. The grace period is a minimum guaranteed window after installation, regardless of the deadline — so a laptop that has been switched off for a fortnight is not forced to restart the instant it powers on. Both are needed for a humane policy."
                 }
               ]
-            },
-            {
-              text: "Assign to `GRP-USR-PILOT` and create the profile."
             },
             {
               text: "Create the broad ring the same way, named `RING-2-Broad`, with quality deferral **7**, feature deferral **30**, and assign it to `GRP-USR-BROAD`.",
@@ -183,7 +190,7 @@ export default {
               ]
             },
             {
-              text: "Assign to `GRP-DEV-WIN-CORP` and create the profile, then verify on a device:",
+              text: "Assign to `GRP-DEV-WIN-CORP` and create the profile, then on **MD102-VM1-Adele** open PowerShell and verify Delivery Optimization:",
               parts: [
                 {
                   kind: "code",

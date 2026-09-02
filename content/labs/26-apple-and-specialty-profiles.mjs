@@ -50,7 +50,7 @@ export default {
               nav: ["Devices", "Configuration", "Create", "New Policy"]
             },
             {
-              text: "Name it `MAC-Baseline` and add settings from these categories:",
+              text: "Name it `MAC-Baseline`, add settings from the categories below, and work through the wizard tabs:",
               parts: [
                 {
                   kind: "inputs",
@@ -62,14 +62,21 @@ export default {
                   ]
                 },
                 {
+                  kind: "substeps",
+                  items: [
+                    { text: "On the **Basics** tab, enter Name `MAC-Baseline`, then select **Next**." },
+                    { text: "On the **Configuration settings** tab, select **Add settings**, find and configure the four macOS settings above, then select **Next**." },
+                    { text: "On the **Scope tags** tab, leave **Default**, then select **Next**." },
+                    { text: "On the **Assignments** tab, assign to `GRP-USR-APPLE`, then select **Next**." },
+                    { text: "On the **Review + create** tab, select **Create**." }
+                  ]
+                },
+                {
                   kind: "callout",
                   variant: "note",
                   text: "The macOS settings catalog is built from Apple's declarative device management payloads. It has grown to cover most of what used to require a hand-written property list, and it is now the preferred way to configure Apple devices."
                 }
               ]
-            },
-            {
-              text: "Assign to `GRP-USR-APPLE` and create the profile."
             },
             {
               text: "Note the escape hatch for anything the catalog does not cover:",
