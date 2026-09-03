@@ -3453,8 +3453,8 @@ After completing this lab, you will be able to:
 
 #### Task 1: Configure company branding and Company Portal
 
-1. In the **Microsoft Entra admin center**, select **Company branding**, then **Default sign-in experience**, then **Edit**.
-   *Path:* **Company branding** > **Default sign-in experience** > **Edit**
+1. In the **Microsoft Entra admin center**, select **Custom branding**, then **Default sign-in**, then **Customize**.
+   *Path:* **Custom branding** > **Default sign-in** > **Customize**
 
 2. Set a sign-in page background colour and a banner logo. Any image will do — the point is that it is visibly yours.
 

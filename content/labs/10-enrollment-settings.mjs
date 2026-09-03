@@ -179,8 +179,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "In the **Microsoft Entra admin center**, select **Company branding**, then **Default sign-in experience**, then **Edit**.",
-              nav: ["Company branding", "Default sign-in experience", "Edit"]
+              text: "In the **Microsoft Entra admin center**, select **Custom branding**, then **Default sign-in**, then **Customize**.",
+              nav: ["Custom branding", "Default sign-in", "Customize"]
             },
             {
               text: "Set a sign-in page background colour and a banner logo. Any image will do — the point is that it is visibly yours.",
