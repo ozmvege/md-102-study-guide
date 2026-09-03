@@ -175,7 +175,7 @@ export default {
               ]
             },
             {
-              text: "Check **Application reliability** and **Resource performance**.",
+              text: "Under **Reports** > **Endpoint analytics**, select **Application reliability** to view crash frequency, and review **Resource performance** for CPU and memory metrics.",
               nav: ["Reports", "Endpoint analytics", "Application reliability"],
               parts: [
                 {

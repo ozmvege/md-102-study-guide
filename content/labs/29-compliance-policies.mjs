@@ -181,8 +181,8 @@ export default {
               ]
             },
             {
-              text: "In the portal, open **Devices** > **All devices** > `MD102-VM2-Alex` > **Device compliance**.",
-              nav: ["Devices", "All devices", "Device compliance"],
+              text: "In the **Microsoft Intune admin center**, select **Devices**, then **All devices**, select **MD102-VM2-Alex** from the list, then select **Device compliance**.",
+              nav: ["Devices", "All devices", "MD102-VM2-Alex", "Device compliance"],
               parts: [
                 {
                   kind: "verify",

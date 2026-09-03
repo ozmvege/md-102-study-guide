@@ -44,7 +44,7 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Select **Endpoint security**, then **Security baselines**.",
+              text: "In the **Microsoft Intune admin center**, select **Endpoint security**, then **Security baselines**.",
               nav: ["Endpoint security", "Security baselines"],
               parts: [
                 {
@@ -107,8 +107,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Sync **MD102-VM1-Adele**, then open the baseline profile and review its status views.",
-              nav: ["Endpoint security", "Security baselines", "SB-Windows-Pilot"],
+              text: "Sync **MD102-VM1-Adele**. In the **Microsoft Intune admin center**, select **Endpoint security**, then **Security baselines**, select **Security Baseline for Windows 10 and later**, select the **SB-Windows-Pilot** profile from the list, and review its status views.",
+              nav: ["Endpoint security", "Security baselines", "Security Baseline for Windows 10 and later", "SB-Windows-Pilot"],
               parts: [
                 {
                   kind: "table",
@@ -126,7 +126,8 @@ export default {
               ]
             },
             {
-              text: "Now customise deliberately. Open the profile, select **Properties**, then edit the settings and change one value with a documented reason.",
+              text: "Now customise deliberately. With **SB-Windows-Pilot** open, select **Properties**, then next to **Configuration settings** select **Edit**, and change one value with a documented reason.",
+              nav: ["Endpoint security", "Security baselines", "Security Baseline for Windows 10 and later", "SB-Windows-Pilot", "Properties", "Configuration settings", "Edit"],
               parts: [
                 {
                   kind: "inputs",

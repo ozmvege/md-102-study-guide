@@ -163,8 +163,8 @@ export default {
               ]
             },
             {
-              text: "Wait for both authorities to finish provisioning, then download the root certificate.",
-              nav: ["Tenant administration", "Cloud PKI", "Contoso Root CA"],
+              text: "Wait for both authorities to finish provisioning. In the **Microsoft Intune admin center**, select **Tenant administration**, then **Cloud PKI**, select **Contoso Root CA** from the list, then select **Download certificate**.",
+              nav: ["Tenant administration", "Cloud PKI", "Contoso Root CA", "Download certificate"],
               parts: [
                 {
                   kind: "verify",
@@ -279,7 +279,7 @@ export default {
               ]
             },
             {
-              text: "Check certificate health in the portal — the third part of the exam objective.",
+              text: "Check certificate health in the portal: in the **Microsoft Intune admin center**, select **Tenant administration**, then **Cloud PKI**, and select **Contoso Issuing CA** from the list.",
               nav: ["Tenant administration", "Cloud PKI", "Contoso Issuing CA"],
               parts: [
                 {

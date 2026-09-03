@@ -159,7 +159,7 @@ export default {
               ]
             },
             {
-              text: "Check the reporting.",
+              text: "In the **Microsoft Intune admin center**, select **Apps**, then **Monitor**, then **App protection status** to check the reporting.",
               nav: ["Apps", "Monitor", "App protection status"],
               parts: [
                 {
@@ -191,8 +191,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "In the **Microsoft Entra admin center**, create a new Conditional Access policy named `CA-Require-App-Protection`.",
-              nav: ["Protection", "Conditional Access", "Policies", "New policy"]
+              text: "In the **Microsoft Entra admin center**, select **Identity**, then **Protection**, **Conditional Access**, **Policies**, then **New policy** to create a policy named `CA-Require-App-Protection`.",
+              nav: ["Identity", "Protection", "Conditional Access", "Policies", "New policy"]
             },
             {
               text: "Configure it:",

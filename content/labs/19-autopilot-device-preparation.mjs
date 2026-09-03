@@ -45,7 +45,7 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "In the **Microsoft Entra admin center**, select **Groups**, then **New group**.",
+              text: "In the **Microsoft Entra admin center**, select **Groups**, then **All groups**, then select **New group**.",
               nav: ["Groups", "All groups", "New group"]
             },
             {
@@ -67,8 +67,8 @@ export default {
               ]
             },
             {
-              text: "Create the group, then reopen it and select **Owners**, then **Add owners**.",
-              nav: ["Groups", "GRP-DEV-DEVICEPREP", "Owners", "Add owners"]
+              text: "Select **Create**. Under **Groups** > **All groups**, select `GRP-DEV-DEVICEPREP`, select **Owners**, then select **Add owners**.",
+              nav: ["Groups", "All groups", "GRP-DEV-DEVICEPREP", "Owners", "Add owners"]
             },
             {
               text: "Search for `Intune Provisioning Client` and add it as an owner.",
@@ -175,8 +175,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "First remove VM3's Autopilot registration so the classic profile cannot claim it.",
-              nav: ["Devices", "Enrollment", "Devices"],
+              text: "In the **Microsoft Intune admin center**, select **Devices**, then **Enrollment**, select the **Windows** tab, then select **Devices** (under Windows Autopilot). First remove VM3's Autopilot registration so the classic profile cannot claim it.",
+              nav: ["Devices", "Enrollment", "Windows", "Devices"],
               parts: [
                 {
                   kind: "substeps",
@@ -238,8 +238,8 @@ export default {
               ]
             },
             {
-              text: "Confirm the service principal did its job:",
-              nav: ["Groups", "GRP-DEV-DEVICEPREP", "Members"],
+              text: "In the **Microsoft Entra admin center**, select **Groups**, then **All groups**. Select `GRP-DEV-DEVICEPREP`, then select **Members** to confirm the service principal did its job:",
+              nav: ["Groups", "All groups", "GRP-DEV-DEVICEPREP", "Members"],
               parts: [
                 {
                   kind: "verify",

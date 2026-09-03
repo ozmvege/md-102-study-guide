@@ -1191,7 +1191,7 @@ A naming standard is worth agreeing before you have forty groups, not after. Eve
 
    **Verify:** All groups are listed, and `GRP-LIC-M365-E5` from lab 1 appears alongside the new ones.
 
-3. Open the **Microsoft Entra admin center** and inspect one dynamic group to see the rule the script wrote.
+3. In the **Microsoft Entra admin center**, select **Groups**, then **All groups**. Select **GRP-DEV-WIN-CORP**, then select **Dynamic membership rules** to see the rule the script wrote.
    *Path:* **Groups** > **All groups** > **GRP-DEV-WIN-CORP** > **Dynamic membership rules**
 
    *The rule on GRP-DEV-WIN-CORP*
@@ -1269,7 +1269,7 @@ A naming standard is worth agreeing before you have forty groups, not after. Eve
 
    **Verify:** The command returns nothing. Any row here is an account that looks normal but has no licence.
 
-3. In the **Microsoft Entra admin center**, open `GRP-LIC-M365-E5` and confirm the member count.
+3. In the **Microsoft Entra admin center**, select **Groups**, then **All groups**. Select **GRP-LIC-M365-E5**, then select **Members** to confirm the member count.
    *Path:* **Groups** > **All groups** > **GRP-LIC-M365-E5** > **Members**
 
 **Results:** Twenty seats are assigned through the group, five remain in reserve, and no assignment errored.
@@ -1705,8 +1705,8 @@ The account already exists from lab 3. What matters now is the properties that m
 
 1. An emergency account that can be used without anyone noticing is a back door. Confirm you can see its sign-ins.
 
-2. In the **Microsoft Entra admin center**, select **Monitoring and health**, then select **Sign-in logs**.
-   *Path:* **Monitoring and health** > **Sign-in logs**
+2. In the **Microsoft Entra admin center**, select **Identity**, then under **Monitoring and health** select **Sign-in logs**.
+   *Path:* **Identity** > **Monitoring and health** > **Sign-in logs**
 
 3. Add a filter on **User** for `admin-breakglass` and confirm the sign-in you performed earlier appears.
 
@@ -2234,14 +2234,14 @@ Lab 3 created several of these with a script. Now build one by hand so the synta
 
 #### Task 1: Confirm your joined device lands in the right group
 
-1. Open `GRP-DEV-WIN-11` and select **Members**.
-   *Path:* **Groups** > **GRP-DEV-WIN-11** > **Members**
+1. In the **Microsoft Entra admin center**, select **Groups**, then **All groups**. Select **GRP-DEV-WIN-11**, then select **Members**.
+   *Path:* **Groups** > **All groups** > **GRP-DEV-WIN-11** > **Members**
 
    > [!NOTE]
    > It may be empty. Rule evaluation runs asynchronously and a newly created rule can take several minutes, occasionally much longer, before it first populates. Empty immediately after creation means nothing.
 
-2. Check the processing state, which is the field that tells you whether evaluation is even running:
-   *Path:* **Groups** > **GRP-DEV-WIN-11** > **Dynamic membership rules**
+2. In **Groups** > **All groups**, select **GRP-DEV-WIN-11**, then select **Dynamic membership rules** and check the processing state, which is the field that tells you whether evaluation is even running:
+   *Path:* **Groups** > **All groups** > **GRP-DEV-WIN-11** > **Dynamic membership rules**
 
    **Verify:** **Dynamic membership rule processing status** reads **Evaluation completed** or **Update in progress**. If it reads **Processing paused**, the rule is not being evaluated at all and no amount of waiting will help.
 
@@ -2259,8 +2259,8 @@ Lab 3 created several of these with a script. Now build one by hand so the synta
 
 #### Task 2: Validate rules before you rely on them
 
-1. Open `GRP-DEV-WIN-CORP`, select **Dynamic membership rules**, then select **Validate Rules**.
-   *Path:* **Groups** > **GRP-DEV-WIN-CORP** > **Dynamic membership rules** > **Validate Rules**
+1. In **Groups** > **All groups**, select **GRP-DEV-WIN-CORP**, select **Dynamic membership rules**, then select **Validate Rules**.
+   *Path:* **Groups** > **All groups** > **GRP-DEV-WIN-CORP** > **Dynamic membership rules** > **Validate Rules**
 
 2. Add `MD102-VM2-Alex` as a device to validate against, then select **Validate**.
 
@@ -2438,7 +2438,7 @@ After completing this lab, you will be able to:
    > [!TIP]
    > Use a private window rather than signing out. You will be switching between the administrator and the operator repeatedly, and a second browser profile saves a great deal of time across this course.
 
-2. Check your own effective permissions first:
+2. In the **Microsoft Intune admin center**, select **Tenant administration**, then **Roles**, then select **My permissions** to check your own effective permissions first:
    *Path:* **Tenant administration** > **Roles** > **My permissions**
 
    **Verify:** **My permissions** lists Help Desk Operator and shows the granted actions. This blade is the fastest way to answer *why can this person not do X*.
@@ -2663,8 +2663,8 @@ Everything in this lab that does not need a managed device happens here: the tag
 
 #### Task 1: Create a scope tag for Finance
 
-1. In the **Microsoft Intune admin center**, select **Tenant administration**, then **Roles**, then **Scope (Tags)**.
-   *Path:* **Tenant administration** > **Roles** > **Scope (Tags)**
+1. In the **Microsoft Intune admin center**, select **Tenant administration**, then **Roles**, then **Scope tags**.
+   *Path:* **Tenant administration** > **Roles** > **Scope tags**
 
 2. Select **Create** and configure:
 
@@ -2693,7 +2693,7 @@ Everything in this lab that does not need a managed device happens here: the tag
 
 **Results:** Two scope tags exist, each associated with a department group.
 
-- [ ] **Scope (Tags)** lists `TAG-FINANCE`, `TAG-IT` and **Default**.
+- [ ] **Scope tags** lists `TAG-FINANCE`, `TAG-IT` and **Default**.
 
 #### Task 2: Know how an object gets tagged
 
@@ -2793,7 +2793,7 @@ Scope tags restrict Intune. Administrative units restrict Microsoft Entra ID. Th
    > [!TIP]
    > This is the classic administrative unit scenario: a regional help desk that may reset passwords, but only for users in its own region. The same directory role assigned tenant-wide would let them reset anyone's password, including an administrator's.
 
-4. Select **Review + create**, then **Create**. Open the new unit, select **Users**, then **Add member**, and add `alex.wilber` and `henrietta.mueller`.
+4. Select **Review + create**, then **Create**. Under **Admin units**, open `AU-FINANCE`, select **Users**, then select **Add member**, and add `alex.wilber` and `henrietta.mueller`.
    *Path:* **Admin units** > **AU-FINANCE** > **Users** > **Add member**
 
 5. Compare the two mechanisms:
@@ -3461,8 +3461,8 @@ After completing this lab, you will be able to:
    > [!NOTE]
    > Branding is a security control, not decoration. Users are being asked to hand over corporate credentials during enrollment; a generic Microsoft page is indistinguishable from a phishing page, whereas a branded one gives them something to check.
 
-3. In the **Microsoft Intune admin center**, select **Tenant administration**, then **Customization**, then **Edit**.
-   *Path:* **Tenant administration** > **Customization** > **Edit**
+3. In the **Microsoft Intune admin center**, select **Tenant administration**, then under **End user experiences** select **Customization**. Select the **Default** policy from the table, then select **Edit**.
+   *Path:* **Tenant administration** > **End user experiences** > **Customization** > **Default** > **Edit**
 
 4. Configure the Company Portal:
 
@@ -3525,7 +3525,7 @@ After completing this lab, you will be able to:
    **Verify:** `MD102-VM2-Alex` is listed with **Managed by** of **Intune** and an **Ownership** of **Personal** — ownership is corrected in lab 11.
 
 6. Lab 7 left one check unfinished for want of a device. Finish it now: open a private window, sign in as `helpdesk.operator@<tenant>.onmicrosoft.com`, then open **Devices** > **All devices** and select `MD102-VM2-Alex`.
-   *Path:* **Devices** > **All devices**
+   *Path:* **Devices** > **All devices** > **MD102-VM2-Alex**
 
    **Verify:** The operator sees the device, and remote actions such as **Sync**, **Restart** and **Retire** are offered. That completes the Help Desk Operator proof from lab 7: read widely, act where the role allows, author nothing.
 
@@ -3713,7 +3713,7 @@ A device enrolled by hand through Settings is marked **Personal** by default. Co
 
 4. Select **Add identifiers**, choose **Upload CSV file**, set the identifier type to **Serial number**, and upload your file.
 
-5. The device is already enrolled, so the identifier will not retroactively change it. Change ownership directly:
+5. In the **Microsoft Intune admin center**, select **Devices**, then **All devices**, select **MD102-VM2-Alex**, and select **Properties**. The device is already enrolled, so the identifier will not retroactively change it. Change ownership directly:
    *Path:* **Devices** > **All devices** > **MD102-VM2-Alex** > **Properties**
 
    a. Next to **Device ownership**, select **Corporate**.
@@ -3729,8 +3729,8 @@ A device enrolled by hand through Settings is marked **Personal** by default. Co
 
 #### Task 2: Watch the dynamic group repopulate
 
-1. In the **Microsoft Entra admin center**, open `GRP-DEV-WIN-CORP` and select **Members**.
-   *Path:* **Groups** > **GRP-DEV-WIN-CORP** > **Members**
+1. In the **Microsoft Entra admin center**, select **Groups**, then **All groups**. Select **GRP-DEV-WIN-CORP**, then select **Members**.
+   *Path:* **Groups** > **All groups** > **GRP-DEV-WIN-CORP** > **Members**
 
    > [!NOTE]
    > In lab 6 this group was empty because the rule requires `device.deviceOwnership -eq "Company"` and the device was Personal. Changing ownership changes the directory attribute, and the rule re-evaluates. Allow several minutes.
@@ -3990,7 +3990,7 @@ Lab 8 built the scope tags and scoped the help desk role, but it could not apply
 #### Task 1: Tag a device and a policy
 
 1. Select **Devices**, then **All devices**, then open `MD102-VM2-Alex`.
-   *Path:* **Devices** > **All devices**
+   *Path:* **Devices** > **All devices** > **MD102-VM2-Alex**
 
    **Verify:** Both `MD102-VM1-Adele` and `MD102-VM2-Alex` are listed. If only one appears, finish the enrollment exercises above before continuing.
 
@@ -4543,8 +4543,8 @@ Meeting these failures under controlled conditions is far cheaper than meeting t
 
 #### Task 1: Provoke the licensing failure
 
-1. In the **Microsoft Entra admin center**, open `GRP-LIC-M365-E5` and remove `staging.user01` from the group.
-   *Path:* **Groups** > **GRP-LIC-M365-E5** > **Members**
+1. In the **Microsoft Entra admin center**, select **Groups**, then **All groups**. Select **GRP-LIC-M365-E5**, select **Members**, and remove `staging.user01` from the group.
+   *Path:* **Groups** > **All groups** > **GRP-LIC-M365-E5** > **Members**
 
 2. Wait a few minutes for the licence to be revoked, then confirm in PowerShell on your management workstation:
 
@@ -4571,8 +4571,8 @@ Meeting these failures under controlled conditions is far cheaper than meeting t
 
 #### Task 2: Provoke the restriction failure
 
-1. Temporarily edit `WIN-Corporate-Only` from lab 11 and set the **Minimum OS version** to something no device can meet, such as `10.0.99999`.
-   *Path:* **Devices** > **Enrollment** > **Device platform restrictions**
+1. In the **Microsoft Intune admin center**, select **Devices**, then **Enrollment**, then **Device platform restrictions**. Select **WIN-Corporate-Only**, then under **Properties** edit **Platform settings** to temporarily set the **Minimum OS version** to `10.0.99999`.
+   *Path:* **Devices** > **Enrollment** > **Device platform restrictions** > **WIN-Corporate-Only** > **Properties**
 
 2. Add `staging.user01` to `GRP-USR-FINANCE` so the restriction applies to them, then attempt enrollment again.
 
@@ -4989,8 +4989,8 @@ After completing this lab, you will be able to:
 
 #### Task 2: Confirm the dynamic Autopilot group picks it up
 
-1. In the **Microsoft Entra admin center**, open `GRP-DEV-AUTOPILOT` from lab 3 and select **Members**.
-   *Path:* **Groups** > **GRP-DEV-AUTOPILOT** > **Members**
+1. In the **Microsoft Entra admin center**, select **Groups**, then **All groups**. Select **GRP-DEV-AUTOPILOT**, then select **Members**.
+   *Path:* **Groups** > **All groups** > **GRP-DEV-AUTOPILOT** > **Members**
 
 2. Recall the rule that makes this work:
 
@@ -5044,7 +5044,8 @@ After completing this lab, you will be able to:
 
 4. On **Assignments**, include `GRP-DEV-AUTOPILOT`, then create the profile.
 
-5. Return to **Devices** > **Enrollment** > **Devices** and check the registration.
+5. In the **Microsoft Intune admin center**, select **Devices**, then **Enrollment**, select the **Windows** tab, then select **Devices** (under Windows Autopilot) and check the registration.
+   *Path:* **Devices** > **Enrollment** > **Windows** > **Devices**
 
    **Verify:** **Profile status** now reads **Assigned**. Do not start the virtual machine until it does — a device that reaches the out-of-box experience before assignment completes will not use Autopilot at all, and you will have to reset it and start again.
    ```
@@ -5133,7 +5134,7 @@ After completing this lab, you will be able to:
 
    **Verify:** Megan's account is **not** listed. This is the **User account type: Standard** setting from the deployment profile doing its job.
 
-7. In the portal, confirm the device object.
+7. In the **Microsoft Intune admin center**, select **Devices**, then select **All devices** to confirm the device object.
    *Path:* **Devices** > **All devices**
 
    **Verify:** The device appears with the templated name, ownership **Corporate**, and Megan as primary user. Autopilot-registered devices are corporate by definition, so `GRP-DEV-WIN-CORP` will pick this one up without the manual step you needed in lab 11.
@@ -5427,7 +5428,7 @@ This exercise is entirely about one setting. Skip it and the deployment fails la
 
 #### Task 1: Create the group and assign the service principal as owner
 
-1. In the **Microsoft Entra admin center**, select **Groups**, then **New group**.
+1. In the **Microsoft Entra admin center**, select **Groups**, then **All groups**, then select **New group**.
    *Path:* **Groups** > **All groups** > **New group**
 
 2. Configure:
@@ -5441,8 +5442,8 @@ This exercise is entirely about one setting. Skip it and the deployment fails la
    > [!WARNING]
    > A dynamic group will not work here and the portal will not stop you choosing one. The service needs to write membership, and dynamic membership is computed rather than written.
 
-3. Create the group, then reopen it and select **Owners**, then **Add owners**.
-   *Path:* **Groups** > **GRP-DEV-DEVICEPREP** > **Owners** > **Add owners**
+3. Select **Create**. Under **Groups** > **All groups**, select `GRP-DEV-DEVICEPREP`, select **Owners**, then select **Add owners**.
+   *Path:* **Groups** > **All groups** > **GRP-DEV-DEVICEPREP** > **Owners** > **Add owners**
 
 4. Search for `Intune Provisioning Client` and add it as an owner.
 
@@ -5497,8 +5498,8 @@ This exercise is entirely about one setting. Skip it and the deployment fails la
 
 #### Task 1: Deploy VM3 without a hardware hash
 
-1. First remove VM3's Autopilot registration so the classic profile cannot claim it.
-   *Path:* **Devices** > **Enrollment** > **Devices**
+1. In the **Microsoft Intune admin center**, select **Devices**, then **Enrollment**, select the **Windows** tab, then select **Devices** (under Windows Autopilot). First remove VM3's Autopilot registration so the classic profile cannot claim it.
+   *Path:* **Devices** > **Enrollment** > **Windows** > **Devices**
 
    a. Find the device by serial number and select **Delete**.
    b. Also delete the device object under **Devices** > **All devices** and in Microsoft Entra ID.
@@ -5533,8 +5534,8 @@ This exercise is entirely about one setting. Skip it and the deployment fails la
 
    **Verify:** The name matches the `CTS-DP-` template and the device is Entra joined and enrolled.
 
-6. Confirm the service principal did its job:
-   *Path:* **Groups** > **GRP-DEV-DEVICEPREP** > **Members**
+6. In the **Microsoft Entra admin center**, select **Groups**, then **All groups**. Select `GRP-DEV-DEVICEPREP`, then select **Members** to confirm the service principal did its job:
+   *Path:* **Groups** > **All groups** > **GRP-DEV-DEVICEPREP** > **Members**
 
    **Verify:** The new device is a member of the group. **Intune Provisioning Client** added it during provisioning — if this is empty, the owner assignment was missing.
 
@@ -5859,7 +5860,7 @@ After completing this lab, you will be able to:
    > [!IMPORTANT]
    > Only **Enterprise** is examinable in an MD-102 context, because only Enterprise Cloud PCs appear in Intune and receive Intune policy. Any question mentioning provisioning policies, custom images or configuration profiles is describing Enterprise.
 
-2. Note where Cloud PCs live in the portal:
+2. In the **Microsoft Intune admin center**, select **Devices**, then **Windows 365**. Note where Cloud PCs live in the portal:
    *Path:* **Devices** > **Windows 365**
 
    > [!NOTE]
@@ -6099,7 +6100,7 @@ After completing this lab, you will be able to:
 
    **Verify:** **KFMSilentOptIn** contains your tenant GUID and the other values are `1`.
 
-3. Back in the portal, open the profile and select the **Device status** and **Per setting status** views.
+3. Back in the **Microsoft Intune admin center**, select **Devices**, then **Configuration**, select the **WIN-OneDrive-KFM** profile from the list, and review the **Device status** and **Per setting status** views.
    *Path:* **Devices** > **Configuration** > **WIN-OneDrive-KFM**
 
    **Verify:** **Per setting status** shows each individual setting as **Succeeded**, **Error**, **Conflict** or **Not applicable**. This is the view that tells you *which* setting failed rather than just that the profile did.
@@ -6142,7 +6143,8 @@ After completing this lab, you will be able to:
 
 #### Task 2: Use exclude assignments
 
-1. Open `WIN-OneDrive-KFM` and select **Properties**, then edit **Assignments**.
+1. In the **Microsoft Intune admin center**, select **Devices**, then **Configuration**, select the **WIN-OneDrive-KFM** profile from the list, select **Properties**, then next to **Assignments** select **Edit**.
+   *Path:* **Devices** > **Configuration** > **WIN-OneDrive-KFM** > **Properties** > **Assignments** > **Edit**
 
 2. In the **Assignments** section, select **Add groups** under **Excluded groups** to add an exclusion, then select **Review + save**:
 
@@ -6301,7 +6303,7 @@ After completing this lab, you will be able to:
 
 #### Task 3: Migrate the supported settings
 
-1. With the imported policy open, select **Migrate**.
+1. In the **Microsoft Intune admin center**, select **Devices**, then **Group Policy analytics**, select the imported GPO from the list, then select **Migrate**.
    *Path:* **Devices** > **Group Policy analytics** > **Migrate**
 
 2. Review the settings offered. Only those with a CSP mapping appear.
@@ -6314,7 +6316,8 @@ After completing this lab, you will be able to:
    > [!WARNING]
    > Assign a migrated profile to a pilot group first, always. Group Policy and MDM apply settings through different mechanisms and a setting that behaved one way under Group Policy can behave differently as a CSP. Prove it on a handful of devices before it reaches the estate.
 
-4. Open the resulting profile under **Devices** > **Configuration**.
+4. Open the resulting profile: in the **Microsoft Intune admin center**, select **Devices**, then **Configuration**, and select **WIN-Migrated-From-GPO**.
+   *Path:* **Devices** > **Configuration** > **WIN-Migrated-From-GPO**
 
    **Verify:** It is an ordinary settings catalog profile. Migration is a one-time conversion — there is no ongoing link to the original GPO, and changing the GPO later changes nothing here.
 
@@ -6449,8 +6452,8 @@ After completing this lab, you will be able to:
 
 #### Task 1: Build a filter for Windows Enterprise devices
 
-1. In the **Microsoft Intune admin center**, select **Tenant administration**, then **Filters**, then **Create**.
-   *Path:* **Tenant administration** > **Filters** > **Create**
+1. In the **Microsoft Intune admin center**, select **Tenant administration**, then **Assignment filters**, then **Create**.
+   *Path:* **Tenant administration** > **Assignment filters** > **Create**
 
 2. Configure:
 
@@ -6480,12 +6483,13 @@ After completing this lab, you will be able to:
 
 **Results:** A reusable filter exists that narrows any Windows assignment.
 
-- [ ] The filter appears under **Tenant administration** > **Filters**.
+- [ ] The filter appears under **Tenant administration** > **Assignment filters**.
 - [ ] **Preview devices** returns the devices you expect.
 
 #### Task 2: Apply the filter in both modes
 
-1. Open `WIN-OneDrive-KFM` from lab 22, select **Properties**, then edit **Assignments**.
+1. In the **Microsoft Intune admin center**, select **Devices**, then **Configuration**, select **WIN-OneDrive-KFM** from the list, select **Properties**, then next to **Assignments** select **Edit**.
+   *Path:* **Devices** > **Configuration** > **WIN-OneDrive-KFM** > **Properties** > **Assignments** > **Edit**
 
 2. On the included group, select **Edit filter**, then choose:
 
@@ -6540,14 +6544,14 @@ After completing this lab, you will be able to:
    | Configured in | Microsoft Entra ID | The Autopilot device preparation policy |
    | Solves | Ongoing classification of the estate | Getting policy onto a device during provisioning |
 
-3. Confirm the group you built in lab 19 is exactly this mechanism.
-   *Path:* **Groups** > **GRP-DEV-DEVICEPREP** > **Owners**
+3. In the **Microsoft Entra admin center**, select **Identity**, then **Groups**, then **All groups**, select **GRP-DEV-DEVICEPREP**, then select **Owners** to confirm the group you built in lab 19 is exactly this mechanism.
+   *Path:* **Identity** > **Groups** > **All groups** > **GRP-DEV-DEVICEPREP** > **Owners**
 
    **Verify:** **Intune Provisioning Client** is an owner, and the membership type is **Assigned**. This is enrollment time grouping — the device preparation policy names this group, and the service writes the device into it during provisioning.
 
 4. Assign a profile to that group so provisioning-time policy actually exists:
 
-   a. Open `WIN-OneDrive-KFM` and edit its assignments.
+   a. Under **Devices** > **Configuration**, select `WIN-OneDrive-KFM`, select **Properties**, and edit its assignments.
    b. Add `GRP-DEV-DEVICEPREP` as a second included group.
    c. Save.
 
@@ -6567,7 +6571,7 @@ After completing this lab, you will be able to:
 - **Diagnostic:**
 
   ```text
-  Tenant administration > Filters > open the filter > Preview devices
+  Tenant administration > Assignment filters > open the filter > Preview devices
   Compare with Devices > All devices > open a device > Hardware, to see the real property values.
   ```
 
@@ -6696,7 +6700,7 @@ After completing this lab, you will be able to:
 
    **Verify:** Android prompts for a separate work profile challenge meeting the complexity you configured. Set one — later labs assume the container is unlocked.
 
-4. Check the profile's device status in the portal.
+4. In the **Microsoft Intune admin center**, select **Devices**, then **Configuration**, select the **AND-WP-Restrictions** profile from the list, then select **Device status**.
    *Path:* **Devices** > **Configuration** > **AND-WP-Restrictions** > **Device status**
 
    **Verify:** The emulator reports **Succeeded**. A status of **Not applicable** means the profile type does not match the enrollment scenario.
@@ -7052,8 +7056,8 @@ After completing this lab, you will be able to:
    > [!IMPORTANT]
    > Every certificate you issue comes from the **issuing** CA, never the root. That separation is why the root's private key can stay effectively untouched while the issuing CA does the daily work — and why compromising an issuing CA is recoverable by revoking it, whereas compromising a root is not.
 
-4. Wait for both authorities to finish provisioning, then download the root certificate.
-   *Path:* **Tenant administration** > **Cloud PKI** > **Contoso Root CA**
+4. Wait for both authorities to finish provisioning. In the **Microsoft Intune admin center**, select **Tenant administration**, then **Cloud PKI**, select **Contoso Root CA** from the list, then select **Download certificate**.
+   *Path:* **Tenant administration** > **Cloud PKI** > **Contoso Root CA** > **Download certificate**
 
    **Verify:** Both CAs show a status of **Active**. The root CA blade offers **Download certificate**, which produces the `.cer` you need for the trusted root profile in the next task.
 
@@ -7130,7 +7134,7 @@ After completing this lab, you will be able to:
 
    **Verify:** The Contoso root is in the machine Root store, and a client certificate issued by Contoso Issuing CA is in the machine Personal store with a private key. This is a real certificate, issued on demand, with no PKI infrastructure of your own.
 
-6. Check certificate health in the portal — the third part of the exam objective.
+6. Check certificate health in the portal: in the **Microsoft Intune admin center**, select **Tenant administration**, then **Cloud PKI**, and select **Contoso Issuing CA** from the list.
    *Path:* **Tenant administration** > **Cloud PKI** > **Contoso Issuing CA**
 
    | View | Shows |
@@ -7341,8 +7345,8 @@ After completing this lab, you will be able to:
 
 #### Task 1: Enable LAPS in Microsoft Entra ID and Intune
 
-1. First enable the directory to accept escrowed passwords. In the **Microsoft Entra admin center**, select **Devices**, then **Device settings**.
-   *Path:* **Devices** > **Device settings**
+1. First enable the directory to accept escrowed passwords. In the **Microsoft Entra admin center**, select **Identity**, then **Devices**, then **Device settings**.
+   *Path:* **Identity** > **Devices** > **Device settings**
 
    | Setting | Value |
    | --- | --- |
@@ -7390,7 +7394,7 @@ After completing this lab, you will be able to:
 
    **Verify:** The LAPS operational log shows a successful password update and escrow. Event ID 10018 indicates a successful directory backup.
 
-2. In the **Microsoft Intune admin center**, open the device and select **Local admin password**.
+2. In the **Microsoft Intune admin center**, select **Devices**, then **All devices**, select **MD102-VM2-Alex** from the list, then select **Local admin password**.
    *Path:* **Devices** > **All devices** > **MD102-VM2-Alex** > **Local admin password**
 
    **Verify:** The current password is shown along with the account name and the next rotation time. Retrieving it is an audited action.
@@ -7468,7 +7472,7 @@ After completing this lab, you will be able to:
       Select-Object TimeCreated, Id, Message | Format-Table -Wrap
   ```
 
-- **Resolution:** Enable the setting under **Devices** > **Device settings** in the Microsoft Entra admin center, then force a rotation from the device blade. Until then, the device has a password nobody knows.
+- **Resolution:** Enable the setting under **Identity** > **Devices** > **Device settings** in the Microsoft Entra admin center, then force a rotation from the device blade. Until then, the device has a password nobody knows.
 
 **Symptom:** Users are not prompted to set a Windows Hello PIN.
 
@@ -7653,8 +7657,8 @@ After completing this lab, you will be able to:
    manage-bde -status C:
    ```
 
-2. In the portal, open **Devices** > **All devices** > `MD102-VM2-Alex` > **Device compliance**.
-   *Path:* **Devices** > **All devices** > **Device compliance**
+2. In the **Microsoft Intune admin center**, select **Devices**, then **All devices**, select **MD102-VM2-Alex** from the list, then select **Device compliance**.
+   *Path:* **Devices** > **All devices** > **MD102-VM2-Alex** > **Device compliance**
 
    **Verify:** The device is listed as **Not compliant** and the BitLocker rule shows as failing. That is correct — BitLocker is not enabled until lab 43. This is a real non-compliant device to watch.
 
@@ -7868,7 +7872,7 @@ After completing this lab, you will be able to:
 
 5. Configure actions for non-compliance with a 7-day grace period as in lab 29, assign to `GRP-DEV-WIN-CORP`, and create the policy.
 
-6. Sync **MD102-VM2-Alex**, wait, then check the result.
+6. Sync **MD102-VM2-Alex**, wait, then in the **Microsoft Intune admin center**, select **Devices**, then **All devices**, select **MD102-VM2-Alex** from the list, then select **Device compliance** to check the result.
    *Path:* **Devices** > **All devices** > **MD102-VM2-Alex** > **Device compliance**
 
    **Verify:** `CMP-Windows-Custom` appears with a per-rule breakdown. The asset agent rule should fail, and the failure message should be the **RemediationStrings** text from your JSON — which is what the user sees in Company Portal.
@@ -8066,8 +8070,8 @@ After completing this lab, you will be able to:
 
 #### Task 1: Create the policy without enforcing it
 
-1. Sign in to the **Microsoft Entra admin center** as a Global Administrator, then select **Protection**, **Conditional Access**, **Policies**, then **New policy**.
-   *Path:* **Protection** > **Conditional Access** > **Policies** > **New policy**
+1. Sign in to the **Microsoft Entra admin center** as a Global Administrator, then select **Identity**, then **Protection**, **Conditional Access**, **Policies**, then **New policy**.
+   *Path:* **Identity** > **Protection** > **Conditional Access** > **Policies** > **New policy**
 
 2. Name it `CA-Require-Compliant-Device`.
 
@@ -8100,8 +8104,8 @@ After completing this lab, you will be able to:
 
 #### Task 2: Predict the impact before enforcing
 
-1. Use the **What If** tool: **Protection** > **Conditional Access** > **Policies** > **What If**.
-   *Path:* **Protection** > **Conditional Access** > **Policies** > **What If**
+1. Use the **What If** tool: in the **Microsoft Entra admin center**, select **Identity**, then **Protection**, **Conditional Access**, **Policies**, then **What If**.
+   *Path:* **Identity** > **Protection** > **Conditional Access** > **Policies** > **What If**
 
 2. Run a simulation:
 
@@ -8113,8 +8117,8 @@ After completing this lab, you will be able to:
 
    **Verify:** The result lists `CA-Require-Compliant-Device` under policies that **would apply**, with the grant control that would be required.
 
-3. Now sign in as Alex on **MD102-VM2-Alex** and open Office 365, then check the sign-in logs.
-   *Path:* **Monitoring and health** > **Sign-in logs**
+3. Now sign in as Alex on **MD102-VM2-Alex** and open Office 365. In the **Microsoft Entra admin center**, select **Identity**, then **Monitoring and health**, then **Sign-in logs**.
+   *Path:* **Identity** > **Monitoring and health** > **Sign-in logs**
 
    a. Open the most recent sign-in for Alex.
    b. Select the **Report-only** tab.
@@ -8142,8 +8146,8 @@ After completing this lab, you will be able to:
 
    **Verify:** Access is refused with a message stating the device does not meet the organisation's requirements. This is a real Conditional Access block, caused by a real compliance failure, on a real device.
 
-4. Confirm which policy acted:
-   *Path:* **Monitoring and health** > **Sign-in logs**
+4. In the **Microsoft Entra admin center**, select **Identity**, then **Monitoring and health**, then **Sign-in logs** to confirm which policy acted:
+   *Path:* **Identity** > **Monitoring and health** > **Sign-in logs**
 
    a. Open the failed sign-in.
    b. Select the **Conditional Access** tab.
@@ -8165,9 +8169,10 @@ After completing this lab, you will be able to:
    | Fix the device | Make the device compliant — enable BitLocker, or temporarily relax the failing rule in `CMP-Windows-Corporate` | The correct answer in production |
    | Bypass the policy | Sign in as the break-glass account and set the policy to report-only | When the policy itself is wrong and people are locked out |
 
-2. Take the first route. Edit `CMP-Windows-Corporate` and set **Require BitLocker** to **Not configured**, then sync the device.
+2. Take the first route: in the **Microsoft Intune admin center**, select **Devices**, then **Compliance**, select the **CMP-Windows-Corporate** policy from the list, select **Properties**, select **Edit** next to **Device Health**, set **Require BitLocker** to **Not configured**, save, then sync the device.
+   *Path:* **Devices** > **Compliance** > **CMP-Windows-Corporate** > **Properties** > **Device Health** > **Edit**
 
-3. Wait for compliance to re-evaluate, then confirm.
+3. Wait for compliance to re-evaluate. In the **Microsoft Intune admin center**, select **Devices**, then **All devices**, select **MD102-VM2-Alex** from the list, then select **Device compliance** to confirm.
    *Path:* **Devices** > **All devices** > **MD102-VM2-Alex** > **Device compliance**
 
    **Verify:** The device reports **Compliant**.
@@ -8215,7 +8220,7 @@ After completing this lab, you will be able to:
 - **Diagnostic:**
 
   ```text
-  Entra admin center > Monitoring and health > Sign-in logs > open the sign-in
+  Entra admin center > Identity > Monitoring and health > Sign-in logs > open the sign-in
   Check the Device info tab: is it the device you expect, and is it marked compliant?
   ```
 
@@ -8228,7 +8233,7 @@ After completing this lab, you will be able to:
 
   ```text
   Sign in as the break-glass account.
-  Protection > Conditional Access > Policies > open the policy > Assignments > Users > Exclude
+  Identity > Protection > Conditional Access > Policies > open the policy > Assignments > Users > Exclude
   ```
 
 - **Resolution:** Sign in with the emergency access account, set the policy to **Report-only**, add the exclusion, and re-enable. This is the entire justification for lab 4.
@@ -8346,8 +8351,8 @@ After completing this lab, you will be able to:
        Select-Object Name, Version, Status
    ```
 
-2. In the portal, open the app and select **Device install status**, then **User install status**.
-   *Path:* **Apps** > **All apps** > **Device install status**
+2. In the **Microsoft Intune admin center**, select **Apps**, then **All apps**, select **Windows Terminal** from the list, then select **Device install status**, followed by **User install status**.
+   *Path:* **Apps** > **All apps** > **Windows Terminal** > **Device install status**
 
    **Verify:** The device shows **Installed**. If it shows **Pending** the device has not checked in yet; if it shows **Failed** open the row for the error code.
 
@@ -8400,7 +8405,8 @@ After completing this lab, you will be able to:
 
 3. Install it from Company Portal and confirm it appears in the portal's device install status.
 
-4. Now test the uninstall intent. Edit the line-of-business app's assignments, remove the Available assignment, and add an **Uninstall** assignment for `GRP-USR-PILOT`.
+4. Now test the uninstall intent: in the **Microsoft Intune admin center**, select **Apps**, then **All apps**, select your line-of-business app from the list, select **Properties**, then next to **Assignments** select **Edit**. Remove the Available assignment, and add an **Uninstall** assignment for `GRP-USR-PILOT`.
+   *Path:* **Apps** > **All apps** > **Properties** > **Assignments** > **Edit**
 
    **Verify:** After the next sync the application is removed from the device. Confirm with `Get-Package` or by looking in Installed apps.
 
@@ -8626,8 +8632,8 @@ After completing this lab, you will be able to:
 
 #### Task 1: Configure a dependency and understand supersedence
 
-1. Open the app and select **Dependencies**, then **Add**. Choose the line-of-business app from lab 32.
-   *Path:* **Apps** > **All apps** > **Dependencies** > **Add**
+1. In the **Microsoft Intune admin center**, select **Apps**, then **All apps**, select the Win32 application (**7-Zip**) from the list, select **Dependencies**, then select **Add**. Choose the line-of-business app from lab 32.
+   *Path:* **Apps** > **All apps** > **7-Zip** > **Dependencies** > **Add**
 
    | Setting | Value |
    | --- | --- |
@@ -8673,7 +8679,8 @@ After completing this lab, you will be able to:
    > [!TIP]
    > Install **CMTrace** or use the Support Center log viewer to read these — they are formatted for it and are close to unreadable in Notepad. Search for the application name, then read forward to the detection result.
 
-3. Deliberately break detection to see the signature failure. Edit the detection rule to point at a path that does not exist, such as `C:\Program Files\7-Zip-Wrong`, then sync again.
+3. Deliberately break detection to see the signature failure. In the **Microsoft Intune admin center**, select **Apps**, then **All apps**, select **7-Zip** from the list, select **Properties**, then next to **Detection rules** select **Edit**. Change the path to a path that does not exist, such as `C:\Program Files\7-Zip-Wrong`, save, then sync again.
+   *Path:* **Apps** > **All apps** > **7-Zip** > **Properties** > **Detection rules** > **Edit**
 
    **Verify:** The application reports **Failed** with `0x87D1041C` even though the software is installed on the device. The installer returned 0 and the detection rule then said the app was absent.
 
@@ -9222,7 +9229,7 @@ After completing this lab, you will be able to:
    b. Try to save an attachment to local storage. Only OneDrive for Business and SharePoint are offered.
    c. Try a screenshot inside Outlook. It is refused.
 
-3. Check the reporting.
+3. In the **Microsoft Intune admin center**, select **Apps**, then **Monitor**, then **App protection status** to check the reporting.
    *Path:* **Apps** > **Monitor** > **App protection status**
 
    **Verify:** Diego appears with a policy status of **Protected** and the checked-in time. **Flagged users** on the same page lists devices failing conditional launch.
@@ -9236,8 +9243,8 @@ After completing this lab, you will be able to:
 
 #### Task 1: Require app protection through Conditional Access
 
-1. In the **Microsoft Entra admin center**, create a new Conditional Access policy named `CA-Require-App-Protection`.
-   *Path:* **Protection** > **Conditional Access** > **Policies** > **New policy**
+1. In the **Microsoft Entra admin center**, select **Identity**, then **Protection**, **Conditional Access**, **Policies**, then **New policy** to create a policy named `CA-Require-App-Protection`.
+   *Path:* **Identity** > **Protection** > **Conditional Access** > **Policies** > **New policy**
 
 2. Configure it:
 
@@ -9747,7 +9754,7 @@ After completing this lab, you will be able to:
 
 #### Task 1: Create a baseline profile
 
-1. Select **Endpoint security**, then **Security baselines**.
+1. In the **Microsoft Intune admin center**, select **Endpoint security**, then **Security baselines**.
    *Path:* **Endpoint security** > **Security baselines**
 
    | Baseline | Covers |
@@ -9781,8 +9788,8 @@ After completing this lab, you will be able to:
 
 #### Task 2: Read the reporting and customise one setting
 
-1. Sync **MD102-VM1-Adele**, then open the baseline profile and review its status views.
-   *Path:* **Endpoint security** > **Security baselines** > **SB-Windows-Pilot**
+1. Sync **MD102-VM1-Adele**. In the **Microsoft Intune admin center**, select **Endpoint security**, then **Security baselines**, select **Security Baseline for Windows 10 and later**, select the **SB-Windows-Pilot** profile from the list, and review its status views.
+   *Path:* **Endpoint security** > **Security baselines** > **Security Baseline for Windows 10 and later** > **SB-Windows-Pilot**
 
    | View | Answers |
    | --- | --- |
@@ -9792,7 +9799,8 @@ After completing this lab, you will be able to:
 
    **Verify:** **Per setting status** lists individual settings. Look for anything reporting **Conflict** — that is a setting the baseline and another profile both try to control.
 
-2. Now customise deliberately. Open the profile, select **Properties**, then edit the settings and change one value with a documented reason.
+2. Now customise deliberately. With **SB-Windows-Pilot** open, select **Properties**, then next to **Configuration settings** select **Edit**, and change one value with a documented reason.
+   *Path:* **Endpoint security** > **Security baselines** > **Security Baseline for Windows 10 and later** > **SB-Windows-Pilot** > **Properties** > **Configuration settings** > **Edit**
 
    | Setting | Value |
    | --- | --- |
@@ -10395,7 +10403,8 @@ After completing this lab, you will be able to:
    | Events from a legitimate business application | Add a **per-rule exclusion** for that application, then promote to Block. |
    | Many events from many applications | Leave in Audit and investigate. The rule may not suit your estate. |
 
-2. Edit `ASR-Windows-Audit` and change the low-risk rules to **Block**:
+2. In the **Microsoft Intune admin center**, select **Endpoint security**, then **Attack surface reduction**. Select `ASR-Windows-Audit` from the policy list, select **Properties**, select **Edit** next to **Configuration settings**, and change the low-risk rules to **Block**:
+   *Path:* **Endpoint security** > **Attack surface reduction** > **ASR-Windows-Audit** > **Properties** > **Edit**
 
    | Setting | Value |
    | --- | --- |
@@ -10593,7 +10602,7 @@ After completing this lab, you will be able to:
    > [!NOTE]
    > You need both. **TPM** unlocks the drive automatically at boot so the user never sees a prompt. **Numerical Password** is the 48-digit recovery key escrowed to Microsoft Entra ID, used when the TPM cannot attest — after a firmware change, a hardware repair, or a boot configuration change.
 
-3. Once encryption completes, sync the device and check compliance.
+3. Once encryption completes and the device syncs, return to the **Microsoft Intune admin center**. Navigate to **Devices** > **All devices**, select `MD102-VM2-Alex`, and select **Device compliance** to verify that the policy is satisfied.
    *Path:* **Devices** > **All devices** > **MD102-VM2-Alex** > **Device compliance**
 
    **Verify:** `CMP-Windows-Corporate` now reports **Compliant**. The BitLocker rule that has been failing since lab 29 is satisfied, and with the Conditional Access policy from lab 31 enabled, Alex's access to Office 365 is restored without any change to that policy.
@@ -10607,7 +10616,7 @@ After completing this lab, you will be able to:
 
 #### Task 1: Retrieve keys as administrator and as user
 
-1. In the **Microsoft Intune admin center**, open the device and select **Recovery keys**.
+1. In the **Microsoft Intune admin center**, select **Devices**, then **All devices**. Select `MD102-VM2-Alex`, then under **Monitor**, select **Recovery keys**.
    *Path:* **Devices** > **All devices** > **MD102-VM2-Alex** > **Recovery keys**
 
    **Verify:** The BitLocker key identifier and the 48-digit recovery key are shown. Retrieving a key is an audited action.
@@ -10626,15 +10635,15 @@ After completing this lab, you will be able to:
 
 #### Task 2: Rotate a key and monitor the estate
 
-1. Rotate the recovery key from the device blade using the **BitLocker key rotation** remote action.
-   *Path:* **Devices** > **All devices** > **MD102-VM2-Alex**
+1. Under **Devices** > **All devices**, select `MD102-VM2-Alex`, then select **...** (overflow menu) > **BitLocker key rotation** from the device action bar.
+   *Path:* **Devices** > **All devices** > **MD102-VM2-Alex** > **BitLocker key rotation**
 
    **Verify:** A new 48-digit key appears in **Recovery keys** after the device next checks in, and the previous key stops working.
 
    > [!TIP]
    > Rotate a key whenever it has been disclosed — after a support call where it was read out, or after a device changes hands. The policy setting **Configure client-driven recovery password rotation** does this automatically after each use, which is the same idea as the LAPS post-authentication action from lab 28.
 
-2. Review encryption across the estate:
+2. Select **Endpoint security**, then **Disk encryption**, and review encryption across the estate:
    *Path:* **Endpoint security** > **Disk encryption**
 
    | Column | Watch for |
@@ -10752,6 +10761,7 @@ After completing this lab, you will be able to:
    > If you have never opened this portal, the Defender for Endpoint tenant is provisioned on your first visit and can take several hours to become fully available. The Intune connector will show **Unavailable** until it finishes. Open it now even if you do nothing else — the wait is unavoidable and it is better to start it early.
 
 2. In the Defender portal, select **Settings**, **Endpoints**, then **Advanced features**, and enable:
+   *Path:* **Settings** > **Endpoints** > **Advanced features**
 
    | Setting | Value |
    | --- | --- |
@@ -10826,8 +10836,8 @@ After completing this lab, you will be able to:
 
 #### Task 1: Add device risk to the compliance policy
 
-1. Open `CMP-Windows-Corporate` from lab 29 and select **Properties**, then edit **Compliance settings**.
-   *Path:* **Devices** > **Compliance** > **CMP-Windows-Corporate**
+1. In the **Microsoft Intune admin center**, select **Devices**, then **Compliance**. Select `CMP-Windows-Corporate` from the policy list, select **Properties**, then select **Edit** next to **Compliance settings**.
+   *Path:* **Devices** > **Compliance** > **CMP-Windows-Corporate** > **Properties** > **Edit**
 
 2. Under **Microsoft Defender for Endpoint**, set:
 
@@ -10884,7 +10894,7 @@ After completing this lab, you will be able to:
    > [!TIP]
    > **Isolate device** cuts the machine off from the network while leaving the Defender connection alive, so you can keep investigating a compromised device without letting it reach anything else. It is the single most useful response action and it is examinable.
 
-4. Watch the loop close. Check the device's compliance state in Intune after risk propagates.
+4. Watch the loop close. In the **Microsoft Intune admin center**, navigate to **Devices** > **All devices**, select `MD102-VM2-Alex`, and select **Device compliance** to verify compliance state after risk propagates.
    *Path:* **Devices** > **All devices** > **MD102-VM2-Alex** > **Device compliance**
 
    > [!NOTE]
@@ -11284,7 +11294,7 @@ After completing this lab, you will be able to:
 
 #### Task 2: Pause a ring
 
-1. Open `RING-2-Broad` and note the **Pause** option on the overview.
+1. Navigate to **Devices** > **Windows updates**, select the **Update rings** tab, select `RING-2-Broad` from the profile list, and note the **Pause** option on the overview.
    *Path:* **Devices** > **Windows updates** > **Update rings** > **RING-2-Broad**
 
 2. Select **Pause**, then choose **Quality updates**.
@@ -11401,8 +11411,8 @@ After completing this lab, you will be able to:
    > [!IMPORTANT]
    > **Corporate-owned** is the prerequisite that catches lab tenants. A device enrolled by hand through Settings defaults to Personal ownership, and Autopatch refuses it. Lab 11 changed `MD102-VM2-Alex` to Corporate; Autopilot devices are Corporate automatically. Check ownership before assuming registration is broken.
 
-2. Select **Devices**, **Windows updates**, then the **Windows Autopatch** section, and open **Devices**.
-   *Path:* **Devices** > **Windows updates** > **Devices**
+2. Select **Devices**, **Windows updates**, then under the **Windows Autopatch** section, select **Devices**.
+   *Path:* **Devices** > **Windows updates** > **Windows Autopatch** > **Devices**
 
 3. Register devices by adding a group under **Device registration**, using `GRP-DEV-WIN-CORP`.
 
@@ -11415,8 +11425,8 @@ After completing this lab, you will be able to:
 
 #### Task 2: Understand Autopatch groups
 
-1. Open **Autopatch groups** and review the default group.
-   *Path:* **Devices** > **Windows updates** > **Autopatch groups**
+1. Under **Devices** > **Windows updates** > **Windows Autopatch**, select **Autopatch groups** and review the default group.
+   *Path:* **Devices** > **Windows updates** > **Windows Autopatch** > **Autopatch groups**
 
    | Deployment ring | Share of devices | Purpose |
    | --- | --- | --- |
@@ -11489,7 +11499,7 @@ After completing this lab, you will be able to:
    > [!IMPORTANT]
    > The cadence is the examinable part. Hotpatch does not eliminate restarts — it reduces them from twelve a year to four. Every quarter a **baseline** update establishes a new starting point and requires a restart; the two months following it are hotpatched in memory. A scenario describing eight restart-free months a year is describing Hotpatch.
 
-2. Where it is configured:
+2. Where it is configured: navigate to **Devices** > **Windows updates**, select the **Quality updates** tab, then select **Create profile**.
    *Path:* **Devices** > **Windows updates** > **Quality updates** > **Create profile**
 
    | Setting | Value |
@@ -11588,8 +11598,8 @@ After completing this lab, you will be able to:
 
 #### Task 1: Configure system updates on fully managed devices
 
-1. Open the fully managed device restrictions profile from lab 25, `AND-FM-Restrictions`, or create one if you skipped it.
-   *Path:* **Devices** > **Configuration**
+1. In the **Microsoft Intune admin center**, select **Devices**, then **Configuration**. Select `AND-FM-Restrictions` from the profile list, select **Properties**, then select **Edit** next to **Configuration settings** (or create the profile if you skipped lab 25).
+   *Path:* **Devices** > **Configuration** > **AND-FM-Restrictions** > **Properties** > **Edit**
 
 2. Find the **System update** section and configure:
 
@@ -11651,8 +11661,8 @@ After completing this lab, you will be able to:
    | Feature update failures report | Which devices could not take a feature update, with the failure reason |
    | Windows update rings report | Per-ring deployment state and device counts |
 
-2. Open **Reports** > **Windows updates** for the fuller picture.
-   *Path:* **Reports** > **Windows updates**
+2. Open **Reports** > **Device management** > **Windows updates** for the fuller picture.
+   *Path:* **Reports** > **Device management** > **Windows updates**
 
    > [!IMPORTANT]
    > The richer reports — **Windows Update for Business reports** — need a Log Analytics workspace, which needs an Azure subscription. Without one you get the built-in Intune reports, which are enough to answer *is this device patched* but not enough to answer *what is our compliance trend over ninety days*. Know the distinction and know why the richer reports are missing from a tenant like this one.
@@ -11784,7 +11794,8 @@ After completing this lab, you will be able to:
 
 #### Task 2: Create a macOS update policy
 
-1. Create a settings catalog profile with platform **macOS**, named `MAC-Updates-Corporate`.
+1. Create a second settings catalog profile: select **Devices** > **Configuration** > **Create** > **New Policy**, platform **macOS**, profile type **Settings catalog**, named `MAC-Updates-Corporate`.
+   *Path:* **Devices** > **Configuration** > **Create** > **New Policy**
 
 2. Search for `Software Update` and configure:
 
@@ -11935,8 +11946,8 @@ After completing this lab, you will be able to:
 
 #### Task 1: Run individual actions
 
-1. Open **Devices** > **All devices** > `MD102-VM1-Adele` and review the action bar across the top.
-   *Path:* **Devices** > **All devices**
+1. In the **Microsoft Intune admin center**, select **Devices**, then **All devices**. Select `MD102-VM1-Adele` from the list and review the action bar across the top of the device overview.
+   *Path:* **Devices** > **All devices** > **MD102-VM1-Adele**
 
 2. Run the safe ones and watch what happens:
 
@@ -11984,6 +11995,7 @@ After completing this lab, you will be able to:
    > Bulk actions support destructive operations including **Retire** and **Wipe**, with a limit of 100 devices per action. There is one confirmation and no undo. Read the device list twice before confirming a bulk wipe — the confirmation dialog will not save you from a wrong filter.
 
 3. Run the sync and check progress under **Tenant administration** > **Bulk device actions**.
+   *Path:* **Tenant administration** > **Bulk device actions**
 
    **Verify:** The action is listed with per-device status showing pending, succeeded or failed.
 
@@ -11996,7 +12008,8 @@ After completing this lab, you will be able to:
 
 #### Task 1: Retire the Android emulator
 
-1. Open the Android emulator's device record in **All devices** and select **Retire**.
+1. In the **Microsoft Intune admin center**, select **Devices**, then **All devices**. Select the Android emulator's device record from the list, then select **Retire** from the action toolbar.
+   *Path:* **Devices** > **All devices** > **Retire**
 
    > [!NOTE]
    > The emulator is personally owned with a work profile, so **Wipe** is not offered — Intune will not let you factory reset a device the organisation does not own. That constraint is the feature working, and it is worth seeing rather than reading about.
@@ -12137,8 +12150,8 @@ After completing this lab, you will be able to:
 
 #### Task 1: Run your first device query
 
-1. Open **Devices** > **All devices** > `MD102-VM1-Adele`, then select **Query** from the device blade.
-   *Path:* **Devices** > **All devices** > **Query**
+1. Select **Devices**, then **All devices**, select `MD102-VM1-Adele` from the list, then select **Query** from the device action bar.
+   *Path:* **Devices** > **All devices** > **MD102-VM1-Adele** > **Query**
 
    > [!IMPORTANT]
    > **Single-device query** is included with Intune Plan 1. **Multi-device query**, which runs the same KQL across many devices at once, belongs to Intune Advanced Analytics — which Microsoft 365 E5 has included since July 2026, so you have both. This lab teaches the single-device form because it is where the query language is easiest to learn; lab 59 runs the same queries across the estate.
@@ -12207,14 +12220,14 @@ After completing this lab, you will be able to:
 
 #### Task 1: Collect and download a diagnostics package
 
-1. On the device blade, select **Collect diagnostics** and confirm.
-   *Path:* **Devices** > **All devices** > **Collect diagnostics**
+1. On the `MD102-VM1-Adele` device blade under **Devices** > **All devices**, select **Collect diagnostics** and confirm.
+   *Path:* **Devices** > **All devices** > **MD102-VM1-Adele** > **Collect diagnostics**
 
    > [!NOTE]
    > Collection is silent — the user is not prompted and sees nothing. The device gathers Intune Management Extension logs, MDM diagnostics, event logs, registry state and update history, then uploads the bundle.
 
-2. Once collection completes, open **Monitor** > **Device diagnostics** on the device and download the package.
-   *Path:* **Devices** > **All devices** > **Device diagnostics**
+2. Once collection completes, navigate to **Devices** > **All devices**, select `MD102-VM1-Adele`, then under **Monitor**, select **Device diagnostics** and download the package.
+   *Path:* **Devices** > **All devices** > **MD102-VM1-Adele** > **Monitor** > **Device diagnostics**
 
    **Verify:** A zip file downloads containing numbered folders. `results.xml` maps each folder to what it collected — read that first rather than opening folders at random.
 
@@ -12703,7 +12716,8 @@ After completing this lab, you will be able to:
    | Hourly | Settings that must not drift for long — use sparingly, it is real load |
    | Daily | **The usual choice** for configuration drift |
 
-4. Create the package, then after devices have run it, open **Device status** and read the columns:
+4. Create the package. After devices have run it, navigate to **Devices** > **Scripts and remediations** > **Remediations**, select `REM-DeliveryOptimization` from the list, then select **Device status** under **Monitor** and read the columns:
+   *Path:* **Devices** > **Scripts and remediations** > **Remediations** > **REM-DeliveryOptimization** > **Device status**
 
    | Column | Meaning |
    | --- | --- |
@@ -12940,7 +12954,7 @@ After completing this lab, you will be able to:
    > [!TIP]
    > This report turns a vague complaint into a business case. *Devices are slow* is arguable; *this agent adds 40 seconds to every sign-in across 200 devices, which is 2.2 hours a day* is not. That framing is what gets the offending software removed.
 
-3. Check **Application reliability** and **Resource performance**.
+3. Under **Reports** > **Endpoint analytics**, select **Application reliability** to view crash frequency, and review **Resource performance** for CPU and memory metrics.
    *Path:* **Reports** > **Endpoint analytics** > **Application reliability**
 
    **Verify:** Applications are ranked by crashes per device. Resource performance shows CPU and memory pressure, distinguishing an under-specified machine from one running something pathological.
@@ -13059,8 +13073,8 @@ After completing this lab, you will be able to:
    > [!IMPORTANT]
    > Freshness is the distinction that matters in practice. **Operational** reports query live and are what you use when troubleshooting now. **Organizational** and **historical** reports run against aggregated data that can be hours old — so a device you just fixed will still look broken, and concluding that your fix did not work is the standard mistake.
 
-2. Open **Reports** > **Device compliance** and customise it:
-   *Path:* **Reports** > **Device compliance**
+2. Select **Reports**, then under **Device management**, select **Device compliance**, and customise it:
+   *Path:* **Reports** > **Device management** > **Device compliance**
 
    a. Select **Filters** and narrow to a single operating system and compliance state.
    b. Select **Columns** and add or remove columns so the report answers exactly one question.
@@ -13288,7 +13302,8 @@ After completing this lab, you will be able to:
    | Device compliance drift | Compliant devices become non-compliant above a threshold | A policy change that broke compliance shows up immediately |
    | Configuration policy conflict | Profiles conflict on devices | Catches the silent conflicts from lab 22 |
 
-3. Open the enrollment failure rule and configure it:
+3. Under **Tenant administration** > **Alerts**, from the **Alert rules** list, select the **Device enrollment failure** rule, and configure it:
+   *Path:* **Tenant administration** > **Alerts** > **Alert rules** > **Device enrollment failure**
 
    | Setting | Value |
    | --- | --- |
@@ -13301,7 +13316,7 @@ After completing this lab, you will be able to:
    > [!IMPORTANT]
    > Set the threshold from your baseline. A rule that fires on normal variation gets muted within a week, and a muted rule is worse than no rule because everyone believes it is watching. This is the practical reason the baseline exercise came first.
 
-4. Repeat for the compliance drift rule, then configure notification recipients under **Alerts** > **Notifications**.
+4. Repeat for the **Device compliance drift** rule: select it from the list and configure its threshold, then select **Notifications** under **Tenant administration** > **Alerts** to configure notification recipients.
    *Path:* **Tenant administration** > **Alerts** > **Notifications**
 
    > [!TIP]
@@ -13650,7 +13665,8 @@ After completing this lab, you will be able to:
    > [!TIP]
    > Record the SHA-256 hash. A rule can match on file name alone, but a hash or a publisher certificate is what stops someone dropping their own `regedit.exe` into a writable folder and having your rule elevate it for them.
 
-2. Back in the portal under **Endpoint Privilege Management** > **Policies**, open the policy dialog and choose the profile:
+2. Back in the **Microsoft Intune admin center**, select **Endpoint security** > **Endpoint Privilege Management** > the **Policies** tab > **Create Policy**:
+   *Path:* **Endpoint security** > **Endpoint Privilege Management** > **Policies** > **Create Policy**
 
    | Setting | Value |
    | --- | --- |
@@ -13886,6 +13902,7 @@ After completing this lab, you will be able to:
    | Disable chat | **No** |
 
 3. Deploy the Remote Help application to devices. Select **Apps** > **All apps** > **Add** > **Windows app (Win32)**, or use the Enterprise App Catalog entry you will meet in the next exercise.
+   *Path:* **Apps** > **All apps** > **Add**
 
    > [!TIP]
    > Remote Help is itself in the Enterprise App Catalog, so the quickest route is **Add** > **Enterprise App Catalog app** and search for it. That saves packaging it by hand and is a neat demonstration of why the catalogue exists.
@@ -13922,6 +13939,7 @@ After completing this lab, you will be able to:
    **Verify:** The session connects. Note that full control required a **second** explicit consent — viewing and controlling are separate grants.
 
 4. End the session, then check the audit trail under **Tenant administration** > **Remote Help** > **Monitor**.
+   *Path:* **Tenant administration** > **Remote Help** > **Monitor**
 
    **Verify:** The session is logged with both participants, the device and the duration.
 
@@ -13955,7 +13973,8 @@ After completing this lab, you will be able to:
 
 4. Assign as **Available for enrolled devices** to `GRP-USR-PILOT`, then create the app.
 
-5. Open the created app and inspect its **Detection rules**.
+5. In **Apps** > **All apps**, select the created application from the list, select **Properties**, and inspect its **Detection rules**.
+   *Path:* **Apps** > **All apps** > **Properties**
 
    **Verify:** Detection rules are pre-populated and correct for the packaged version. Compare with the rule you wrote by hand in lab 33 — and with the one you deliberately broke to produce `0x87D1041C`.
 
@@ -13989,6 +14008,7 @@ After completing this lab, you will be able to:
    **Verify:** Results return for every device that matches, not just one. This is the vulnerability-response scenario from lab 51 answered properly — that lab could only ask one device at a time.
 
 3. Open **Reports** > **Endpoint analytics** > **Anomalies**.
+   *Path:* **Reports** > **Endpoint analytics** > **Anomalies**
 
    | Column | Meaning |
    | --- | --- |
@@ -14000,7 +14020,8 @@ After completing this lab, you will be able to:
    > [!NOTE]
    > With two virtual machines you will likely see nothing here, and that is the correct result — anomaly detection compares devices against their peers and needs a population to compare within. The mechanism is what matters: it finds the device you would not have thought to look at.
 
-4. Open a device and select **Device timeline**.
+4. Under **Devices** > **All devices**, select a device from the list, then select **Device timeline** under **Monitor**.
+   *Path:* **Devices** > **All devices** > **Device timeline**
 
    **Verify:** A chronological history appears: policy applications, application installs, restarts, crashes and driver events.
 
@@ -14036,7 +14057,7 @@ The licence is included, but this is the one capability in the module you cannot
    > [!WARNING]
    > Tunnel Gateway is infrastructure **you** run: a Linux host, a container runtime, a TLS certificate to renew, and patching. Unlike the other three capabilities in this lab, the licence being included is not the end of the work — there is nothing to click until a gateway exists. That is also why *monitoring tunnel connections and server health* appears in the exam objective.
 
-3. Note the configuration path so you recognise it:
+3. Note the configuration path so you recognise it: in the **Microsoft Intune admin center**, select **Tenant administration**, then **Microsoft Tunnel Gateway**.
    *Path:* **Tenant administration** > **Microsoft Tunnel Gateway**
 
    a. Create a **Server configuration** defining IP ranges, DNS and split tunnelling.

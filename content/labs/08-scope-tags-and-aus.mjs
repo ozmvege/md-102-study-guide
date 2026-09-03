@@ -46,8 +46,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "In the **Microsoft Intune admin center**, select **Tenant administration**, then **Roles**, then **Scope (Tags)**.",
-              nav: ["Tenant administration", "Roles", "Scope (Tags)"]
+              text: "In the **Microsoft Intune admin center**, select **Tenant administration**, then **Roles**, then **Scope tags**.",
+              nav: ["Tenant administration", "Roles", "Scope tags"]
             },
             {
               text: "Select **Create** and configure:",
@@ -98,7 +98,7 @@ export default {
           result: {
             text: "Two scope tags exist, each associated with a department group.",
             verify: [
-              { text: "**Scope (Tags)** lists `TAG-FINANCE`, `TAG-IT` and **Default**." }
+              { text: "**Scope tags** lists `TAG-FINANCE`, `TAG-IT` and **Default**." }
             ]
           }
         },
@@ -289,7 +289,7 @@ export default {
               ]
             },
             {
-              text: "Select **Review + create**, then **Create**. Open the new unit, select **Users**, then **Add member**, and add `alex.wilber` and `henrietta.mueller`.",
+              text: "Select **Review + create**, then **Create**. Under **Admin units**, open `AU-FINANCE`, select **Users**, then select **Add member**, and add `alex.wilber` and `henrietta.mueller`.",
               nav: ["Admin units", "AU-FINANCE", "Users", "Add member"]
             },
             {

@@ -184,7 +184,8 @@ export default {
               ]
             },
             {
-              text: "Create the package, then after devices have run it, open **Device status** and read the columns:",
+              text: "Create the package. After devices have run it, navigate to **Devices** > **Scripts and remediations** > **Remediations**, select `REM-DeliveryOptimization` from the list, then select **Device status** under **Monitor** and read the columns:",
+              nav: ["Devices", "Scripts and remediations", "Remediations", "REM-DeliveryOptimization", "Device status"],
               parts: [
                 {
                   kind: "table",

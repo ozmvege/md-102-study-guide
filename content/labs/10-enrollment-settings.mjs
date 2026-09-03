@@ -193,8 +193,8 @@ export default {
               ]
             },
             {
-              text: "In the **Microsoft Intune admin center**, select **Tenant administration**, then **Customization**, then **Edit**.",
-              nav: ["Tenant administration", "Customization", "Edit"]
+              text: "In the **Microsoft Intune admin center**, select **Tenant administration**, then under **End user experiences** select **Customization**. Select the **Default** policy from the table, then select **Edit**.",
+              nav: ["Tenant administration", "End user experiences", "Customization", "Default", "Edit"]
             },
             {
               text: "Configure the Company Portal:",
@@ -294,7 +294,7 @@ export default {
             },
             {
               text: "Lab 7 left one check unfinished for want of a device. Finish it now: open a private window, sign in as `helpdesk.operator@<tenant>.onmicrosoft.com`, then open **Devices** > **All devices** and select `MD102-VM2-Alex`.",
-              nav: ["Devices", "All devices"],
+              nav: ["Devices", "All devices", "MD102-VM2-Alex"],
               parts: [
                 {
                   kind: "verify",

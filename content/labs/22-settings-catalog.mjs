@@ -136,7 +136,7 @@ export default {
               ]
             },
             {
-              text: "Back in the portal, open the profile and select the **Device status** and **Per setting status** views.",
+              text: "Back in the **Microsoft Intune admin center**, select **Devices**, then **Configuration**, select the **WIN-OneDrive-KFM** profile from the list, and review the **Device status** and **Per setting status** views.",
               nav: ["Devices", "Configuration", "WIN-OneDrive-KFM"],
               parts: [
                 {
@@ -218,7 +218,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Open `WIN-OneDrive-KFM` and select **Properties**, then edit **Assignments**."
+              text: "In the **Microsoft Intune admin center**, select **Devices**, then **Configuration**, select the **WIN-OneDrive-KFM** profile from the list, select **Properties**, then next to **Assignments** select **Edit**.",
+              nav: ["Devices", "Configuration", "WIN-OneDrive-KFM", "Properties", "Assignments", "Edit"]
             },
             {
               text: "In the **Assignments** section, select **Add groups** under **Excluded groups** to add an exclusion, then select **Review + save**:",

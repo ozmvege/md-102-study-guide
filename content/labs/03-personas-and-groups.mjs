@@ -157,7 +157,7 @@ export default {
               ]
             },
             {
-              text: "Open the **Microsoft Entra admin center** and inspect one dynamic group to see the rule the script wrote.",
+              text: "In the **Microsoft Entra admin center**, select **Groups**, then **All groups**. Select **GRP-DEV-WIN-CORP**, then select **Dynamic membership rules** to see the rule the script wrote.",
               nav: ["Groups", "All groups", "GRP-DEV-WIN-CORP", "Dynamic membership rules"],
               parts: [
                 {
@@ -283,7 +283,7 @@ export default {
               ]
             },
             {
-              text: "In the **Microsoft Entra admin center**, open `GRP-LIC-M365-E5` and confirm the member count.",
+              text: "In the **Microsoft Entra admin center**, select **Groups**, then **All groups**. Select **GRP-LIC-M365-E5**, then select **Members** to confirm the member count.",
               nav: ["Groups", "All groups", "GRP-LIC-M365-E5", "Members"]
             }
           ],

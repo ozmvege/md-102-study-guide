@@ -115,8 +115,8 @@ export default {
               ]
             },
             {
-              text: "In the portal, open the app and select **Device install status**, then **User install status**.",
-              nav: ["Apps", "All apps", "Device install status"],
+              text: "In the **Microsoft Intune admin center**, select **Apps**, then **All apps**, select **Windows Terminal** from the list, then select **Device install status**, followed by **User install status**.",
+              nav: ["Apps", "All apps", "Windows Terminal", "Device install status"],
               parts: [
                 {
                   kind: "verify",
@@ -222,7 +222,8 @@ export default {
               text: "Install it from Company Portal and confirm it appears in the portal's device install status."
             },
             {
-              text: "Now test the uninstall intent. Edit the line-of-business app's assignments, remove the Available assignment, and add an **Uninstall** assignment for `GRP-USR-PILOT`.",
+              text: "Now test the uninstall intent: in the **Microsoft Intune admin center**, select **Apps**, then **All apps**, select your line-of-business app from the list, select **Properties**, then next to **Assignments** select **Edit**. Remove the Available assignment, and add an **Uninstall** assignment for `GRP-USR-PILOT`.",
+              nav: ["Apps", "All apps", "Properties", "Assignments", "Edit"],
               parts: [
                 {
                   kind: "verify",

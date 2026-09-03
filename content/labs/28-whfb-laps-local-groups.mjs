@@ -132,8 +132,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "First enable the directory to accept escrowed passwords. In the **Microsoft Entra admin center**, select **Devices**, then **Device settings**.",
-              nav: ["Devices", "Device settings"],
+              text: "First enable the directory to accept escrowed passwords. In the **Microsoft Entra admin center**, select **Identity**, then **Devices**, then **Device settings**.",
+              nav: ["Identity", "Devices", "Device settings"],
               parts: [
                 {
                   kind: "inputs",
@@ -207,7 +207,7 @@ export default {
               ]
             },
             {
-              text: "In the **Microsoft Intune admin center**, open the device and select **Local admin password**.",
+              text: "In the **Microsoft Intune admin center**, select **Devices**, then **All devices**, select **MD102-VM2-Alex** from the list, then select **Local admin password**.",
               nav: ["Devices", "All devices", "MD102-VM2-Alex", "Local admin password"],
               parts: [
                 {
@@ -342,7 +342,7 @@ export default {
         code: "Get-WinEvent -LogName \"Microsoft-Windows-LAPS/Operational\" -MaxEvents 30 |\n    Select-Object TimeCreated, Id, Message | Format-Table -Wrap"
       },
       resolution:
-        "Enable the setting under **Devices** > **Device settings** in the Microsoft Entra admin center, then force a rotation from the device blade. Until then, the device has a password nobody knows."
+        "Enable the setting under **Identity** > **Devices** > **Device settings** in the Microsoft Entra admin center, then force a rotation from the device blade. Until then, the device has a password nobody knows."
     },
     {
       symptom: "Users are not prompted to set a Windows Hello PIN.",

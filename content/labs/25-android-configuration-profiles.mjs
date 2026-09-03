@@ -140,7 +140,7 @@ export default {
               ]
             },
             {
-              text: "Check the profile's device status in the portal.",
+              text: "In the **Microsoft Intune admin center**, select **Devices**, then **Configuration**, select the **AND-WP-Restrictions** profile from the list, then select **Device status**.",
               nav: ["Devices", "Configuration", "AND-WP-Restrictions", "Device status"],
               parts: [
                 {

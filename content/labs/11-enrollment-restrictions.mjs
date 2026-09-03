@@ -228,7 +228,7 @@ export default {
               text: "Select **Add identifiers**, choose **Upload CSV file**, set the identifier type to **Serial number**, and upload your file."
             },
             {
-              text: "The device is already enrolled, so the identifier will not retroactively change it. Change ownership directly:",
+              text: "In the **Microsoft Intune admin center**, select **Devices**, then **All devices**, select **MD102-VM2-Alex**, and select **Properties**. The device is already enrolled, so the identifier will not retroactively change it. Change ownership directly:",
               nav: ["Devices", "All devices", "MD102-VM2-Alex", "Properties"],
               parts: [
                 {
@@ -260,8 +260,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "In the **Microsoft Entra admin center**, open `GRP-DEV-WIN-CORP` and select **Members**.",
-              nav: ["Groups", "GRP-DEV-WIN-CORP", "Members"],
+              text: "In the **Microsoft Entra admin center**, select **Groups**, then **All groups**. Select **GRP-DEV-WIN-CORP**, then select **Members**.",
+              nav: ["Groups", "All groups", "GRP-DEV-WIN-CORP", "Members"],
               parts: [
                 {
                   kind: "callout",

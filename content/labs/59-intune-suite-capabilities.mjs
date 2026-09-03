@@ -66,6 +66,7 @@ export default {
             },
             {
               text: "Deploy the Remote Help application to devices. Select **Apps** > **All apps** > **Add** > **Windows app (Win32)**, or use the Enterprise App Catalog entry you will meet in the next exercise.",
+              nav: ["Apps", "All apps", "Add"],
               parts: [
                 {
                   kind: "callout",
@@ -134,6 +135,7 @@ export default {
             },
             {
               text: "End the session, then check the audit trail under **Tenant administration** > **Remote Help** > **Monitor**.",
+              nav: ["Tenant administration", "Remote Help", "Monitor"],
               parts: [
                 {
                   kind: "verify",
@@ -196,7 +198,8 @@ export default {
               text: "Assign as **Available for enrolled devices** to `GRP-USR-PILOT`, then create the app."
             },
             {
-              text: "Open the created app and inspect its **Detection rules**.",
+              text: "In **Apps** > **All apps**, select the created application from the list, select **Properties**, and inspect its **Detection rules**.",
+              nav: ["Apps", "All apps", "Properties"],
               parts: [
                 {
                   kind: "verify",
@@ -257,6 +260,7 @@ export default {
             },
             {
               text: "Open **Reports** > **Endpoint analytics** > **Anomalies**.",
+              nav: ["Reports", "Endpoint analytics", "Anomalies"],
               parts: [
                 {
                   kind: "table",
@@ -276,7 +280,8 @@ export default {
               ]
             },
             {
-              text: "Open a device and select **Device timeline**.",
+              text: "Under **Devices** > **All devices**, select a device from the list, then select **Device timeline** under **Monitor**.",
+              nav: ["Devices", "All devices", "Device timeline"],
               parts: [
                 {
                   kind: "verify",
@@ -345,7 +350,7 @@ export default {
               ]
             },
             {
-              text: "Note the configuration path so you recognise it:",
+              text: "Note the configuration path so you recognise it: in the **Microsoft Intune admin center**, select **Tenant administration**, then **Microsoft Tunnel Gateway**.",
               nav: ["Tenant administration", "Microsoft Tunnel Gateway"],
               parts: [
                 {

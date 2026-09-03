@@ -104,8 +104,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Open **Devices** > **All devices** > `MD102-VM1-Adele` and review the action bar across the top.",
-              nav: ["Devices", "All devices"]
+              text: "In the **Microsoft Intune admin center**, select **Devices**, then **All devices**. Select `MD102-VM1-Adele` from the list and review the action bar across the top of the device overview.",
+              nav: ["Devices", "All devices", "MD102-VM1-Adele"]
             },
             {
               text: "Run the safe ones and watch what happens:",
@@ -190,6 +190,7 @@ export default {
             },
             {
               text: "Run the sync and check progress under **Tenant administration** > **Bulk device actions**.",
+              nav: ["Tenant administration", "Bulk device actions"],
               parts: [
                 {
                   kind: "verify",
@@ -220,7 +221,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Open the Android emulator's device record in **All devices** and select **Retire**.",
+              text: "In the **Microsoft Intune admin center**, select **Devices**, then **All devices**. Select the Android emulator's device record from the list, then select **Retire** from the action toolbar.",
+              nav: ["Devices", "All devices", "Retire"],
               parts: [
                 {
                   kind: "callout",

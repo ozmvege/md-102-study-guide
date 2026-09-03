@@ -188,7 +188,7 @@ export default {
               text: "Configure actions for non-compliance with a 7-day grace period as in lab 29, assign to `GRP-DEV-WIN-CORP`, and create the policy."
             },
             {
-              text: "Sync **MD102-VM2-Alex**, wait, then check the result.",
+              text: "Sync **MD102-VM2-Alex**, wait, then in the **Microsoft Intune admin center**, select **Devices**, then **All devices**, select **MD102-VM2-Alex** from the list, then select **Device compliance** to check the result.",
               nav: ["Devices", "All devices", "MD102-VM2-Alex", "Device compliance"],
               parts: [
                 {
