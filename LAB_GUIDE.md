@@ -3493,6 +3493,7 @@ After completing this lab, you will be able to:
    a. Select the work account entry, then select **Info**.
    b. If a **Connect** or **Enroll only in device management** option appears, use it.
    c. Otherwise sign out and back in — automatic enrollment is evaluated at sign-in.
+   d. Alternatively, trigger enrollment from an elevated prompt with `DeviceEnroller.exe /c /AutoEnrollMDM`.
 
 3. Confirm enrollment from the client (run in PowerShell on **MD102-VM2-Alex**):
 
@@ -3522,10 +3523,16 @@ After completing this lab, you will be able to:
 5. In the **Microsoft Intune admin center**, select **Devices** > **All devices** and confirm the device appears.
    *Path:* **Devices** > **All devices**
 
-   **Verify:** `MD102-VM2-Alex` is listed with **Managed by** of **Intune** and an **Ownership** of **Personal** — ownership is corrected in lab 11.
+   > [!TIP]
+   > The device appears in Intune under its Windows hostname (e.g. `DESKTOP-XXXXXXX`), not the Hyper-V VM name `MD102-VM2-Alex`. You can identify it by looking for **Alex Wilber** in the **Primary user** column or checking the **Management name**.
 
-6. Lab 7 left one check unfinished for want of a device. Finish it now: open a private window, sign in as `helpdesk.operator@<tenant>.onmicrosoft.com`, then open **Devices** > **All devices** and select `MD102-VM2-Alex`.
-   *Path:* **Devices** > **All devices** > **MD102-VM2-Alex**
+   **Verify:** The device (listed under its Windows hostname, e.g. `DESKTOP-...`) is listed with **Managed by** of **Intune** and an **Ownership** of **Personal** — ownership is corrected in lab 11.
+
+6. Lab 7 left one check unfinished for want of a device. Finish it now: open a private window, sign in as `helpdesk.operator@<tenant>.onmicrosoft.com`, then open **Devices** > **All devices** and select the device (e.g. `DESKTOP-XXXXXXX`).
+   *Path:* **Devices** > **All devices**
+
+   > [!IMPORTANT]
+   > If the device does not appear for `helpdesk.operator`: verify that the **Help Desk — all devices** role assignment from lab 7 has the **Default** scope tag assigned (**Tenant administration > Roles > All roles > Help Desk Operator > Assignments > Properties**). If **Scope tags** shows **No**, the operator cannot see any objects carrying the Default tag. Also, if you already completed lab 8 and scoped the role to `TAG-FINANCE`, ensure the device carries `TAG-FINANCE` under its Properties > Scope tags and has Alex Wilber set as Primary user.
 
    **Verify:** The operator sees the device, and remote actions such as **Sync**, **Restart** and **Retire** are offered. That completes the Help Desk Operator proof from lab 7: read widely, act where the role allows, author nothing.
 
@@ -3552,6 +3559,18 @@ After completing this lab, you will be able to:
 
 - **Resolution:** Signed in as a Global Administrator, set **MDM user scope** to **All** or to a group containing the user, and set the **Windows Information Protection (WIP) user scope** to **None** for devices you intend to fully manage. Save, then have the user sign out and back in — the scope is evaluated at sign-in.
 - **Error codes:** `0x80180018`
+
+**Symptom:** The device is enrolled and visible to the administrator, but does not appear in Devices > All devices for helpdesk.operator.
+
+- **Root cause:** The Help Desk Operator role assignment has no scope tags assigned (showing 'No' under Scope tags), which hides all objects carrying the Default scope tag. Alternatively, if lab 8 was completed early, the role may be scoped to TAG-FINANCE while the device only carries Default, or the device lacks an assigned Primary user. Finally, the operator may be scanning for the Hyper-V name 'MD102-VM2-Alex' instead of the Windows computer name ('DESKTOP-XXXXXXX').
+- **Diagnostic:**
+
+  ```text
+  1. In admin session: Tenant administration > Roles > All roles > Help Desk Operator > Assignments > Properties > Scope tags.
+  2. In admin session: Devices > All devices > [Device] > Properties > Scope tags and Primary user.
+  ```
+
+- **Resolution:** Ensure the Help Desk Operator assignment includes the Default scope tag (or add TAG-FINANCE to the device). Confirm Alex Wilber is set as the Primary user on the device, and verify the operator looks for the Windows computer name (e.g. DESKTOP-...) rather than the VM name.
 
 ### Knowledge check
 
