@@ -65,7 +65,7 @@ export default {
               ]
             },
             {
-              text: "Note where Cloud PCs live in the portal:",
+              text: "In the **Microsoft Intune admin center**, select **Devices**, then **Windows 365**. Note where Cloud PCs live in the portal:",
               nav: ["Devices", "Windows 365"],
               parts: [
                 {

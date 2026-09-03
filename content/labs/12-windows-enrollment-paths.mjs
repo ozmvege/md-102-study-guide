@@ -305,7 +305,7 @@ export default {
           steps: [
             {
               text: "Select **Devices**, then **All devices**, then open `MD102-VM2-Alex`.",
-              nav: ["Devices", "All devices"],
+              nav: ["Devices", "All devices", "MD102-VM2-Alex"],
               parts: [
                 {
                   kind: "verify",

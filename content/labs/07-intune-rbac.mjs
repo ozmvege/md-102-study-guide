@@ -157,7 +157,7 @@ export default {
               ]
             },
             {
-              text: "Check your own effective permissions first:",
+              text: "In the **Microsoft Intune admin center**, select **Tenant administration**, then **Roles**, then select **My permissions** to check your own effective permissions first:",
               nav: ["Tenant administration", "Roles", "My permissions"],
               parts: [
                 {

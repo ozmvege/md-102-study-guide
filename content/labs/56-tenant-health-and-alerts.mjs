@@ -146,7 +146,8 @@ export default {
               ]
             },
             {
-              text: "Open the enrollment failure rule and configure it:",
+              text: "Under **Tenant administration** > **Alerts**, from the **Alert rules** list, select the **Device enrollment failure** rule, and configure it:",
+              nav: ["Tenant administration", "Alerts", "Alert rules", "Device enrollment failure"],
               parts: [
                 {
                   kind: "inputs",
@@ -166,7 +167,7 @@ export default {
               ]
             },
             {
-              text: "Repeat for the compliance drift rule, then configure notification recipients under **Alerts** > **Notifications**.",
+              text: "Repeat for the **Device compliance drift** rule: select it from the list and configure its threshold, then select **Notifications** under **Tenant administration** > **Alerts** to configure notification recipients.",
               nav: ["Tenant administration", "Alerts", "Notifications"],
               parts: [
                 {

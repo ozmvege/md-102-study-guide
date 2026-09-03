@@ -47,8 +47,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Open the fully managed device restrictions profile from lab 25, `AND-FM-Restrictions`, or create one if you skipped it.",
-              nav: ["Devices", "Configuration"]
+              text: "In the **Microsoft Intune admin center**, select **Devices**, then **Configuration**. Select `AND-FM-Restrictions` from the profile list, select **Properties**, then select **Edit** next to **Configuration settings** (or create the profile if you skipped lab 25).",
+              nav: ["Devices", "Configuration", "AND-FM-Restrictions", "Properties", "Edit"]
             },
             {
               text: "Find the **System update** section and configure:",
@@ -157,8 +157,8 @@ export default {
               ]
             },
             {
-              text: "Open **Reports** > **Windows updates** for the fuller picture.",
-              nav: ["Reports", "Windows updates"],
+              text: "Open **Reports** > **Device management** > **Windows updates** for the fuller picture.",
+              nav: ["Reports", "Device management", "Windows updates"],
               parts: [
                 {
                   kind: "callout",

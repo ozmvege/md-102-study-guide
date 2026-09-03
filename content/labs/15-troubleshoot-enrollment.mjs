@@ -46,8 +46,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "In the **Microsoft Entra admin center**, open `GRP-LIC-M365-E5` and remove `staging.user01` from the group.",
-              nav: ["Groups", "GRP-LIC-M365-E5", "Members"]
+              text: "In the **Microsoft Entra admin center**, select **Groups**, then **All groups**. Select **GRP-LIC-M365-E5**, select **Members**, and remove `staging.user01` from the group.",
+              nav: ["Groups", "All groups", "GRP-LIC-M365-E5", "Members"]
             },
             {
               text: "Wait a few minutes for the licence to be revoked, then confirm in PowerShell on your management workstation:",
@@ -95,8 +95,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Temporarily edit `WIN-Corporate-Only` from lab 11 and set the **Minimum OS version** to something no device can meet, such as `10.0.99999`.",
-              nav: ["Devices", "Enrollment", "Device platform restrictions"]
+              text: "In the **Microsoft Intune admin center**, select **Devices**, then **Enrollment**, then **Device platform restrictions**. Select **WIN-Corporate-Only**, then under **Properties** edit **Platform settings** to temporarily set the **Minimum OS version** to `10.0.99999`.",
+              nav: ["Devices", "Enrollment", "Device platform restrictions", "WIN-Corporate-Only", "Properties"]
             },
             {
               text: "Add `staging.user01` to `GRP-USR-FINANCE` so the restriction applies to them, then attempt enrollment again.",

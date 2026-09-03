@@ -125,8 +125,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "In the **Microsoft Entra admin center**, open `GRP-DEV-AUTOPILOT` from lab 3 and select **Members**.",
-              nav: ["Groups", "GRP-DEV-AUTOPILOT", "Members"]
+              text: "In the **Microsoft Entra admin center**, select **Groups**, then **All groups**. Select **GRP-DEV-AUTOPILOT**, then select **Members**.",
+              nav: ["Groups", "All groups", "GRP-DEV-AUTOPILOT", "Members"]
             },
             {
               text: "Recall the rule that makes this work:",
@@ -218,7 +218,8 @@ export default {
               text: "On **Assignments**, include `GRP-DEV-AUTOPILOT`, then create the profile."
             },
             {
-              text: "Return to **Devices** > **Enrollment** > **Devices** and check the registration.",
+              text: "In the **Microsoft Intune admin center**, select **Devices**, then **Enrollment**, select the **Windows** tab, then select **Devices** (under Windows Autopilot) and check the registration.",
+              nav: ["Devices", "Enrollment", "Windows", "Devices"],
               parts: [
                 {
                   kind: "verify",
@@ -364,7 +365,7 @@ export default {
               ]
             },
             {
-              text: "In the portal, confirm the device object.",
+              text: "In the **Microsoft Intune admin center**, select **Devices**, then select **All devices** to confirm the device object.",
               nav: ["Devices", "All devices"],
               parts: [
                 {

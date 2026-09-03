@@ -213,7 +213,7 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Open `RING-2-Broad` and note the **Pause** option on the overview.",
+              text: "Navigate to **Devices** > **Windows updates**, select the **Update rings** tab, select `RING-2-Broad` from the profile list, and note the **Pause** option on the overview.",
               nav: ["Devices", "Windows updates", "Update rings", "RING-2-Broad"]
             },
             {

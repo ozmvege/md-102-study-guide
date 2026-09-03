@@ -216,8 +216,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Open `GRP-DEV-WIN-11` and select **Members**.",
-              nav: ["Groups", "GRP-DEV-WIN-11", "Members"],
+              text: "In the **Microsoft Entra admin center**, select **Groups**, then **All groups**. Select **GRP-DEV-WIN-11**, then select **Members**.",
+              nav: ["Groups", "All groups", "GRP-DEV-WIN-11", "Members"],
               parts: [
                 {
                   kind: "callout",
@@ -227,8 +227,8 @@ export default {
               ]
             },
             {
-              text: "Check the processing state, which is the field that tells you whether evaluation is even running:",
-              nav: ["Groups", "GRP-DEV-WIN-11", "Dynamic membership rules"],
+              text: "In **Groups** > **All groups**, select **GRP-DEV-WIN-11**, then select **Dynamic membership rules** and check the processing state, which is the field that tells you whether evaluation is even running:",
+              nav: ["Groups", "All groups", "GRP-DEV-WIN-11", "Dynamic membership rules"],
               parts: [
                 {
                   kind: "verify",
@@ -264,8 +264,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Open `GRP-DEV-WIN-CORP`, select **Dynamic membership rules**, then select **Validate Rules**.",
-              nav: ["Groups", "GRP-DEV-WIN-CORP", "Dynamic membership rules", "Validate Rules"]
+              text: "In **Groups** > **All groups**, select **GRP-DEV-WIN-CORP**, select **Dynamic membership rules**, then select **Validate Rules**.",
+              nav: ["Groups", "All groups", "GRP-DEV-WIN-CORP", "Dynamic membership rules", "Validate Rules"]
             },
             {
               text: "Add `MD102-VM2-Alex` as a device to validate against, then select **Validate**.",

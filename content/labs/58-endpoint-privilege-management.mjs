@@ -203,7 +203,8 @@ export default {
               ]
             },
             {
-              text: "Back in the portal under **Endpoint Privilege Management** > **Policies**, open the policy dialog and choose the profile:",
+              text: "Back in the **Microsoft Intune admin center**, select **Endpoint security** > **Endpoint Privilege Management** > the **Policies** tab > **Create Policy**:",
+              nav: ["Endpoint security", "Endpoint Privilege Management", "Policies", "Create Policy"],
               parts: [
                 {
                   kind: "inputs",

@@ -182,7 +182,8 @@ export default {
               ]
             },
             {
-              text: "Edit `ASR-Windows-Audit` and change the low-risk rules to **Block**:",
+              text: "In the **Microsoft Intune admin center**, select **Endpoint security**, then **Attack surface reduction**. Select `ASR-Windows-Audit` from the policy list, select **Properties**, select **Edit** next to **Configuration settings**, and change the low-risk rules to **Block**:",
+              nav: ["Endpoint security", "Attack surface reduction", "ASR-Windows-Audit", "Properties", "Edit"],
               parts: [
                 {
                   kind: "inputs",

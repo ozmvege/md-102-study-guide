@@ -90,7 +90,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Create a settings catalog profile with platform **macOS**, named `MAC-Updates-Corporate`."
+              text: "Create a second settings catalog profile: select **Devices** > **Configuration** > **Create** > **New Policy**, platform **macOS**, profile type **Settings catalog**, named `MAC-Updates-Corporate`.",
+              nav: ["Devices", "Configuration", "Create", "New Policy"]
             },
             {
               text: "Search for `Software Update` and configure:",

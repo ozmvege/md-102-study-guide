@@ -47,8 +47,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Open **Devices** > **All devices** > `MD102-VM1-Adele`, then select **Query** from the device blade.",
-              nav: ["Devices", "All devices", "Query"],
+              text: "Select **Devices**, then **All devices**, select `MD102-VM1-Adele` from the list, then select **Query** from the device action bar.",
+              nav: ["Devices", "All devices", "MD102-VM1-Adele", "Query"],
               parts: [
                 {
                   kind: "callout",
@@ -150,8 +150,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "On the device blade, select **Collect diagnostics** and confirm.",
-              nav: ["Devices", "All devices", "Collect diagnostics"],
+              text: "On the `MD102-VM1-Adele` device blade under **Devices** > **All devices**, select **Collect diagnostics** and confirm.",
+              nav: ["Devices", "All devices", "MD102-VM1-Adele", "Collect diagnostics"],
               parts: [
                 {
                   kind: "callout",
@@ -161,8 +161,8 @@ export default {
               ]
             },
             {
-              text: "Once collection completes, open **Monitor** > **Device diagnostics** on the device and download the package.",
-              nav: ["Devices", "All devices", "Device diagnostics"],
+              text: "Once collection completes, navigate to **Devices** > **All devices**, select `MD102-VM1-Adele`, then under **Monitor**, select **Device diagnostics** and download the package.",
+              nav: ["Devices", "All devices", "MD102-VM1-Adele", "Monitor", "Device diagnostics"],
               parts: [
                 {
                   kind: "verify",

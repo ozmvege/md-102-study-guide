@@ -238,8 +238,8 @@ export default {
               text: "An emergency account that can be used without anyone noticing is a back door. Confirm you can see its sign-ins."
             },
             {
-              text: "In the **Microsoft Entra admin center**, select **Monitoring and health**, then select **Sign-in logs**.",
-              nav: ["Monitoring and health", "Sign-in logs"]
+              text: "In the **Microsoft Entra admin center**, select **Identity**, then under **Monitoring and health** select **Sign-in logs**.",
+              nav: ["Identity", "Monitoring and health", "Sign-in logs"]
             },
             {
               text: "Add a filter on **User** for `admin-breakglass` and confirm the sign-in you performed earlier appears."

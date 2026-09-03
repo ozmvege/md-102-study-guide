@@ -59,6 +59,7 @@ export default {
             },
             {
               text: "In the Defender portal, select **Settings**, **Endpoints**, then **Advanced features**, and enable:",
+              nav: ["Settings", "Endpoints", "Advanced features"],
               parts: [
                 {
                   kind: "inputs",
@@ -172,8 +173,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Open `CMP-Windows-Corporate` from lab 29 and select **Properties**, then edit **Compliance settings**.",
-              nav: ["Devices", "Compliance", "CMP-Windows-Corporate"]
+              text: "In the **Microsoft Intune admin center**, select **Devices**, then **Compliance**. Select `CMP-Windows-Corporate` from the policy list, select **Properties**, then select **Edit** next to **Compliance settings**.",
+              nav: ["Devices", "Compliance", "CMP-Windows-Corporate", "Properties", "Edit"]
             },
             {
               text: "Under **Microsoft Defender for Endpoint**, set:",
@@ -265,7 +266,7 @@ export default {
               ]
             },
             {
-              text: "Watch the loop close. Check the device's compliance state in Intune after risk propagates.",
+              text: "Watch the loop close. In the **Microsoft Intune admin center**, navigate to **Devices** > **All devices**, select `MD102-VM2-Alex`, and select **Device compliance** to verify compliance state after risk propagates.",
               nav: ["Devices", "All devices", "MD102-VM2-Alex", "Device compliance"],
               parts: [
                 {

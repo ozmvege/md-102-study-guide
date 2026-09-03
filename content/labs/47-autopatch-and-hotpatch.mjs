@@ -69,8 +69,8 @@ export default {
               ]
             },
             {
-              text: "Select **Devices**, **Windows updates**, then the **Windows Autopatch** section, and open **Devices**.",
-              nav: ["Devices", "Windows updates", "Devices"]
+              text: "Select **Devices**, **Windows updates**, then under the **Windows Autopatch** section, select **Devices**.",
+              nav: ["Devices", "Windows updates", "Windows Autopatch", "Devices"]
             },
             {
               text: "Register devices by adding a group under **Device registration**, using `GRP-DEV-WIN-CORP`.",
@@ -96,8 +96,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Open **Autopatch groups** and review the default group.",
-              nav: ["Devices", "Windows updates", "Autopatch groups"],
+              text: "Under **Devices** > **Windows updates** > **Windows Autopatch**, select **Autopatch groups** and review the default group.",
+              nav: ["Devices", "Windows updates", "Windows Autopatch", "Autopatch groups"],
               parts: [
                 {
                   kind: "table",
@@ -227,7 +227,7 @@ export default {
               ]
             },
             {
-              text: "Where it is configured:",
+              text: "Where it is configured: navigate to **Devices** > **Windows updates**, select the **Quality updates** tab, then select **Create profile**.",
               nav: ["Devices", "Windows updates", "Quality updates", "Create profile"],
               parts: [
                 {

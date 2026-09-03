@@ -41,8 +41,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "In the **Microsoft Intune admin center**, select **Tenant administration**, then **Filters**, then **Create**.",
-              nav: ["Tenant administration", "Filters", "Create"]
+              text: "In the **Microsoft Intune admin center**, select **Tenant administration**, then **Assignment filters**, then **Create**.",
+              nav: ["Tenant administration", "Assignment filters", "Create"]
             },
             {
               text: "Configure:",
@@ -94,7 +94,7 @@ export default {
           result: {
             text: "A reusable filter exists that narrows any Windows assignment.",
             verify: [
-              { text: "The filter appears under **Tenant administration** > **Filters**." },
+              { text: "The filter appears under **Tenant administration** > **Assignment filters**." },
               { text: "**Preview devices** returns the devices you expect." }
             ]
           }
@@ -105,7 +105,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Open `WIN-OneDrive-KFM` from lab 22, select **Properties**, then edit **Assignments**."
+              text: "In the **Microsoft Intune admin center**, select **Devices**, then **Configuration**, select **WIN-OneDrive-KFM** from the list, select **Properties**, then next to **Assignments** select **Edit**.",
+              nav: ["Devices", "Configuration", "WIN-OneDrive-KFM", "Properties", "Assignments", "Edit"]
             },
             {
               text: "On the included group, select **Edit filter**, then choose:",
@@ -206,8 +207,8 @@ export default {
               ]
             },
             {
-              text: "Confirm the group you built in lab 19 is exactly this mechanism.",
-              nav: ["Groups", "GRP-DEV-DEVICEPREP", "Owners"],
+              text: "In the **Microsoft Entra admin center**, select **Identity**, then **Groups**, then **All groups**, select **GRP-DEV-DEVICEPREP**, then select **Owners** to confirm the group you built in lab 19 is exactly this mechanism.",
+              nav: ["Identity", "Groups", "All groups", "GRP-DEV-DEVICEPREP", "Owners"],
               parts: [
                 {
                   kind: "verify",
@@ -221,7 +222,7 @@ export default {
                 {
                   kind: "substeps",
                   items: [
-                    { text: "Open `WIN-OneDrive-KFM` and edit its assignments." },
+                    { text: "Under **Devices** > **Configuration**, select `WIN-OneDrive-KFM`, select **Properties**, and edit its assignments." },
                     { text: "Add `GRP-DEV-DEVICEPREP` as a second included group." },
                     { text: "Save." }
                   ]
@@ -253,7 +254,7 @@ export default {
         "The filter rule uses a property or value that matches nothing — often a `model` or `skuFamily` string that does not match what Intune actually reports for the hardware.",
       diagnostic: {
         lang: "text",
-        code: "Tenant administration > Filters > open the filter > Preview devices\nCompare with Devices > All devices > open a device > Hardware, to see the real property values."
+        code: "Tenant administration > Assignment filters > open the filter > Preview devices\nCompare with Devices > All devices > open a device > Hardware, to see the real property values."
       },
       resolution:
         "Use **Preview devices** and correct the rule against the actual reported values. Filter properties are not the same set as Microsoft Entra dynamic group properties, so a rule copied from a group rule will usually not work."

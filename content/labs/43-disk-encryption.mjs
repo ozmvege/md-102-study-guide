@@ -139,7 +139,7 @@ export default {
               ]
             },
             {
-              text: "Once encryption completes, sync the device and check compliance.",
+              text: "Once encryption completes and the device syncs, return to the **Microsoft Intune admin center**. Navigate to **Devices** > **All devices**, select `MD102-VM2-Alex`, and select **Device compliance** to verify that the policy is satisfied.",
               nav: ["Devices", "All devices", "MD102-VM2-Alex", "Device compliance"],
               parts: [
                 {
@@ -171,7 +171,7 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "In the **Microsoft Intune admin center**, open the device and select **Recovery keys**.",
+              text: "In the **Microsoft Intune admin center**, select **Devices**, then **All devices**. Select `MD102-VM2-Alex`, then under **Monitor**, select **Recovery keys**.",
               nav: ["Devices", "All devices", "MD102-VM2-Alex", "Recovery keys"],
               parts: [
                 {
@@ -209,8 +209,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Rotate the recovery key from the device blade using the **BitLocker key rotation** remote action.",
-              nav: ["Devices", "All devices", "MD102-VM2-Alex"],
+              text: "Under **Devices** > **All devices**, select `MD102-VM2-Alex`, then select **...** (overflow menu) > **BitLocker key rotation** from the device action bar.",
+              nav: ["Devices", "All devices", "MD102-VM2-Alex", "BitLocker key rotation"],
               parts: [
                 {
                   kind: "verify",
@@ -224,7 +224,7 @@ export default {
               ]
             },
             {
-              text: "Review encryption across the estate:",
+              text: "Select **Endpoint security**, then **Disk encryption**, and review encryption across the estate:",
               nav: ["Endpoint security", "Disk encryption"],
               parts: [
                 {

@@ -44,8 +44,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Sign in to the **Microsoft Entra admin center** as a Global Administrator, then select **Protection**, **Conditional Access**, **Policies**, then **New policy**.",
-              nav: ["Protection", "Conditional Access", "Policies", "New policy"]
+              text: "Sign in to the **Microsoft Entra admin center** as a Global Administrator, then select **Identity**, then **Protection**, **Conditional Access**, **Policies**, then **New policy**.",
+              nav: ["Identity", "Protection", "Conditional Access", "Policies", "New policy"]
             },
             {
               text: "Name it `CA-Require-Compliant-Device`."
@@ -105,8 +105,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Use the **What If** tool: **Protection** > **Conditional Access** > **Policies** > **What If**.",
-              nav: ["Protection", "Conditional Access", "Policies", "What If"]
+              text: "Use the **What If** tool: in the **Microsoft Entra admin center**, select **Identity**, then **Protection**, **Conditional Access**, **Policies**, then **What If**.",
+              nav: ["Identity", "Protection", "Conditional Access", "Policies", "What If"]
             },
             {
               text: "Run a simulation:",
@@ -126,8 +126,8 @@ export default {
               ]
             },
             {
-              text: "Now sign in as Alex on **MD102-VM2-Alex** and open Office 365, then check the sign-in logs.",
-              nav: ["Monitoring and health", "Sign-in logs"],
+              text: "Now sign in as Alex on **MD102-VM2-Alex** and open Office 365. In the **Microsoft Entra admin center**, select **Identity**, then **Monitoring and health**, then **Sign-in logs**.",
+              nav: ["Identity", "Monitoring and health", "Sign-in logs"],
               parts: [
                 {
                   kind: "substeps",
@@ -188,8 +188,8 @@ export default {
               ]
             },
             {
-              text: "Confirm which policy acted:",
-              nav: ["Monitoring and health", "Sign-in logs"],
+              text: "In the **Microsoft Entra admin center**, select **Identity**, then **Monitoring and health**, then **Sign-in logs** to confirm which policy acted:",
+              nav: ["Identity", "Monitoring and health", "Sign-in logs"],
               parts: [
                 {
                   kind: "substeps",
@@ -233,10 +233,11 @@ export default {
               ]
             },
             {
-              text: "Take the first route. Edit `CMP-Windows-Corporate` and set **Require BitLocker** to **Not configured**, then sync the device."
+              text: "Take the first route: in the **Microsoft Intune admin center**, select **Devices**, then **Compliance**, select the **CMP-Windows-Corporate** policy from the list, select **Properties**, select **Edit** next to **Device Health**, set **Require BitLocker** to **Not configured**, save, then sync the device.",
+              nav: ["Devices", "Compliance", "CMP-Windows-Corporate", "Properties", "Device Health", "Edit"]
             },
             {
-              text: "Wait for compliance to re-evaluate, then confirm.",
+              text: "Wait for compliance to re-evaluate. In the **Microsoft Intune admin center**, select **Devices**, then **All devices**, select **MD102-VM2-Alex** from the list, then select **Device compliance** to confirm.",
               nav: ["Devices", "All devices", "MD102-VM2-Alex", "Device compliance"],
               parts: [
                 {
@@ -319,7 +320,7 @@ export default {
         "The compliance state has not yet reached Microsoft Entra ID, the user's token predates the state change, or the device the user is signing in from is not the device that is compliant — a common case when a browser session runs on a different machine.",
       diagnostic: {
         lang: "text",
-        code: "Entra admin center > Monitoring and health > Sign-in logs > open the sign-in\nCheck the Device info tab: is it the device you expect, and is it marked compliant?"
+        code: "Entra admin center > Identity > Monitoring and health > Sign-in logs > open the sign-in\nCheck the Device info tab: is it the device you expect, and is it marked compliant?"
       },
       resolution:
         "Sign out fully to force a new token, and confirm from the sign-in log's **Device info** tab that the device identifier matches the compliant device. A browser on an unmanaged machine will never satisfy the control regardless of what other devices the user owns."
@@ -329,7 +330,7 @@ export default {
       rootCause: "The policy targets all users with a control nobody can currently satisfy, and no account was excluded.",
       diagnostic: {
         lang: "text",
-        code: "Sign in as the break-glass account.\nProtection > Conditional Access > Policies > open the policy > Assignments > Users > Exclude"
+        code: "Sign in as the break-glass account.\nIdentity > Protection > Conditional Access > Policies > open the policy > Assignments > Users > Exclude"
       },
       resolution:
         "Sign in with the emergency access account, set the policy to **Report-only**, add the exclusion, and re-enable. This is the entire justification for lab 4."

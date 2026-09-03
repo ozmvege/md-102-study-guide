@@ -265,8 +265,8 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Open the app and select **Dependencies**, then **Add**. Choose the line-of-business app from lab 32.",
-              nav: ["Apps", "All apps", "Dependencies", "Add"],
+              text: "In the **Microsoft Intune admin center**, select **Apps**, then **All apps**, select the Win32 application (**7-Zip**) from the list, select **Dependencies**, then select **Add**. Choose the line-of-business app from lab 32.",
+              nav: ["Apps", "All apps", "7-Zip", "Dependencies", "Add"],
               parts: [
                 {
                   kind: "inputs",
@@ -343,7 +343,8 @@ export default {
               ]
             },
             {
-              text: "Deliberately break detection to see the signature failure. Edit the detection rule to point at a path that does not exist, such as `C:\\Program Files\\7-Zip-Wrong`, then sync again.",
+              text: "Deliberately break detection to see the signature failure. In the **Microsoft Intune admin center**, select **Apps**, then **All apps**, select **7-Zip** from the list, select **Properties**, then next to **Detection rules** select **Edit**. Change the path to a path that does not exist, such as `C:\\Program Files\\7-Zip-Wrong`, save, then sync again.",
+              nav: ["Apps", "All apps", "7-Zip", "Properties", "Detection rules", "Edit"],
               parts: [
                 {
                   kind: "verify",

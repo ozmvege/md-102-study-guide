@@ -135,7 +135,7 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "With the imported policy open, select **Migrate**.",
+              text: "In the **Microsoft Intune admin center**, select **Devices**, then **Group Policy analytics**, select the imported GPO from the list, then select **Migrate**.",
               nav: ["Devices", "Group Policy analytics", "Migrate"]
             },
             {
@@ -159,7 +159,8 @@ export default {
               ]
             },
             {
-              text: "Open the resulting profile under **Devices** > **Configuration**.",
+              text: "Open the resulting profile: in the **Microsoft Intune admin center**, select **Devices**, then **Configuration**, and select **WIN-Migrated-From-GPO**.",
+              nav: ["Devices", "Configuration", "WIN-Migrated-From-GPO"],
               parts: [
                 {
                   kind: "verify",

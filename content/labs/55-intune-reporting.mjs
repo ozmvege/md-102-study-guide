@@ -61,8 +61,8 @@ export default {
               ]
             },
             {
-              text: "Open **Reports** > **Device compliance** and customise it:",
-              nav: ["Reports", "Device compliance"],
+              text: "Select **Reports**, then under **Device management**, select **Device compliance**, and customise it:",
+              nav: ["Reports", "Device management", "Device compliance"],
               parts: [
                 {
                   kind: "substeps",
