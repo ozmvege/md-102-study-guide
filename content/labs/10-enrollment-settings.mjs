@@ -206,7 +206,11 @@ export default {
                     { label: "Support contact name", value: "Contoso Service Desk" },
                     { label: "Support email address", value: "helpdesk.operator@<tenant>.onmicrosoft.com" },
                     { label: "Show in Company Portal — Privacy statement", value: "Configured", note: "Users are told what the organisation can and cannot see on their device." },
-                    { label: "Device ownership notification", value: "Show" }
+                    {
+                      label: "Let users select device categories in the Company Portal",
+                      value: "Show",
+                      note: "Under Device categories. Enables the category selection prompt during enrollment so users can pick the 'Shared workstation' category created in Task 2."
+                    }
                   ]
                 }
               ]

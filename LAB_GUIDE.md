@@ -3472,7 +3472,7 @@ After completing this lab, you will be able to:
    | Support contact name | **Contoso Service Desk** |
    | Support email address | **helpdesk.operator@<tenant>.onmicrosoft.com** |
    | Show in Company Portal — Privacy statement | **Configured** <br> Users are told what the organisation can and cannot see on their device. |
-   | Device ownership notification | **Show** |
+   | Let users select device categories in the Company Portal | **Show** <br> Under Device categories. Enables the category selection prompt during enrollment so users can pick the 'Shared workstation' category created in Task 2. |
 
 5. Select **Review + save**.
 
