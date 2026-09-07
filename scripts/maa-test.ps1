@@ -1,0 +1,1 @@
+Write-Output "Multi-admin approval test. This script does nothing."

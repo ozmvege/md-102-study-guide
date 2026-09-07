@@ -3708,29 +3708,30 @@ A device enrolled by hand through Settings is marked **Personal** by default. Co
 
 #### Task 1: Import an identifier and change ownership
 
-1. On **MD102-VM2-Alex**, get the serial number that Intune will match against:
+1. On **MD102-VM2-Alex**, get the hardware attributes (Manufacturer, Model, and Serial Number) that Intune will match against:
 
    ```powershell
+   Get-CimInstance -ClassName Win32_ComputerSystem | Select-Object Manufacturer, Model
    Get-CimInstance -ClassName Win32_BIOS | Select-Object SerialNumber
    ```
 
    > [!NOTE]
-   > Hyper-V generates a serial number for each virtual machine, so this works in the lab exactly as it would on physical hardware. Record the value.
+   > Windows corporate identifiers in Intune require all three values: Manufacturer, Model, and Serial number. On a Hyper-V virtual machine, Manufacturer returns `Microsoft Corporation` and Model returns `Virtual Machine`. Hyper-V generates a unique serial number for each virtual machine in the BIOS.
 
-2. On your host workstation, create a CSV file named `corporate-identifiers.csv` with no header row, containing the identifier and an optional description:
+2. On your host workstation, create a CSV file named `corporate-identifiers.csv` with no header row, containing the manufacturer, model, and serial number:
 
    *corporate-identifiers.csv — save on host or management workstation with no header row*
    ```text
-   1234-5678-9012-3456-7890-1234-56,Finance laptop - Alex Wilber
+   Microsoft Corporation,Virtual Machine,1234-5678-9012-3456-7890-1234-56
    ```
 
    > [!WARNING]
-   > No header row. A header line is treated as a device identifier, fails to match anything, and the import reports success — so the file looks accepted and nothing works.
+   > No header row. A header line is treated as a device identifier record and fails validation. For Windows devices, the CSV must strictly follow `<Manufacturer>,<Model>,<SerialNumber>`.
 
 3. In the **Microsoft Intune admin center**, select **Devices**, **Enrollment**, then **Corporate device identifiers**.
    *Path:* **Devices** > **Enrollment** > **Corporate device identifiers**
 
-4. Select **Add identifiers**, choose **Upload CSV file**, set the identifier type to **Serial number**, and upload your file.
+4. Select **Add identifiers**, choose **Upload CSV file**, set the identifier type to **Manufacturer, model, and serial number (Windows only)**, and upload your file.
 
 5. In the **Microsoft Intune admin center**, select **Devices**, then **All devices**, select **MD102-VM2-Alex**, and select **Properties**. The device is already enrolled, so the identifier will not retroactively change it. Change ownership directly:
    *Path:* **Devices** > **All devices** > **MD102-VM2-Alex** > **Properties**
@@ -3739,11 +3740,11 @@ A device enrolled by hand through Settings is marked **Personal** by default. Co
    b. Select **Save**.
 
    > [!TIP]
-   > Corporate identifiers apply at enrollment time. For a device that is already enrolled you change ownership by hand; for everything you buy in future, importing the serial numbers before deployment means ownership is correct from the first enrollment.
+   > Corporate identifiers apply at enrollment time. For a device that is already enrolled you change ownership by hand; for everything you buy in future, importing the hardware identifiers before deployment means ownership is correct from the first enrollment.
 
 **Results:** The device is marked as corporate-owned and future devices with imported serials will enroll as corporate automatically.
 
-- [ ] **Corporate device identifiers** lists your serial number.
+- [ ] **Corporate device identifiers** lists your imported device identifier.
 - [ ] `MD102-VM2-Alex` shows **Ownership: Corporate** in **All devices**.
 
 #### Task 2: Watch the dynamic group repopulate

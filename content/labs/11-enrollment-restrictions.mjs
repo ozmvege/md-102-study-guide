@@ -190,33 +190,33 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "On **MD102-VM2-Alex**, get the serial number that Intune will match against:",
+              text: "On **MD102-VM2-Alex**, get the hardware attributes (Manufacturer, Model, and Serial Number) that Intune will match against:",
               parts: [
                 {
                   kind: "code",
                   lang: "powershell",
-                  code: "Get-CimInstance -ClassName Win32_BIOS | Select-Object SerialNumber"
+                  code: "Get-CimInstance -ClassName Win32_ComputerSystem | Select-Object Manufacturer, Model\nGet-CimInstance -ClassName Win32_BIOS | Select-Object SerialNumber"
                 },
                 {
                   kind: "callout",
                   variant: "note",
-                  text: "Hyper-V generates a serial number for each virtual machine, so this works in the lab exactly as it would on physical hardware. Record the value."
+                  text: "Windows corporate identifiers in Intune require all three values: Manufacturer, Model, and Serial number. On a Hyper-V virtual machine, Manufacturer returns `Microsoft Corporation` and Model returns `Virtual Machine`. Hyper-V generates a unique serial number for each virtual machine in the BIOS."
                 }
               ]
             },
             {
-              text: "On your host workstation, create a CSV file named `corporate-identifiers.csv` with no header row, containing the identifier and an optional description:",
+              text: "On your host workstation, create a CSV file named `corporate-identifiers.csv` with no header row, containing the manufacturer, model, and serial number:",
               parts: [
                 {
                   kind: "code",
                   lang: "text",
                   caption: "corporate-identifiers.csv — save on host or management workstation with no header row",
-                  code: "1234-5678-9012-3456-7890-1234-56,Finance laptop - Alex Wilber"
+                  code: "Microsoft Corporation,Virtual Machine,1234-5678-9012-3456-7890-1234-56"
                 },
                 {
                   kind: "callout",
                   variant: "warning",
-                  text: "No header row. A header line is treated as a device identifier, fails to match anything, and the import reports success — so the file looks accepted and nothing works."
+                  text: "No header row. A header line is treated as a device identifier record and fails validation. For Windows devices, the CSV must strictly follow `<Manufacturer>,<Model>,<SerialNumber>`."
                 }
               ]
             },
@@ -225,7 +225,7 @@ export default {
               nav: ["Devices", "Enrollment", "Corporate device identifiers"]
             },
             {
-              text: "Select **Add identifiers**, choose **Upload CSV file**, set the identifier type to **Serial number**, and upload your file."
+              text: "Select **Add identifiers**, choose **Upload CSV file**, set the identifier type to **Manufacturer, model, and serial number (Windows only)**, and upload your file."
             },
             {
               text: "In the **Microsoft Intune admin center**, select **Devices**, then **All devices**, select **MD102-VM2-Alex**, and select **Properties**. The device is already enrolled, so the identifier will not retroactively change it. Change ownership directly:",
@@ -241,7 +241,7 @@ export default {
                 {
                   kind: "callout",
                   variant: "tip",
-                  text: "Corporate identifiers apply at enrollment time. For a device that is already enrolled you change ownership by hand; for everything you buy in future, importing the serial numbers before deployment means ownership is correct from the first enrollment."
+                  text: "Corporate identifiers apply at enrollment time. For a device that is already enrolled you change ownership by hand; for everything you buy in future, importing the hardware identifiers before deployment means ownership is correct from the first enrollment."
                 }
               ]
             }
@@ -249,7 +249,7 @@ export default {
           result: {
             text: "The device is marked as corporate-owned and future devices with imported serials will enroll as corporate automatically.",
             verify: [
-              { text: "**Corporate device identifiers** lists your serial number." },
+              { text: "**Corporate device identifiers** lists your imported device identifier." },
               { text: "`MD102-VM2-Alex` shows **Ownership: Corporate** in **All devices**." }
             ]
           }
