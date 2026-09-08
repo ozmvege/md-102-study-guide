@@ -4034,7 +4034,7 @@ After completing this lab, you will be able to:
 
 Lab 8 built the scope tags and scoped the help desk role, but it could not apply a tag to a device or prove the restriction: nothing was enrolled into Intune yet. Both virtual machines now are — `MD102-VM2-Alex` since lab 10 and `MD102-VM1-Adele` as of this lab — so the deferred half can be completed here.
 
-#### Task 1: Tag a device and a policy
+#### Task 1: Tag a device with the scope tag
 
 1. Select **Devices**, then **All devices**, then open `MD102-VM2-Alex`.
    *Path:* **Devices** > **All devices** > **MD102-VM2-Alex**
@@ -4048,11 +4048,8 @@ Lab 8 built the scope tags and scoped the help desk role, but it could not apply
 
 3. Deliberately leave `MD102-VM1-Adele` untagged. The next task depends on one device carrying the tag and one not.
 
-4. Tag a policy the same way. Any configuration profile will do — if you have none yet, come back to this after lab 22.
-
-   a. Open the profile and select **Properties**.
-   b. Next to **Scope tags** select **Edit** and add `TAG-FINANCE`.
-   c. Select **Review + save**.
+   > [!NOTE]
+   > Scope tags also apply to configuration profiles, compliance policies, and applications in the exact same way. When you create configuration profiles starting in lab 22, you will see how scope tags restrict policy visibility to specific administrators.
 
 **Results:** One enrolled device carries the Finance scope tag and one does not.
 

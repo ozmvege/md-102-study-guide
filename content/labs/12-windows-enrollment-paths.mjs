@@ -341,7 +341,7 @@ export default {
       tasks: [
         {
           id: "t1",
-          title: "Tag a device and a policy",
+          title: "Tag a device with the scope tag",
           checkpoint: true,
           steps: [
             {
@@ -365,18 +365,12 @@ export default {
               ]
             },
             {
-              text: "Deliberately leave `MD102-VM1-Adele` untagged. The next task depends on one device carrying the tag and one not."
-            },
-            {
-              text: "Tag a policy the same way. Any configuration profile will do — if you have none yet, come back to this after lab 22.",
+              text: "Deliberately leave `MD102-VM1-Adele` untagged. The next task depends on one device carrying the tag and one not.",
               parts: [
                 {
-                  kind: "substeps",
-                  items: [
-                    { text: "Open the profile and select **Properties**." },
-                    { text: "Next to **Scope tags** select **Edit** and add `TAG-FINANCE`." },
-                    { text: "Select **Review + save**." }
-                  ]
+                  kind: "callout",
+                  variant: "note",
+                  text: "Scope tags also apply to configuration profiles, compliance policies, and applications in the exact same way. When you create configuration profiles starting in lab 22, you will see how scope tags restrict policy visibility to specific administrators."
                 }
               ]
             }
