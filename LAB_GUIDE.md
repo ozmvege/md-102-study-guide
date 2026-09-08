@@ -3728,6 +3728,9 @@ A device enrolled by hand through Settings is marked **Personal** by default. Co
    > [!WARNING]
    > No header row. A header line is treated as a device identifier record and fails validation. For Windows devices, the CSV must strictly follow `<Manufacturer>,<Model>,<SerialNumber>`.
 
+   > [!TIP]
+   > You can query **MD102-VM1-Adele** and include its serial number on a second line as well. Pre-importing VM1 now ensures it is recognized as corporate when Adele joins it during OOBE in lab 12, avoiding `0x80180014`.
+
 3. In the **Microsoft Intune admin center**, select **Devices**, **Enrollment**, then **Corporate device identifiers**.
    *Path:* **Devices** > **Enrollment** > **Corporate device identifiers**
 
@@ -3744,7 +3747,7 @@ A device enrolled by hand through Settings is marked **Personal** by default. Co
 
 **Results:** The device is marked as corporate-owned and future devices with imported serials will enroll as corporate automatically.
 
-- [ ] **Corporate device identifiers** lists your imported device identifier.
+- [ ] **Corporate device identifiers** lists your imported device identifier(s).
 - [ ] `MD102-VM2-Alex` shows **Ownership: Corporate** in **All devices**.
 
 #### Task 2: Watch the dynamic group repopulate
@@ -3911,14 +3914,28 @@ After completing this lab, you will be able to:
    > [!TIP]
    > This takes fifteen to twenty minutes. It is also a good moment to appreciate why lab 2 asked you to checkpoint VM3 instead of resetting it — reverting a checkpoint takes seconds.
 
-3. At the out-of-box experience, work through region and keyboard, connect to the network, and when asked how to set up the device choose **Set up for work or school**.
+3. Ensure **MD102-VM1-Adele** is registered under **Corporate device identifiers** before completing enrollment.
+   *Path:* **Devices** > **Enrollment** > **Corporate device identifiers**
 
-4. Sign in as `adele.vance@<tenant>.onmicrosoft.com` and complete the flow.
+   > [!IMPORTANT]
+   > In lab 11, `WIN-Corporate-Only` was assigned to `GRP-USR-IT` (Adele's group), which blocks personal Windows devices. A Windows device joined at OOBE without Autopilot or an imported identifier defaults to **Personal** ownership, which causes enrollment to fail with `80180014` (`MENROLL_E_PLATFORM_BLOCKED`). Pre-registering the hardware identifier allows Intune to recognise the machine as corporate at enrollment time.
+
+   a. If VM1 is still running before the reset, query its serial number in PowerShell: `(Get-CimInstance Win32_BIOS).SerialNumber`.
+   b. If VM1 has already reset and is sitting at the OOBE screen (or error screen), press **Shift + F10** to open Command Prompt and run `powershell "(Get-CimInstance Win32_BIOS).SerialNumber"`.
+   c. In the **Microsoft Intune admin center**, select **Devices**, **Enrollment**, then **Corporate device identifiers**.
+   d. Select **Add identifiers** > **Upload CSV file**, choose **Manufacturer, model, and serial number (Windows only)**, and upload a CSV line: `Microsoft Corporation,Virtual Machine,<VM1_SerialNumber>` (or ensure it was included in the CSV from lab 11).
+
+4. At the out-of-box experience, work through region and keyboard, connect to the network, and when asked how to set up the device choose **Set up for work or school**.
+
+5. Sign in as `adele.vance@<tenant>.onmicrosoft.com` and complete the flow.
 
    > [!NOTE]
    > Choosing **Set up for work or school** and signing in with a work account performs a Microsoft Entra *join*, not a registration. This is the same code path Autopilot drives — Autopilot simply pre-answers these screens for you.
 
-5. Once at the desktop on **MD102-VM1-Adele**, open PowerShell and confirm both the join and the enrollment:
+   > [!TIP]
+   > If enrollment fails with `80180014`, the corporate identifier is missing or the serial was mistyped. Verify the identifier in Intune, then select **Try again**.
+
+6. Once at the desktop on **MD102-VM1-Adele**, open PowerShell and confirm both the join and the enrollment:
 
    ```powershell
    dsregcmd /status | Select-String "AzureAdJoined|MdmUrl|AzureAdPrt"
@@ -3929,6 +3946,7 @@ After completing this lab, you will be able to:
 **Results:** A device joined and enrolled in one pass at first boot.
 
 - [ ] `MD102-VM1-Adele` appears in **All devices** managed by Intune.
+- [ ] Device ownership shows as **Corporate** (inherited from the corporate identifier).
 - [ ] The primary user is Adele Vance.
 
 ### Exercise 3: Bulk enrollment with a provisioning package
@@ -4049,6 +4067,19 @@ Lab 8 built the scope tags and scoped the help desk role, but it could not apply
 - [ ] The operator sees the tagged device and not the untagged one.
 
 ### Troubleshooting
+
+**Symptom:** Signing in at the out-of-box experience fails with error `80180014`.
+
+- **Root cause:** The platform restriction `WIN-Corporate-Only` from lab 11 blocks personally owned devices for IT users. Intune treats an OOBE join as personally owned unless its hardware identifier was pre-imported under Corporate device identifiers.
+- **Diagnostic:**
+
+  ```text
+  Press Shift + F10 at OOBE to open Command Prompt > powershell "(Get-CimInstance Win32_BIOS).SerialNumber"
+  In Intune admin center > Devices > Enrollment > Corporate device identifiers, verify VM1's serial number is listed.
+  ```
+
+- **Resolution:** Upload VM1's identifier (`Microsoft Corporation,Virtual Machine,<SerialNumber>`) under Corporate device identifiers, then select Try again. Alternatively, edit WIN-Corporate-Only to temporarily allow personally owned devices.
+- **Error codes:** `0x80180014`
 
 **Symptom:** A provisioning package that worked last quarter now fails on every device.
 

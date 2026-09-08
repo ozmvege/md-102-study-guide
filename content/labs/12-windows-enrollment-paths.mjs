@@ -120,6 +120,26 @@ export default {
               ]
             },
             {
+              text: "Ensure **MD102-VM1-Adele** is registered under **Corporate device identifiers** before completing enrollment.",
+              nav: ["Devices", "Enrollment", "Corporate device identifiers"],
+              parts: [
+                {
+                  kind: "callout",
+                  variant: "important",
+                  text: "In lab 11, `WIN-Corporate-Only` was assigned to `GRP-USR-IT` (Adele's group), which blocks personal Windows devices. A Windows device joined at OOBE without Autopilot or an imported identifier defaults to **Personal** ownership, which causes enrollment to fail with `80180014` (`MENROLL_E_PLATFORM_BLOCKED`). Pre-registering the hardware identifier allows Intune to recognise the machine as corporate at enrollment time."
+                },
+                {
+                  kind: "substeps",
+                  items: [
+                    { text: "If VM1 is still running before the reset, query its serial number in PowerShell: `(Get-CimInstance Win32_BIOS).SerialNumber`." },
+                    { text: "If VM1 has already reset and is sitting at the OOBE screen (or error screen), press **Shift + F10** to open Command Prompt and run `powershell \"(Get-CimInstance Win32_BIOS).SerialNumber\"`." },
+                    { text: "In the **Microsoft Intune admin center**, select **Devices**, **Enrollment**, then **Corporate device identifiers**." },
+                    { text: "Select **Add identifiers** > **Upload CSV file**, choose **Manufacturer, model, and serial number (Windows only)**, and upload a CSV line: `Microsoft Corporation,Virtual Machine,<VM1_SerialNumber>` (or ensure it was included in the CSV from lab 11)." }
+                  ]
+                }
+              ]
+            },
+            {
               text: "At the out-of-box experience, work through region and keyboard, connect to the network, and when asked how to set up the device choose **Set up for work or school**."
             },
             {
@@ -129,6 +149,11 @@ export default {
                   kind: "callout",
                   variant: "note",
                   text: "Choosing **Set up for work or school** and signing in with a work account performs a Microsoft Entra *join*, not a registration. This is the same code path Autopilot drives — Autopilot simply pre-answers these screens for you."
+                },
+                {
+                  kind: "callout",
+                  variant: "tip",
+                  text: "If enrollment fails with `80180014`, the corporate identifier is missing or the serial was mistyped. Verify the identifier in Intune, then select **Try again**."
                 }
               ]
             },
@@ -151,6 +176,7 @@ export default {
             text: "A device joined and enrolled in one pass at first boot.",
             verify: [
               { text: "`MD102-VM1-Adele` appears in **All devices** managed by Intune." },
+              { text: "Device ownership shows as **Corporate** (inherited from the corporate identifier)." },
               { text: "The primary user is Adele Vance." }
             ]
           }
@@ -384,6 +410,19 @@ export default {
   ],
 
   troubleshooting: [
+    {
+      symptom: "Signing in at the out-of-box experience fails with error `80180014`.",
+      rootCause:
+        "The platform restriction `WIN-Corporate-Only` from lab 11 blocks personally owned devices for IT users. Intune treats an OOBE join as personally owned unless its hardware identifier was pre-imported under Corporate device identifiers.",
+      diagnostic: {
+        lang: "text",
+        code:
+          "Press Shift + F10 at OOBE to open Command Prompt > powershell \"(Get-CimInstance Win32_BIOS).SerialNumber\"\nIn Intune admin center > Devices > Enrollment > Corporate device identifiers, verify VM1's serial number is listed."
+      },
+      resolution:
+        "Upload VM1's identifier (`Microsoft Corporation,Virtual Machine,<SerialNumber>`) under Corporate device identifiers, then select Try again. Alternatively, edit WIN-Corporate-Only to temporarily allow personally owned devices.",
+      errorCodes: ["0x80180014"]
+    },
     {
       symptom: "A provisioning package that worked last quarter now fails on every device.",
       rootCause: "The bulk enrollment token embedded in the package has expired. Tokens last at most 180 days.",

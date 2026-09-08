@@ -217,6 +217,11 @@ export default {
                   kind: "callout",
                   variant: "warning",
                   text: "No header row. A header line is treated as a device identifier record and fails validation. For Windows devices, the CSV must strictly follow `<Manufacturer>,<Model>,<SerialNumber>`."
+                },
+                {
+                  kind: "callout",
+                  variant: "tip",
+                  text: "You can query **MD102-VM1-Adele** and include its serial number on a second line as well. Pre-importing VM1 now ensures it is recognized as corporate when Adele joins it during OOBE in lab 12, avoiding `0x80180014`."
                 }
               ]
             },
@@ -249,7 +254,7 @@ export default {
           result: {
             text: "The device is marked as corporate-owned and future devices with imported serials will enroll as corporate automatically.",
             verify: [
-              { text: "**Corporate device identifiers** lists your imported device identifier." },
+              { text: "**Corporate device identifiers** lists your imported device identifier(s)." },
               { text: "`MD102-VM2-Alex` shows **Ownership: Corporate** in **All devices**." }
             ]
           }
