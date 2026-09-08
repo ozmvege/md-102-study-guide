@@ -4272,7 +4272,13 @@ After completing this lab, you will be able to:
 1. Select **Devices**, **Enrollment**, **Android**, then **Personally-owned devices with work profile**.
    *Path:* **Devices** > **Enrollment** > **Android** > **Personally-owned devices with work profile**
 
-2. Confirm the setting **Use default Play Store app version for enrollment** and that the enrollment type is enabled.
+2. Review the **Personally owned devices with work profile** configuration blade:
+
+   a. Confirm that under **Enrollment using the Company Portal app**, Intune displays: *When personally owned work profile devices are enrolled with the Company Portal app, no further action is needed.* This enrollment path is active automatically once managed Google Play is connected.
+   b. Leave **Use web enrollment for all users enrolling into Android personally owned work profile management** unchecked unless your tenant has already opted in (web enrollment uses the browser and Microsoft Intune app instead of Company Portal).
+
+   > [!NOTE]
+   > Older Intune versions displayed a toggle labeled *Use default Play Store app version for enrollment*. In modern Intune, Company Portal enrollment is enabled out of the box, alongside an optional opt-in for web-based enrollment.
 
 3. Check your enrollment restrictions do not block Android. From lab 11, restrictions are assigned to Finance, IT and BYOD groups — Diego is in `GRP-USR-FIELD`, so only the built-in **All Users** restriction applies to him, which allows everything.
 
@@ -4292,6 +4298,9 @@ After completing this lab, you will be able to:
    > If the Play Store is absent, the emulator was created from a **Google APIs** image rather than a **Google Play** image. There is no fix — delete the virtual device and recreate it as described in lab 2. Work profile provisioning cannot happen without the Play Store.
 
 3. Open **Company Portal** and sign in as `diego.siciliani@<tenant>.onmicrosoft.com`.
+
+   > [!NOTE]
+   > If your tenant has opted into web-based enrollment, opening or signing in prompts you to continue in the browser to set up the work profile via the Microsoft Intune app / Android Management API. The result—an isolated work profile with badged corporate apps—is identical.
 
 4. Work through the enrollment flow:
 
