@@ -166,6 +166,7 @@ export default {
                   kind: "inputs",
                   rows: [
                     { label: "Name", value: "AND-FullyManaged" },
+                    { label: "Token type", value: "Corporate-owned, fully managed (default)" },
                     { label: "Token expiration date", value: "Default (within 90 days)" },
                     { label: "Device group", value: "None" }
                   ]
@@ -174,7 +175,7 @@ export default {
                   kind: "substeps",
                   items: [
                     { text: "Select **Create policy** (or on older portal views, set **Allow users to enroll corporate-owned user devices** to **Yes**)." },
-                    { text: "On the **Basics** tab, enter Name `AND-FullyManaged`, then select **Next**." },
+                    { text: "On the **Basics** tab, enter Name `AND-FullyManaged`, select Token type **Corporate-owned, fully managed (default)**, leave **Token expiration date** at its default, then select **Next**." },
                     { text: "On the **Device group** tab, leave **None** selected, then select **Next**." },
                     { text: "On the **Scope tags** tab, leave **Default**, then select **Next**." },
                     { text: "On the **Review + create** tab, select **Create**." }

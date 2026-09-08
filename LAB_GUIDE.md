@@ -4247,11 +4247,12 @@ After completing this lab, you will be able to:
    | Setting | Value |
    | --- | --- |
    | Name | **AND-FullyManaged** |
+   | Token type | **Corporate-owned, fully managed (default)** |
    | Token expiration date | **Default (within 90 days)** |
    | Device group | **None** |
 
    a. Select **Create policy** (or on older portal views, set **Allow users to enroll corporate-owned user devices** to **Yes**).
-   b. On the **Basics** tab, enter Name `AND-FullyManaged`, then select **Next**.
+   b. On the **Basics** tab, enter Name `AND-FullyManaged`, select Token type **Corporate-owned, fully managed (default)**, leave **Token expiration date** at its default, then select **Next**.
    c. On the **Device group** tab, leave **None** selected, then select **Next**.
    d. On the **Scope tags** tab, leave **Default**, then select **Next**.
    e. On the **Review + create** tab, select **Create**.
