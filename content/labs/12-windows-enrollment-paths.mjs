@@ -201,32 +201,47 @@ export default {
               text: "Select **Provision desktop devices**."
             },
             {
-              text: "Work through the wizard:",
+              text: "Work through the wizard tabs:",
               parts: [
                 {
                   kind: "inputs",
                   rows: [
                     { label: "Name", value: "Contoso-Bulk-Enroll" },
                     { label: "Project folder", value: "Any local path" },
-                    { label: "Device name", value: "CONTOSO-%RAND:4%", note: "%RAND:4% appends four random digits, keeping names unique." },
-                    { label: "Configure network", value: "Off", note: "The Default Switch already provides connectivity." },
-                    { label: "Account management", value: "Enroll in Microsoft Entra ID" }
+                    { label: "Set up device > Device name", value: "CONTOSO-%RAND:4%", note: "%RAND:4% appends four random digits, keeping names unique." },
+                    { label: "Set up network", value: "Off", note: "The Default Switch already provides connectivity." },
+                    { label: "Account Management", value: "Enroll in Azure AD" },
+                    { label: "Refresh AAD credentials", value: "Yes", note: "Forces an interactive sign-in prompt and prevents silent token retrieval failures." },
+                    { label: "Optional: Create a local administrator account", value: "Leave blank", note: "Optional and not required for this lab." }
                   ]
                 }
               ]
             },
             {
-              text: "When prompted, select **Get Bulk Token** and sign in as `admin-intune@<tenant>.onmicrosoft.com`.",
+              text: "Select **Get Bulk Token** and authenticate as `admin-intune@<tenant>.onmicrosoft.com`.",
               parts: [
+                {
+                  kind: "substeps",
+                  items: [
+                    { text: "When prompted, sign in with `admin-intune@<tenant>.onmicrosoft.com` (or your Global Administrator)." },
+                    { text: "If prompted with **Use this account everywhere on your device** or **Allow my organization to manage my device**, choose **No, sign in to this app only**." },
+                    { text: "Confirm that token retrieval succeeds and a green checkmark appears next to **Account Management**." }
+                  ]
+                },
                 {
                   kind: "callout",
                   variant: "important",
                   text: "The bulk token has a maximum lifetime of **180 days** and is baked into the package. When it expires the package stops working and every device it touches fails to enroll — with an error that says nothing about tokens. Record the expiry date with the package."
+                },
+                {
+                  kind: "callout",
+                  variant: "tip",
+                  text: "If token acquisition returns `Bulk token retrieval failed` (logged with `UserInteractionRequired` in `ICD.log`), toggle **Refresh AAD credentials** to **Yes**, ensure the account has the Intune Administrator or Global Administrator role and is not scoped to an administrative unit, and select **No, sign in to this app only**."
                 }
               ]
             },
             {
-              text: "Skip the application and certificate steps, then select **Create**.",
+              text: "Select **Next** through the **Add applications** and **Add certificates** pages without adding anything, then on **Finish** select **Create**.",
               parts: [
                 {
                   kind: "verify",
@@ -422,6 +437,18 @@ export default {
       resolution:
         "Upload VM1's identifier (`Microsoft Corporation,Virtual Machine,<SerialNumber>`) under Corporate device identifiers, then select Try again. Alternatively, edit WIN-Corporate-Only to temporarily allow personally owned devices.",
       errorCodes: ["0x80180014"]
+    },
+    {
+      symptom: "Windows Configuration Designer fails with `Bulk token retrieval failed`.",
+      rootCause:
+        "WCD attempted silent authentication against cached credentials instead of opening an interactive prompt, or 'Allow my organization to manage my device' was selected.",
+      diagnostic: {
+        lang: "text",
+        code:
+          "Open %USERPROFILE%\\Documents\\Windows Imaging and Configuration Designer (WICD)\\<Project>\\ICD.log\nCheck for: 'Access token retrieval failed with status: UserInteractionRequired'."
+      },
+      resolution:
+        "Toggle 'Refresh AAD credentials' to 'Yes' to force an interactive sign-in prompt. When the sign-in prompt appears, sign in as admin-intune (or Global Administrator) and select 'No, sign in to this app only'. Ensure the account has the Intune Administrator or Global Administrator role and is not scoped to an Administrative Unit."
     },
     {
       symptom: "A provisioning package that worked last quarter now fails on every device.",
