@@ -4221,7 +4221,7 @@ After completing this lab, you will be able to:
 1. Select **Devices**, **Enrollment**, **Android**, then **Corporate-owned dedicated devices**.
    *Path:* **Devices** > **Enrollment** > **Android** > **Corporate-owned dedicated devices**
 
-2. Select **Create profile** and configure through the wizard tabs:
+2. Select **Create policy** (or **Create profile** depending on your portal version) and configure through the wizard tabs:
 
    | Setting | Value |
    | --- | --- |
@@ -4240,7 +4240,7 @@ After completing this lab, you will be able to:
    > [!NOTE]
    > A dedicated device is enrolled by factory-resetting it and tapping the welcome screen six times to open the QR reader, then scanning this code. There is no user sign-in, which is why these devices normally have no user affinity and can only receive device-targeted policy.
 
-4. Repeat under **Corporate-owned, fully managed user devices** to create a profile named `AND-FullyManaged`.
+4. Under **Corporate-owned, fully managed user devices**, set **Allow users to enroll corporate-owned user devices** to **Yes** to enable fully managed enrollment and review the generated token and QR code.
    *Path:* **Devices** > **Enrollment** > **Android** > **Corporate-owned, fully managed user devices**
 
 **Results:** Enrollment profiles and tokens exist for dedicated and fully managed devices.

@@ -125,7 +125,7 @@ export default {
               nav: ["Devices", "Enrollment", "Android", "Corporate-owned dedicated devices"]
             },
             {
-              text: "Select **Create profile** and configure through the wizard tabs:",
+              text: "Select **Create policy** (or **Create profile** depending on your portal version) and configure through the wizard tabs:",
               parts: [
                 {
                   kind: "inputs",
@@ -158,7 +158,7 @@ export default {
               ]
             },
             {
-              text: "Repeat under **Corporate-owned, fully managed user devices** to create a profile named `AND-FullyManaged`.",
+              text: "Under **Corporate-owned, fully managed user devices**, set **Allow users to enroll corporate-owned user devices** to **Yes** to enable fully managed enrollment and review the generated token and QR code.",
               nav: ["Devices", "Enrollment", "Android", "Corporate-owned, fully managed user devices"]
             }
           ],
