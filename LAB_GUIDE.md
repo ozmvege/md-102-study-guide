@@ -4229,9 +4229,10 @@ After completing this lab, you will be able to:
    | Token type | **Corporate-owned dedicated device** |
    | Token expiration date | **A date within 90 days** |
    | Wi-Fi | **Not configured** |
+   | Device group | **None** <br> Enrollment-time grouping is covered in lab 24. |
 
-   a. On the **Basics** tab, enter Name `AND-Dedicated-Kiosk` and an optional description, then select **Next**.
-   b. On the **Settings** tab, configure the **Token type**, **Token expiration date**, and set Wi-Fi to **Not configured**, then select **Next**.
+   a. On the **Basics** tab, enter Name `AND-Dedicated-Kiosk`, configure **Token type**, **Token expiration date**, and Wi-Fi to **Not configured**, then select **Next**.
+   b. On the **Device group** tab (if present in your portal version), leave **None** selected, then select **Next**.
    c. On the **Scope tags** tab, leave **Default**, then select **Next**.
    d. On the **Review + create** tab, select **Create**.
 

@@ -133,14 +133,15 @@ export default {
                     { label: "Name", value: "AND-Dedicated-Kiosk" },
                     { label: "Token type", value: "Corporate-owned dedicated device" },
                     { label: "Token expiration date", value: "A date within 90 days" },
-                    { label: "Wi-Fi", value: "Not configured" }
+                    { label: "Wi-Fi", value: "Not configured" },
+                    { label: "Device group", value: "None", note: "Enrollment-time grouping is covered in lab 24." }
                   ]
                 },
                 {
                   kind: "substeps",
                   items: [
-                    { text: "On the **Basics** tab, enter Name `AND-Dedicated-Kiosk` and an optional description, then select **Next**." },
-                    { text: "On the **Settings** tab, configure the **Token type**, **Token expiration date**, and set Wi-Fi to **Not configured**, then select **Next**." },
+                    { text: "On the **Basics** tab, enter Name `AND-Dedicated-Kiosk`, configure **Token type**, **Token expiration date**, and Wi-Fi to **Not configured**, then select **Next**." },
+                    { text: "On the **Device group** tab (if present in your portal version), leave **None** selected, then select **Next**." },
                     { text: "On the **Scope tags** tab, leave **Default**, then select **Next**." },
                     { text: "On the **Review + create** tab, select **Create**." }
                   ]
