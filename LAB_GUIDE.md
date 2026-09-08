@@ -4241,13 +4241,28 @@ After completing this lab, you will be able to:
    > [!NOTE]
    > A dedicated device is enrolled by factory-resetting it and tapping the welcome screen six times to open the QR reader, then scanning this code. There is no user sign-in, which is why these devices normally have no user affinity and can only receive device-targeted policy.
 
-4. Under **Corporate-owned, fully managed user devices**, set **Allow users to enroll corporate-owned user devices** to **Yes** to enable fully managed enrollment and review the generated token and QR code.
+4. Select **Corporate-owned, fully managed user devices** and create an enrollment policy named `AND-FullyManaged`:
    *Path:* **Devices** > **Enrollment** > **Android** > **Corporate-owned, fully managed user devices**
+
+   | Setting | Value |
+   | --- | --- |
+   | Name | **AND-FullyManaged** |
+   | Token expiration date | **Default (within 90 days)** |
+   | Device group | **None** |
+
+   a. Select **Create policy** (or on older portal views, set **Allow users to enroll corporate-owned user devices** to **Yes**).
+   b. On the **Basics** tab, enter Name `AND-FullyManaged`, then select **Next**.
+   c. On the **Device group** tab, leave **None** selected, then select **Next**.
+   d. On the **Scope tags** tab, leave **Default**, then select **Next**.
+   e. On the **Review + create** tab, select **Create**.
+
+   > [!TIP]
+   > Selecting the created policy and clicking **Token** displays the QR code and token used during Android out-of-box setup.
 
 **Results:** Enrollment profiles and tokens exist for dedicated and fully managed devices.
 
 - [ ] `AND-Dedicated-Kiosk` shows a token and a QR code.
-- [ ] Fully managed enrollment is enabled.
+- [ ] `AND-FullyManaged` enrollment policy is created.
 
 ### Exercise 3: Enrol the emulator into a work profile
 

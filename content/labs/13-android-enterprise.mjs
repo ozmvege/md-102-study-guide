@@ -159,15 +159,40 @@ export default {
               ]
             },
             {
-              text: "Under **Corporate-owned, fully managed user devices**, set **Allow users to enroll corporate-owned user devices** to **Yes** to enable fully managed enrollment and review the generated token and QR code.",
-              nav: ["Devices", "Enrollment", "Android", "Corporate-owned, fully managed user devices"]
+              text: "Select **Corporate-owned, fully managed user devices** and create an enrollment policy named `AND-FullyManaged`:",
+              nav: ["Devices", "Enrollment", "Android", "Corporate-owned, fully managed user devices"],
+              parts: [
+                {
+                  kind: "inputs",
+                  rows: [
+                    { label: "Name", value: "AND-FullyManaged" },
+                    { label: "Token expiration date", value: "Default (within 90 days)" },
+                    { label: "Device group", value: "None" }
+                  ]
+                },
+                {
+                  kind: "substeps",
+                  items: [
+                    { text: "Select **Create policy** (or on older portal views, set **Allow users to enroll corporate-owned user devices** to **Yes**)." },
+                    { text: "On the **Basics** tab, enter Name `AND-FullyManaged`, then select **Next**." },
+                    { text: "On the **Device group** tab, leave **None** selected, then select **Next**." },
+                    { text: "On the **Scope tags** tab, leave **Default**, then select **Next**." },
+                    { text: "On the **Review + create** tab, select **Create**." }
+                  ]
+                },
+                {
+                  kind: "callout",
+                  variant: "tip",
+                  text: "Selecting the created policy and clicking **Token** displays the QR code and token used during Android out-of-box setup."
+                }
+              ]
             }
           ],
           result: {
             text: "Enrollment profiles and tokens exist for dedicated and fully managed devices.",
             verify: [
               { text: "`AND-Dedicated-Kiosk` shows a token and a QR code." },
-              { text: "Fully managed enrollment is enabled." }
+              { text: "`AND-FullyManaged` enrollment policy is created." }
             ]
           }
         }
