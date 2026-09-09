@@ -4751,27 +4751,32 @@ Enrollment failures on Windows present almost identically to the end user — 'S
 
 #### Task 1: Configure device cleanup rules
 
-1. Select **Devices**, then **Device onboarding** or **Device cleanup rules** depending on your portal version, then **Device cleanup rules**.
-   *Path:* **Devices** > **Device cleanup rules**
+1. In the **Microsoft Intune admin center**, select **Devices**, scroll down to **Organize devices**, then select **Device clean-up rules**.
+   *Path:* **Devices** > **Organize devices** > **Device clean-up rules**
 
-2. Enable the rule:
+2. Select **Create** to launch the device clean-up rule wizard:
 
    | Setting | Value |
    | --- | --- |
-   | Delete devices based on last check-in date | **Yes** |
-   | Delete devices that haven't checked in for this many days | **90** <br> Minimum is 30. Choose a figure longer than your longest expected absence — a laptop in a drawer over a summer break should not be deleted. |
+   | Name | **WIN-Cleanup-90D** |
+   | Description | **Clean up inactive Windows devices after 90 days** |
+   | Platform | **Windows** <br> Intune allows scoping rules per platform or selecting All platforms. |
+
+   a. Select **Next** to navigate to **Rule settings**.
+   b. Set **Delete devices that haven't checked in for this many days** to `90` (valid range is 30 to 270 days).
+   c. Select **Next**, review the settings, and select **Create**.
 
    > [!WARNING]
    > This deletes the Intune record only. It does not wipe the device, and it does not remove the Microsoft Entra device object — those are cleaned separately under **Devices** > **Device settings** in Entra. A device deleted here that later checks in will re-enrol as a new record.
 
-3. Select **Save**, then explain why this prevents a future support call:
+3. Explain why device cleanup rules prevent future enrollment support calls:
 
    > [!NOTE]
    > Stale records count toward the device limit restriction from lab 11. A user who has rebuilt their laptop three times without retiring the old records hits `0x80180026` on a device limit of three, having only one physical machine. Cleanup rules make that self-correcting.
 
 **Results:** Stale device records are removed automatically.
 
-- [ ] A cleanup rule is enabled with a threshold of 90 days or fewer.
+- [ ] A cleanup rule is configured with a threshold of 90 days.
 - [ ] You can explain which error code stale records eventually cause.
 
 ### Scripts

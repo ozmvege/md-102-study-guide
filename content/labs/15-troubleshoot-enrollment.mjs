@@ -246,17 +246,26 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "Select **Devices**, then **Device onboarding** or **Device cleanup rules** depending on your portal version, then **Device cleanup rules**.",
-              nav: ["Devices", "Device cleanup rules"]
+              text: "In the **Microsoft Intune admin center**, select **Devices**, scroll down to **Organize devices**, then select **Device clean-up rules**.",
+              nav: ["Devices", "Organize devices", "Device clean-up rules"]
             },
             {
-              text: "Enable the rule:",
+              text: "Select **Create** to launch the device clean-up rule wizard:",
               parts: [
                 {
                   kind: "inputs",
                   rows: [
-                    { label: "Delete devices based on last check-in date", value: "Yes" },
-                    { label: "Delete devices that haven't checked in for this many days", value: "90", note: "Minimum is 30. Choose a figure longer than your longest expected absence — a laptop in a drawer over a summer break should not be deleted." }
+                    { label: "Name", value: "WIN-Cleanup-90D" },
+                    { label: "Description", value: "Clean up inactive Windows devices after 90 days" },
+                    { label: "Platform", value: "Windows", note: "Intune allows scoping rules per platform or selecting All platforms." }
+                  ]
+                },
+                {
+                  kind: "substeps",
+                  items: [
+                    { text: "Select **Next** to navigate to **Rule settings**." },
+                    { text: "Set **Delete devices that haven't checked in for this many days** to `90` (valid range is 30 to 270 days)." },
+                    { text: "Select **Next**, review the settings, and select **Create**." }
                   ]
                 },
                 {
@@ -267,7 +276,7 @@ export default {
               ]
             },
             {
-              text: "Select **Save**, then explain why this prevents a future support call:",
+              text: "Explain why device cleanup rules prevent future enrollment support calls:",
               parts: [
                 {
                   kind: "callout",
@@ -280,7 +289,7 @@ export default {
           result: {
             text: "Stale device records are removed automatically.",
             verify: [
-              { text: "A cleanup rule is enabled with a threshold of 90 days or fewer." },
+              { text: "A cleanup rule is configured with a threshold of 90 days." },
               { text: "You can explain which error code stale records eventually cause." }
             ]
           }
