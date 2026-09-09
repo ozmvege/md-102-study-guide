@@ -4629,7 +4629,7 @@ After completing this lab, you will be able to:
 - Completed labs: `enrollment-restrictions`, `android-enterprise`
 - Licences: M365-E5
 - Roles: Intune Administrator
-- Devices and portals: Microsoft Intune admin center, vm1-adele (Windows 11 Pro)
+- Devices and portals: Microsoft Intune admin center, vm1-adele (Windows 11 Pro), vm3-megan (Windows 11 Pro at OOBE)
 - Personas: staging.user01, adele.vance
 
 ### Exercise 1: Break enrollment on purpose
@@ -4650,15 +4650,41 @@ Meeting these failures under controlled conditions is far cheaper than meeting t
 
    **Verify:** **Licences** is `0`.
 
-3. On **MD102-VM1-Adele**, attempt to add a work account for `staging.user01`.
-   *Path:* **Settings** > **Accounts** > **Access work or school** > **Connect**
+3. Revert **MD102-VM3-Megan** to the clean checkpoint from lab 2 and start it:
 
-   **Verify:** Enrollment fails. The error is `0x80180018` — `MENROLL_E_LICENSE`. The wording on screen mentions the device or the organisation, not the licence, which is exactly why the code matters more than the message.
+   *On the Hyper-V host*
+   ```powershell
+   Restore-VMCheckpoint -Name "OOBE-Clean" -VMName MD102-VM3-Megan -Confirm:$false
+   Start-VM -Name MD102-VM3-Megan
+   ```
+
+4. Connect to **MD102-VM3-Megan** in Hyper-V Manager. At the out-of-box experience, proceed through region and keyboard, connect to the network, and when prompted choose **Set up for work or school**.
+
+5. Attempt to sign in as `staging.user01@<tenant>.onmicrosoft.com` and complete the password prompt.
+
+   **Verify:** Enrollment fails on screen with `0x80180018` — `MENROLL_E_LICENSE`. The setup screen reports that something went wrong with your organisation's MDM terms or licence.
 
    > [!TIP]
    > This is the single most common enrollment failure in a trial tenant, because the seat pool is small and group-based licensing is asynchronous. If you see `0x80180018`, check licensing before you touch anything else.
 
-4. Add `staging.user01` back to `GRP-LIC-M365-E5` and confirm the licence returns.
+6. Inspect the failure event on the machine directly from the error screen:
+
+   a. Press **Shift + F10** on the error screen to open Command Prompt.
+   b. Launch PowerShell and query the MDM provider log for Event ID 76 (shown below).
+   c. Type `exit` twice when finished to close PowerShell and Command Prompt.
+
+   *In the Shift + F10 Command Prompt on MD102-VM3-Megan*
+   ```powershell
+   powershell
+   Get-WinEvent -FilterHashtable @{
+       LogName = 'Microsoft-Windows-DeviceManagement-Enterprise-Diagnostics-Provider/Admin'
+       Id = 76
+   } -MaxEvents 5 | Format-List TimeCreated, Id, Message
+   ```
+
+   **Verify:** Event ID 76 is present with failure status containing `0x80180018`.
+
+7. In the **Microsoft Entra admin center**, add `staging.user01` back to `GRP-LIC-M365-E5` and confirm the licence returns.
 
 **Results:** You have seen the licensing failure and can recognise its code.
 
@@ -4669,11 +4695,32 @@ Meeting these failures under controlled conditions is far cheaper than meeting t
 1. In the **Microsoft Intune admin center**, select **Devices**, then **Enrollment**, then **Device platform restrictions**. Select **WIN-Corporate-Only**, then under **Properties** edit **Platform settings** to temporarily set the **Minimum OS version** to `10.0.99999`.
    *Path:* **Devices** > **Enrollment** > **Device platform restrictions** > **WIN-Corporate-Only** > **Properties**
 
-2. Add `staging.user01` to `GRP-USR-FINANCE` so the restriction applies to them, then attempt enrollment again.
+2. Add `staging.user01` to `GRP-USR-FINANCE` so the restriction applies to them, then on **MD102-VM3-Megan** select **Try again** (or back up and sign in again as `staging.user01@<tenant>.onmicrosoft.com`).
 
    **Verify:** Enrollment fails with `0x80180014` — `MENROLL_E_PLATFORM_BLOCKED`. Nothing on the client says which restriction blocked it; that answer only exists in the portal.
 
-3. Restore the minimum version to `10.0.22000` and remove the temporary group membership.
+3. Press **Shift + F10** again and check Event ID 76 in PowerShell:
+
+   *In the Shift + F10 Command Prompt on MD102-VM3-Megan*
+   ```powershell
+   powershell
+   Get-WinEvent -FilterHashtable @{
+       LogName = 'Microsoft-Windows-DeviceManagement-Enterprise-Diagnostics-Provider/Admin'
+       Id = 76
+   } -MaxEvents 5 | Format-List TimeCreated, Id, Message
+   ```
+
+   **Verify:** A new Event ID 76 records failure with code `0x80180014`. Type `exit` twice to close PowerShell and Command Prompt.
+
+4. Restore the minimum version to `10.0.22000` and remove the temporary group membership.
+
+5. Revert **MD102-VM3-Megan** to its clean state so it remains ready for Autopilot in lab 17:
+
+   *On the Hyper-V host*
+   ```powershell
+   Restore-VMCheckpoint -Name "OOBE-Clean" -VMName MD102-VM3-Megan -Confirm:$false
+   Stop-VM -Name MD102-VM3-Megan -TurnOff -Force
+   ```
 
    > [!IMPORTANT]
    > Note what you just proved: the same symptom — enrollment refused — came from two completely unrelated causes, and only the hex code distinguished them. This is why the error dictionary is worth memorising rather than looking up.
@@ -4681,12 +4728,13 @@ Meeting these failures under controlled conditions is far cheaper than meeting t
 **Results:** You can distinguish a licensing failure from a restriction failure by code alone.
 
 - [ ] You provoked `0x80180014` and restored the restriction.
+- [ ] `MD102-VM3-Megan` is reverted to `OOBE-Clean` and turned off.
 
 ### Exercise 2: Collect and read client diagnostics
 
 #### Task 1: Generate an MDM diagnostics report
 
-1. On **MD102-VM1-Adele**, open an elevated command prompt and generate the HTML report:
+1. Switch to **MD102-VM1-Adele** (which is enrolled and managed by Intune from lab 12). Open an elevated command prompt and generate the HTML report:
 
    *Produces MDMDiagReport.html and supporting files*
    ```cmd
@@ -4728,7 +4776,7 @@ Meeting these failures under controlled conditions is far cheaper than meeting t
 1. Open **Event Viewer** and navigate to the MDM provider log.
    *Path:* **Applications and Services Logs** > **Microsoft** > **Windows** > **DeviceManagement-Enterprise-Diagnostics-Provider** > **Admin**
 
-2. Or query it from PowerShell on **MD102-VM1-Adele**, which is faster:
+2. Or query it from PowerShell on **MD102-VM1-Adele** (which is faster) to inspect policy events on a healthy enrolled client:
 
    ```powershell
    Get-WinEvent -LogName "Microsoft-Windows-DeviceManagement-Enterprise-Diagnostics-Provider/Admin" -MaxEvents 40 |
@@ -4751,7 +4799,7 @@ Meeting these failures under controlled conditions is far cheaper than meeting t
 
 **Results:** You can find and interpret enrollment and policy events on a client.
 
-- [ ] The provider log contains events from your enrollment attempts.
+- [ ] The provider log on VM1 shows successful enrollment and policy events (71, 72, 813).
 - [ ] You can state what event 814 tells you that event 76 does not.
 
 ### Exercise 3: Stop stale records causing future failures

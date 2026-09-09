@@ -26,7 +26,8 @@ export default {
     roles: ["Intune Administrator"],
     platforms: [
       { kind: "portal", id: "Microsoft Intune admin center" },
-      { kind: "vm", id: "vm1-adele", os: "Windows 11 Pro" }
+      { kind: "vm", id: "vm1-adele", os: "Windows 11 Pro" },
+      { kind: "vm", id: "vm3-megan", os: "Windows 11 Pro at OOBE" }
     ],
     personas: ["staging.user01", "adele.vance"],
     labs: ["enrollment-restrictions", "android-enterprise"]
@@ -64,12 +65,25 @@ export default {
               ]
             },
             {
-              text: "On **MD102-VM1-Adele**, attempt to add a work account for `staging.user01`.",
-              nav: ["Settings", "Accounts", "Access work or school", "Connect"],
+              text: "Revert **MD102-VM3-Megan** to the clean checkpoint from lab 2 and start it:",
+              parts: [
+                {
+                  kind: "code",
+                  lang: "powershell",
+                  caption: "On the Hyper-V host",
+                  code: "Restore-VMCheckpoint -Name \"OOBE-Clean\" -VMName MD102-VM3-Megan -Confirm:$false\nStart-VM -Name MD102-VM3-Megan"
+                }
+              ]
+            },
+            {
+              text: "Connect to **MD102-VM3-Megan** in Hyper-V Manager. At the out-of-box experience, proceed through region and keyboard, connect to the network, and when prompted choose **Set up for work or school**."
+            },
+            {
+              text: "Attempt to sign in as `staging.user01@<tenant>.onmicrosoft.com` and complete the password prompt.",
               parts: [
                 {
                   kind: "verify",
-                  text: "Enrollment fails. The error is `0x80180018` — `MENROLL_E_LICENSE`. The wording on screen mentions the device or the organisation, not the licence, which is exactly why the code matters more than the message."
+                  text: "Enrollment fails on screen with `0x80180018` — `MENROLL_E_LICENSE`. The setup screen reports that something went wrong with your organisation's MDM terms or licence."
                 },
                 {
                   kind: "callout",
@@ -79,7 +93,30 @@ export default {
               ]
             },
             {
-              text: "Add `staging.user01` back to `GRP-LIC-M365-E5` and confirm the licence returns."
+              text: "Inspect the failure event on the machine directly from the error screen:",
+              parts: [
+                {
+                  kind: "substeps",
+                  items: [
+                    { text: "Press **Shift + F10** on the error screen to open Command Prompt." },
+                    { text: "Launch PowerShell and query the MDM provider log for Event ID 76 (shown below)." },
+                    { text: "Type `exit` twice when finished to close PowerShell and Command Prompt." }
+                  ]
+                },
+                {
+                  kind: "code",
+                  lang: "powershell",
+                  caption: "In the Shift + F10 Command Prompt on MD102-VM3-Megan",
+                  code: "powershell\nGet-WinEvent -FilterHashtable @{\n    LogName = 'Microsoft-Windows-DeviceManagement-Enterprise-Diagnostics-Provider/Admin'\n    Id = 76\n} -MaxEvents 5 | Format-List TimeCreated, Id, Message"
+                },
+                {
+                  kind: "verify",
+                  text: "Event ID 76 is present with failure status containing `0x80180018`."
+                }
+              ]
+            },
+            {
+              text: "In the **Microsoft Entra admin center**, add `staging.user01` back to `GRP-LIC-M365-E5` and confirm the licence returns."
             }
           ],
           result: {
@@ -99,7 +136,7 @@ export default {
               nav: ["Devices", "Enrollment", "Device platform restrictions", "WIN-Corporate-Only", "Properties"]
             },
             {
-              text: "Add `staging.user01` to `GRP-USR-FINANCE` so the restriction applies to them, then attempt enrollment again.",
+              text: "Add `staging.user01` to `GRP-USR-FINANCE` so the restriction applies to them, then on **MD102-VM3-Megan** select **Try again** (or back up and sign in again as `staging.user01@<tenant>.onmicrosoft.com`).",
               parts: [
                 {
                   kind: "verify",
@@ -108,8 +145,32 @@ export default {
               ]
             },
             {
-              text: "Restore the minimum version to `10.0.22000` and remove the temporary group membership.",
+              text: "Press **Shift + F10** again and check Event ID 76 in PowerShell:",
               parts: [
+                {
+                  kind: "code",
+                  lang: "powershell",
+                  caption: "In the Shift + F10 Command Prompt on MD102-VM3-Megan",
+                  code: "powershell\nGet-WinEvent -FilterHashtable @{\n    LogName = 'Microsoft-Windows-DeviceManagement-Enterprise-Diagnostics-Provider/Admin'\n    Id = 76\n} -MaxEvents 5 | Format-List TimeCreated, Id, Message"
+                },
+                {
+                  kind: "verify",
+                  text: "A new Event ID 76 records failure with code `0x80180014`. Type `exit` twice to close PowerShell and Command Prompt."
+                }
+              ]
+            },
+            {
+              text: "Restore the minimum version to `10.0.22000` and remove the temporary group membership."
+            },
+            {
+              text: "Revert **MD102-VM3-Megan** to its clean state so it remains ready for Autopilot in lab 17:",
+              parts: [
+                {
+                  kind: "code",
+                  lang: "powershell",
+                  caption: "On the Hyper-V host",
+                  code: "Restore-VMCheckpoint -Name \"OOBE-Clean\" -VMName MD102-VM3-Megan -Confirm:$false\nStop-VM -Name MD102-VM3-Megan -TurnOff -Force"
+                },
                 {
                   kind: "callout",
                   variant: "important",
@@ -121,7 +182,8 @@ export default {
           result: {
             text: "You can distinguish a licensing failure from a restriction failure by code alone.",
             verify: [
-              { text: "You provoked `0x80180014` and restored the restriction." }
+              { text: "You provoked `0x80180014` and restored the restriction." },
+              { text: "`MD102-VM3-Megan` is reverted to `OOBE-Clean` and turned off." }
             ]
           }
         }
@@ -139,7 +201,7 @@ export default {
           checkpoint: true,
           steps: [
             {
-              text: "On **MD102-VM1-Adele**, open an elevated command prompt and generate the HTML report:",
+              text: "Switch to **MD102-VM1-Adele** (which is enrolled and managed by Intune from lab 12). Open an elevated command prompt and generate the HTML report:",
               parts: [
                 {
                   kind: "code",
@@ -204,7 +266,7 @@ export default {
               nav: ["Applications and Services Logs", "Microsoft", "Windows", "DeviceManagement-Enterprise-Diagnostics-Provider", "Admin"]
             },
             {
-              text: "Or query it from PowerShell on **MD102-VM1-Adele**, which is faster:",
+              text: "Or query it from PowerShell on **MD102-VM1-Adele** (which is faster) to inspect policy events on a healthy enrolled client:",
               parts: [
                 {
                   kind: "code",
@@ -237,7 +299,7 @@ export default {
           result: {
             text: "You can find and interpret enrollment and policy events on a client.",
             verify: [
-              { text: "The provider log contains events from your enrollment attempts." },
+              { text: "The provider log on VM1 shows successful enrollment and policy events (71, 72, 813)." },
               { text: "You can state what event 814 tells you that event 76 does not." }
             ]
           }
