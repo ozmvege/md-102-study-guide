@@ -26,8 +26,7 @@ export default {
     roles: ["Intune Administrator"],
     platforms: [
       { kind: "portal", id: "Microsoft Intune admin center" },
-      { kind: "vm", id: "vm1-adele", os: "Windows 11 Pro" },
-      { kind: "vm", id: "vm3-megan", os: "Windows 11 Pro at OOBE" }
+      { kind: "vm", id: "vm1-adele", os: "Windows 11 Pro" }
     ],
     personas: ["staging.user01", "adele.vance"],
     labs: ["enrollment-restrictions", "android-enterprise"]
@@ -36,154 +35,83 @@ export default {
   exercises: [
     {
       id: "e1",
-      title: "Break enrollment on purpose",
+      title: "Recognise the three enrollment failures by code",
       intro:
-        "Meeting these failures under controlled conditions is far cheaper than meeting them for the first time on a support call.",
-      estimatedMinutes: 20,
+        "Enrollment failures on Windows present almost identically to the end user — 'Something went wrong' or a silent failure where the device joins Entra ID but never becomes managed. On the MD-102 exam and in production, you must diagnose them by their hex error code rather than the on-screen wording.",
+      estimatedMinutes: 15,
       tasks: [
         {
           id: "t1",
-          title: "Provoke the licensing failure",
+          title: "Map the failure codes to their root causes",
           checkpoint: true,
           steps: [
             {
-              text: "In the **Microsoft Entra admin center**, select **Groups**, then **All groups**. Select **GRP-LIC-M365-E5**, select **Members**, and remove `staging.user01` from the group.",
-              nav: ["Groups", "All groups", "GRP-LIC-M365-E5", "Members"]
-            },
-            {
-              text: "Wait a few minutes for the licence to be revoked, then confirm in PowerShell on your management workstation:",
+              text: "Study the three core enrollment error codes that Microsoft Intune generates:",
               parts: [
                 {
-                  kind: "code",
-                  lang: "powershell",
-                  code: "Get-MgUser -UserId \"staging.user01@<tenant>.onmicrosoft.com\" -Property DisplayName,AssignedLicenses |\n    Select-Object DisplayName, @{n='Licences';e={$_.AssignedLicenses.Count}}"
-                },
-                {
-                  kind: "verify",
-                  text: "**Licences** is `0`."
-                }
-              ]
-            },
-            {
-              text: "Revert **MD102-VM3-Megan** to the clean checkpoint from lab 2 and start it:",
-              parts: [
-                {
-                  kind: "code",
-                  lang: "powershell",
-                  caption: "On the Hyper-V host",
-                  code: "Restore-VMCheckpoint -Name \"OOBE-Clean\" -VMName MD102-VM3-Megan -Confirm:$false\nStart-VM -Name MD102-VM3-Megan"
-                }
-              ]
-            },
-            {
-              text: "Connect to **MD102-VM3-Megan** in Hyper-V Manager. At the out-of-box experience, proceed through region and keyboard, connect to the network, and when prompted choose **Set up for work or school**."
-            },
-            {
-              text: "Attempt to sign in as `staging.user01@<tenant>.onmicrosoft.com` and complete the password prompt.",
-              parts: [
-                {
-                  kind: "verify",
-                  text: "Enrollment fails on screen with `0x80180018` — `MENROLL_E_LICENSE`. The setup screen reports that something went wrong with your organisation's MDM terms or licence."
-                },
-                {
-                  kind: "callout",
-                  variant: "tip",
-                  text: "This is the single most common enrollment failure in a trial tenant, because the seat pool is small and group-based licensing is asynchronous. If you see `0x80180018`, check licensing before you touch anything else."
-                }
-              ]
-            },
-            {
-              text: "Inspect the failure event on the machine directly from the error screen:",
-              parts: [
-                {
-                  kind: "substeps",
-                  items: [
-                    { text: "Press **Shift + F10** on the error screen to open Command Prompt." },
-                    { text: "Launch PowerShell and query the MDM provider log for Event ID 76 (shown below)." },
-                    { text: "Type `exit` twice when finished to close PowerShell and Command Prompt." }
+                  kind: "table",
+                  headers: ["Error Code", "Win32 Symbol", "Root Cause", "Where to Fix"],
+                  rows: [
+                    ["0x80180018", "MENROLL_E_LICENSE", "The user attempting enrollment has no Intune licence assigned, or group-based licensing is still pending.", "Entra admin center > Groups > GRP-LIC-M365-E5 (assign M365 E5 licence)"],
+                    ["0x80180014", "MENROLL_E_PLATFORM_BLOCKED", "An enrollment restriction blocked the device: wrong OS version, platform blocked, or personal devices blocked.", "Intune admin center > Devices > Enrollment > Device platform restrictions"],
+                    ["0x80180026", "MENROLL_E_DEVICECAPREACHED", "The user has reached the maximum number of enrolled devices allowed by the restriction policy.", "Intune admin center > Devices > Enrollment > Device limit restrictions"]
                   ]
                 },
                 {
-                  kind: "code",
-                  lang: "powershell",
-                  caption: "In the Shift + F10 Command Prompt on MD102-VM3-Megan",
-                  code: "powershell\nGet-WinEvent -FilterHashtable @{\n    LogName = 'Microsoft-Windows-DeviceManagement-Enterprise-Diagnostics-Provider/Admin'\n    Id = 76\n} -MaxEvents 5 | Format-List TimeCreated, Id, Message"
-                },
-                {
-                  kind: "verify",
-                  text: "Event ID 76 is present with failure status containing `0x80180018`."
+                  kind: "callout",
+                  variant: "important",
+                  text: "Notice that **0x80180018** and **0x80180014** produce the same generic client message on Windows: *Something went wrong*. On standard manual OOBE joins without an Autopilot blocking ESP, Windows actually allows the user to log in as an Entra-joined user and fails MDM silently in the background, recording the error in Event ID 76. Only the hex code in the event log or diagnostic report reveals the true cause."
                 }
               ]
             },
             {
-              text: "In the **Microsoft Entra admin center**, add `staging.user01` back to `GRP-LIC-M365-E5` and confirm the licence returns."
+              text: "Review the licensing trap: why licensing failures look like device failures.",
+              parts: [
+                {
+                  kind: "callout",
+                  variant: "tip",
+                  text: "Group-based licensing evaluates asynchronously. When a user is added to a licensed group, it can take several minutes to issue a seat. If the user attempts enrollment immediately, Intune rejects the request with **0x80180018**. Conversely, when a license is revoked, token caching can cause the device to still be recognized until the token cache expires."
+                }
+              ]
             }
           ],
           result: {
-            text: "You have seen the licensing failure and can recognise its code.",
+            text: "You can identify the three major enrollment error codes and their remediation points.",
             verify: [
-              { text: "You provoked `0x80180018` and recovered from it." }
+              { text: "You can explain the root cause of 0x80180018 without looking it up." },
+              { text: "You can state which error code indicates a platform restriction block." }
             ]
           }
         },
         {
           id: "t2",
-          title: "Provoke the restriction failure",
+          title: "Contrast platform restrictions against device limits",
           checkpoint: true,
           steps: [
             {
-              text: "In the **Microsoft Intune admin center**, select **Devices**, then **Enrollment**, then **Device platform restrictions**. Select **WIN-Corporate-Only**, then under **Properties** edit **Platform settings** to temporarily set the **Minimum OS version** to `10.0.99999`.",
-              nav: ["Devices", "Enrollment", "Device platform restrictions", "WIN-Corporate-Only", "Properties"]
-            },
-            {
-              text: "Add `staging.user01` to `GRP-USR-FINANCE` so the restriction applies to them, then on **MD102-VM3-Megan** select **Try again** (or back up and sign in again as `staging.user01@<tenant>.onmicrosoft.com`).",
+              text: "In the **Microsoft Intune admin center**, review where each restriction is governed:",
+              nav: ["Devices", "Enrollment"],
               parts: [
                 {
-                  kind: "verify",
-                  text: "Enrollment fails with `0x80180014` — `MENROLL_E_PLATFORM_BLOCKED`. Nothing on the client says which restriction blocked it; that answer only exists in the portal."
-                }
-              ]
-            },
-            {
-              text: "Press **Shift + F10** again and check Event ID 76 in PowerShell:",
-              parts: [
-                {
-                  kind: "code",
-                  lang: "powershell",
-                  caption: "In the Shift + F10 Command Prompt on MD102-VM3-Megan",
-                  code: "powershell\nGet-WinEvent -FilterHashtable @{\n    LogName = 'Microsoft-Windows-DeviceManagement-Enterprise-Diagnostics-Provider/Admin'\n    Id = 76\n} -MaxEvents 5 | Format-List TimeCreated, Id, Message"
-                },
-                {
-                  kind: "verify",
-                  text: "A new Event ID 76 records failure with code `0x80180014`. Type `exit` twice to close PowerShell and Command Prompt."
-                }
-              ]
-            },
-            {
-              text: "Restore the minimum version to `10.0.22000` and remove the temporary group membership."
-            },
-            {
-              text: "Revert **MD102-VM3-Megan** to its clean state so it remains ready for Autopilot in lab 17:",
-              parts: [
-                {
-                  kind: "code",
-                  lang: "powershell",
-                  caption: "On the Hyper-V host",
-                  code: "Restore-VMCheckpoint -Name \"OOBE-Clean\" -VMName MD102-VM3-Megan -Confirm:$false\nStop-VM -Name MD102-VM3-Megan -TurnOff -Force"
+                  kind: "substeps",
+                  items: [
+                    { text: "Select **Device platform restrictions** and inspect **WIN-Corporate-Only** from lab 11. Note that blocking personal Windows devices or setting a minimum OS version causes `0x80180014`." },
+                    { text: "Select **Device limit restrictions** and inspect the default limit (typically 5 or 15 devices per user). Exceeding this limit causes `0x80180026`." }
+                  ]
                 },
                 {
                   kind: "callout",
                   variant: "important",
-                  text: "Note what you just proved: the same symptom — enrollment refused — came from two completely unrelated causes, and only the hex code distinguished them. This is why the error dictionary is worth memorising rather than looking up."
+                  text: "The Intune device limit restriction (`0x80180026`) is separate from the Microsoft Entra device quota (`0x801c03f2`, *DSREG_E_DEVICE_MAXIMUM_REACHED* under Entra > Devices > Device settings). Entra limits how many devices a user can join; Intune limits how many can be MDM-managed."
                 }
               ]
             }
           ],
           result: {
-            text: "You can distinguish a licensing failure from a restriction failure by code alone.",
+            text: "You can distinguish between platform restrictions, device limits, and Entra join quotas.",
             verify: [
-              { text: "You provoked `0x80180014` and restored the restriction." },
-              { text: "`MD102-VM3-Megan` is reverted to `OOBE-Clean` and turned off." }
+              { text: "You know the difference between 0x80180014 and 0x80180026." },
+              { text: "You can state the difference between an Intune device limit and an Entra device quota." }
             ]
           }
         }
